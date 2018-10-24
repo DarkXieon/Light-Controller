@@ -1,0 +1,207 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7cab2c93433eee49ab61a9f47783877, type: 3}
+  m_Name: Blink
+  m_EditorClassIdentifier: 
+  listedIntensities:
+    useControl: 0
+    randomizeBetweenValues: 0
+    randomizeChosenEntry: 0
+    listedValues:
+    - 20
+    - 0
+    maxValue: 20
+    minValue: 0
+  curvedIntensities:
+    useControl: 1
+    minMaxCurve:
+      m_Mode: 1
+      m_CurveMultiplier: 10
+      m_CurveMin:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 0
+          outSlope: 10
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 10
+          inSlope: 10
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_CurveMax:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 10.378839
+          outSlope: 10.378839
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.09592473
+          value: 0.9955872
+          inSlope: 10.378839
+          outSlope: -14.709037
+          tangentMode: 69
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.16281399
+          value: 0.011710599
+          inSlope: -14.709037
+          outSlope: 4.69076
+          tangentMode: 69
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.37157536
+          value: 0.99096006
+          inSlope: 4.69076
+          outSlope: -7.416871
+          tangentMode: 69
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 1
+        m_PostInfinity: 1
+        m_RotationOrder: 4
+      m_ConstantMin: 0
+      m_ConstantMax: 0
+    maxCurveTracker:
+      minMaxPoints:
+      - 0
+      - 0.09592473
+      - 0.16281399
+      - 0.37157536
+      wrapMode: 1
+    minCurveTracker:
+      minMaxPoints:
+      - 0
+      - 1
+      wrapMode: 2
+    maxValue: 9.955873
+    minValue: 0
+  listedRoC:
+    useControl: 0
+    randomizeBetweenValues: 0
+    randomizeChosenEntry: 0
+    listedValues:
+    - 0
+    maxValue: 0
+    minValue: 0
+  curvedRoC:
+    useControl: 0
+    minMaxCurve:
+      m_Mode: 0
+      m_CurveMultiplier: 1
+      m_CurveMin:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 0
+          outSlope: 10
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 10
+          inSlope: 10
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_CurveMax:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 5
+          inSlope: 0
+          outSlope: 5
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 10
+          inSlope: 5
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_ConstantMin: 0
+      m_ConstantMax: 0.2
+    maxCurveTracker:
+      minMaxPoints:
+      - 0
+      - 1
+      wrapMode: 2
+    minCurveTracker:
+      minMaxPoints:
+      - 0
+      - 1
+      wrapMode: 2
+    maxValue: 0.2
+    minValue: 0.2
+  roCMode: 1
+  controlTarget: 7
+  intensityModifers:
+  - Multiplier: 1
+    Offset: 0
+    RelateInversely: 0
+  - Multiplier: 0.2
+    Offset: 0
+    RelateInversely: 0
+  - Multiplier: 0.2
+    Offset: 0
+    RelateInversely: 0
+  - Multiplier: 1
+    Offset: 0
+    RelateInversely: 0
+  - Multiplier: 1
+    Offset: 0
+    RelateInversely: 0
+  noSmoothTransitions: 0
+  useLightIntensityFloor: 0
+  useLightIntensityCeiling: 0
+  floor: 0
+  ceiling: 0
