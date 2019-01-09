@@ -11,12 +11,20 @@ using UnityEngine.SceneManagement;
 
 namespace LightControls.Utilities
 {
+    //[InitializeOnLoad]
+    //public class UniqueDataTrackerLoader
+    //{
+    //    static UniqueDataTrackerLoader()
+    //    {
+
+    //    }
+    //}
+
     [InitializeOnLoad]
     public class StagerReorderableListWrapper
     {
         private const double doubleClickTimeFrame = 0.5;
-
-        //private static Dictionary<string, List<bool>> toggleSets;
+        
         private static Texture2D alternateBoxTexture;
         private static GUIStyle headingStyle;
 
@@ -36,11 +44,7 @@ namespace LightControls.Utilities
         }
         
         private ReorderableList displayList;
-
-        private SerializedProperty selectedCollapsed => displayList
-            .serializedProperty
-            .GetArrayElementAtIndex(currentFocus)
-            .FindPropertyRelative("serializedInspectorInfo.Collapsed");
+        private List<StageData> stageData;
         
         private int currentFocus;
         private double clickStartTime;
@@ -58,7 +62,24 @@ namespace LightControls.Utilities
         public StagerReorderableListWrapper(SerializedObject obj, SerializedProperty listProperty)
         {
             displayList = new ReorderableList(obj, listProperty);
-            
+            stageData = new List<StageData>();
+
+            var valueTracker = new List<string>();
+
+            for(int i = 0; i < listProperty.arraySize; i++)
+            {
+                SerializedProperty elementGUID = GUIDAt(i);
+
+                if (string.IsNullOrWhiteSpace(elementGUID.stringValue) || valueTracker.Contains(elementGUID.stringValue))
+                    elementGUID.stringValue = GUID.Generate().ToString();
+
+                valueTracker.Add(elementGUID.stringValue);
+
+                StageData data = GetValueAt(i);
+                
+                stageData.Add(data);
+            }
+
             clickStartTime = EditorApplication.timeSinceStartup;
 
             displayList.draggable = true;
@@ -69,31 +90,31 @@ namespace LightControls.Utilities
             displayList.drawElementBackgroundCallback = DrawElementBackground;
             displayList.elementHeightCallback = GetElementHeight;
             displayList.onMouseUpCallback = SelectElement;
-            displayList.onChangedCallback = OnListChange;
-            displayList.onReorderCallback = OnReorder;
+            displayList.onRemoveCallback = RemoveElement;
+            displayList.onAddCallback = AddElement;
         }
         
         public void DisplayList(Rect rect)
         {
             displayList.DoList(rect);
         }
-        
+
         private void DrawHeader(Rect rect)
         {
             //EditorGUI.LabelField(rect, new GUIContent("Stages"));
         }
-        
+
         private void DrawElement(Rect rect, int index, bool isActive, bool isFocused)
         {
             SerializedProperty element = displayList.serializedProperty.GetArrayElementAtIndex(index);
-            SerializedProperty elementName = element.FindPropertyRelative("serializedInspectorInfo.Name");
-            SerializedProperty elementCollapsed = element.FindPropertyRelative("serializedInspectorInfo.Collapsed");
 
-            bool isDefaultName = string.IsNullOrWhiteSpace(elementName.stringValue) || elementName.stringValue.StartsWith("Stage");
+            StageData data = stageData[index];
+
+            bool isDefaultName = string.IsNullOrWhiteSpace(data.Name) || data.Name.StartsWith("Stage");
             string stageNumberHeading = string.Format("Stage {0}", index + 1);
             string nameHeading = isDefaultName
                 ? stageNumberHeading
-                : elementName.stringValue;
+                : data.Name;
             string numberReferenceHeading = isDefaultName
                 ? string.Empty
                 : string.Format("({0})", stageNumberHeading);
@@ -106,11 +127,12 @@ namespace LightControls.Utilities
             float labelOffset = 5f;
             Rect nameRect = new Rect(headingRect.position, nameSize);
             Rect labelRect = new Rect(headingRect.x + nameSize.x + labelOffset, headingRect.y, headingRect.width - nameSize.x - labelOffset, headingRect.height);
-            
-            elementName.stringValue = EditorGUI.TextField(nameRect, nameHeading, headingStyle);
+
+            data.Name = EditorGUI.TextField(nameRect, nameHeading, headingStyle);
+
             EditorGUI.LabelField(labelRect, numberReferenceHeading, headingStyle);
             
-            if(!elementCollapsed.boolValue)
+            if(!data.Collapsed)
                 EditorGUI.PropertyField(rect, element);
         }
 
@@ -135,7 +157,27 @@ namespace LightControls.Utilities
                 GUI.DrawTextureWithTexCoords(bottomBorderGUICoordinates, alternateBoxTexture, bottomBorderTextureCoordinates);
             }
         }
-        
+
+        private void AddElement(ReorderableList list)
+        {
+            ReorderableList.defaultBehaviours.DoAddButton(list);
+
+            SerializedProperty elementGUID = GUIDAt(list.count - 1);
+            elementGUID.stringValue = GUID.Generate().ToString();
+
+            StageData data = GetValueAt(list.count - 1);
+            stageData.Add(data);
+        }
+
+        private void RemoveElement(ReorderableList list)
+        {
+            UniqueDataTracker.Singleton.Data.RemoveData(GUIDAt(list.index).stringValue);
+
+            stageData.Remove(stageData[list.index]);
+
+            ReorderableList.defaultBehaviours.DoRemoveButton(list);
+        }
+
         private void SelectElement(ReorderableList list)
         {
             if (currentFocus == list.index)
@@ -148,7 +190,8 @@ namespace LightControls.Utilities
                 {
                     displayList.index = -1;
                     displayList.ReleaseKeyboardFocus();
-                    selectedCollapsed.boolValue = !selectedCollapsed.boolValue;
+                    
+                    stageData[currentFocus].Collapsed = !stageData[currentFocus].Collapsed;
                 }
             }
             else
@@ -157,29 +200,31 @@ namespace LightControls.Utilities
                 clickStartTime = EditorApplication.timeSinceStartup;
             }
         }
-
-        private void OnListChange(ReorderableList list)
-        {
-            int i = 0;
-        }
-
-        private void OnReorder(ReorderableList list)
-        {
-            int i = 0;
-        }
-
+        
         private float GetElementHeight(int index)
         {
-            SerializedProperty element = displayList
-                .serializedProperty
-                .GetArrayElementAtIndex(index)
-                .FindPropertyRelative("serializedInspectorInfo.Collapsed");
-
-            float elementPropertyHeight = !element.boolValue
+            float elementPropertyHeight = !stageData[index].Collapsed
                 ? EditorGUI.GetPropertyHeight(displayList.serializedProperty.GetArrayElementAtIndex(index))
                 : 0f;
             
             return elementPropertyHeight + headingStyle.CalcSize(GUIContent.none).y + EditorUtils.VerticalSpace;
+        }
+
+        private StageData GetValueAt(int index)
+        {
+            SerializedProperty elementGUID = GUIDAt(index);
+
+            StageData data = UniqueDataTracker.Singleton.Data.GetOrCreateData<StageData>(elementGUID.stringValue);
+
+            return data;
+        }
+
+        private SerializedProperty GUIDAt(int index)
+        {
+            return displayList
+                .serializedProperty
+                .GetArrayElementAtIndex(index)
+                .FindPropertyRelative("guid");
         }
     }
 }

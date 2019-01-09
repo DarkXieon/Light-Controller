@@ -15,7 +15,7 @@ MonoBehaviour:
     RandomizeNextStage: 0
     CanSkipStages: 0
     Stages:
-    - Name: Stage 1
+    - guid: d9d06445dda18c74ebebcb81ff8a5441
       ContinueFor: 0
       AdvanceAfter: 2
       ContinueForEventDetector:
@@ -184,7 +184,7 @@ MonoBehaviour:
       MaxStartAmountMax: 1
       ControlOptions:
       - {fileID: 11400000, guid: ec3da4ef102e9324d8c39dc2bcd9d981, type: 2}
-    - Name: Stage 2
+    - guid: 71fdf8368c32f6d4b977da04bdb5ca66
       ContinueFor: 0
       AdvanceAfter: 2
       ContinueForEventDetector:

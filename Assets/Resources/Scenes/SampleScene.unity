@@ -191,7 +191,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1671827779310850, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
       propertyPath: m_Name
-      value: Street Light (1)
+      value: Street Light 2
       objectReference: {fileID: 0}
     - target: {fileID: 108709628416484488, guid: e662b63da84f7454dab229ff72e755d8,
         type: 2}
@@ -202,6 +202,10 @@ Prefab:
         type: 2}
       propertyPath: m_Range
       value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566725840517976, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
+      propertyPath: m_Name
+      value: Point Light 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
@@ -240,7 +244,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 1987682997}
   m_GameObject: {fileID: 82588943}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef0c4398bcb53d548ac825b63a1d3800, type: 3}
   m_Name: 
@@ -258,7 +262,21 @@ MonoBehaviour:
       IntensityMax: 0
       IntensityMin: 0
     LightControlOptions:
-    - {fileID: 11400000, guid: 51e03033857c7a443afd7754a1cb6a30, type: 2}
+    - {fileID: 11400000, guid: 687ce1451fc884340a253337da1bbdfa, type: 2}
+  - ControlOptionInfo:
+      CurrentStage: 0
+      Lights:
+      - {fileID: 921004984}
+      - {fileID: 726898216}
+      EmissiveMaterialRenderers: []
+      SaveLightColor: 0
+      SaveMaterialColor: 0
+      LightColors: []
+      IntensityMax: 0
+      IntensityMin: 0
+    LightControlOptions:
+    - {fileID: 11400000, guid: 5b748d64acc94734fb69a93e11e8c6e5, type: 2}
+    - {fileID: 11400000, guid: e21758d0cc6aa5a48b3f84b21763ed5b, type: 2}
 --- !u!4 &82588945
 Transform:
   m_ObjectHideFlags: 0
@@ -273,211 +291,6 @@ Transform:
   m_Father: {fileID: 2104241059}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &323757077
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 323757078}
-  - component: {fileID: 323757079}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &323757078
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 323757077}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 2104241059}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &323757079
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 323757077}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 360cbcbac0b9b514d8858ba1c3072601, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ControllerStager:
-    RandomizeNextStage: 0
-    CanSkipStages: 0
-    Stages:
-    - serializedInspectorInfo:
-        Name: (name your stage. . .)
-        Collapsed: 0
-      ContinueFor: 1
-      AdvanceAfter: 1
-      ContinueForEventDetector:
-        detector: {fileID: 0}
-        methodName: 
-      ContinueForListedTimeGeneration:
-        useControl: 0
-        randomizeBetweenValues: 0
-        randomizeChosenEntry: 0
-        listedValues:
-        - 0
-        maxValue: 0
-        minValue: 0
-      ContinueForCurvedTimeGeneration:
-        useControl: 0
-        minMaxCurve:
-          m_Mode: 2
-          m_CurveMultiplier: 1
-          m_CurveMin:
-            serializedVersion: 2
-            m_Curve:
-            - serializedVersion: 3
-              time: 0
-              value: 0
-              inSlope: 0
-              outSlope: 10
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            - serializedVersion: 3
-              time: 1
-              value: 10
-              inSlope: 10
-              outSlope: 0
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            m_PreInfinity: 2
-            m_PostInfinity: 2
-            m_RotationOrder: 4
-          m_CurveMax:
-            serializedVersion: 2
-            m_Curve:
-            - serializedVersion: 3
-              time: 0
-              value: 5
-              inSlope: 0
-              outSlope: 5
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            - serializedVersion: 3
-              time: 1
-              value: 10
-              inSlope: 5
-              outSlope: 0
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            m_PreInfinity: 2
-            m_PostInfinity: 2
-            m_RotationOrder: 4
-          m_ConstantMin: 0
-          m_ConstantMax: 0
-        maxCurveTracker:
-          minMaxPoints: []
-          wrapMode: 2
-        minCurveTracker:
-          minMaxPoints: []
-          wrapMode: 2
-        maxValue: 0
-        minValue: 0
-      ContinueForIterationsMin: 1
-      ContinueForIterationsMax: 1
-      AdvanceAfterEventDetector:
-        detector: {fileID: 0}
-        methodName: 
-      AdvanceAfterListedTimeGeneration:
-        useControl: 0
-        randomizeBetweenValues: 0
-        randomizeChosenEntry: 0
-        listedValues:
-        - 0
-        maxValue: 0
-        minValue: 0
-      AdvanceAfterCurvedTimeGeneration:
-        useControl: 0
-        minMaxCurve:
-          m_Mode: 2
-          m_CurveMultiplier: 1
-          m_CurveMin:
-            serializedVersion: 2
-            m_Curve:
-            - serializedVersion: 3
-              time: 0
-              value: 0
-              inSlope: 0
-              outSlope: 10
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            - serializedVersion: 3
-              time: 1
-              value: 10
-              inSlope: 10
-              outSlope: 0
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            m_PreInfinity: 2
-            m_PostInfinity: 2
-            m_RotationOrder: 4
-          m_CurveMax:
-            serializedVersion: 2
-            m_Curve:
-            - serializedVersion: 3
-              time: 0
-              value: 5
-              inSlope: 0
-              outSlope: 5
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            - serializedVersion: 3
-              time: 1
-              value: 10
-              inSlope: 5
-              outSlope: 0
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            m_PreInfinity: 2
-            m_PostInfinity: 2
-            m_RotationOrder: 4
-          m_ConstantMin: 0
-          m_ConstantMax: 0
-        maxCurveTracker:
-          minMaxPoints: []
-          wrapMode: 2
-        minCurveTracker:
-          minMaxPoints: []
-          wrapMode: 2
-        maxValue: 0
-        minValue: 0
-      AdvanceAfterIterationsMin: 1
-      AdvanceAfterIterationsMax: 1
-      LimitStarts: 0
-      MaxStartAmountMin: 1
-      MaxStartAmountMax: 1
-      LightControllers: []
 --- !u!1 &574192910
 GameObject:
   m_ObjectHideFlags: 0
@@ -671,6 +484,11 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!108 &726898216 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 108709628416484488, guid: e662b63da84f7454dab229ff72e755d8,
+    type: 2}
+  m_PrefabInternal: {fileID: 21029570}
 --- !u!1001 &829205893
 Prefab:
   m_ObjectHideFlags: 0
@@ -724,9 +542,34 @@ Prefab:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1989511003346934, guid: 07cf77b7648769b439c99121dbb4a450, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1991729964572806, guid: 07cf77b7648769b439c99121dbb4a450, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1881149297598292, guid: 07cf77b7648769b439c99121dbb4a450, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1094022819592826, guid: 07cf77b7648769b439c99121dbb4a450, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1841209099117528, guid: 07cf77b7648769b439c99121dbb4a450, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07cf77b7648769b439c99121dbb4a450, type: 2}
   m_IsPrefabAsset: 0
+--- !u!4 &829205894 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4627337375693488, guid: 07cf77b7648769b439c99121dbb4a450,
+    type: 2}
+  m_PrefabInternal: {fileID: 829205893}
 --- !u!1 &854924524
 GameObject:
   m_ObjectHideFlags: 0
@@ -756,13 +599,171 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ControllerStager:
     RandomizeNextStage: 0
-    CanSkipStages: 0
+    CanSkipStages: 1
     Stages:
-    - serializedInspectorInfo:
-        Name: Hello Name Here
-        Collapsed: 1
+    - guid: 2955944b83714c845a25e89fa53d6c68
       ContinueFor: 1
-      AdvanceAfter: 1
+      AdvanceAfter: 2
+      ContinueForEventDetector:
+        detector: {fileID: 0}
+        methodName: 
+      ContinueForListedTimeGeneration:
+        useControl: 0
+        randomizeBetweenValues: 0
+        randomizeChosenEntry: 0
+        listedValues:
+        - 0
+        maxValue: 0
+        minValue: 0
+      ContinueForCurvedTimeGeneration:
+        useControl: 0
+        minMaxCurve:
+          m_Mode: 2
+          m_CurveMultiplier: 1
+          m_CurveMin:
+            serializedVersion: 2
+            m_Curve:
+            - serializedVersion: 3
+              time: 0
+              value: 0
+              inSlope: 0
+              outSlope: 10
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            - serializedVersion: 3
+              time: 1
+              value: 10
+              inSlope: 10
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            m_PreInfinity: 2
+            m_PostInfinity: 2
+            m_RotationOrder: 4
+          m_CurveMax:
+            serializedVersion: 2
+            m_Curve:
+            - serializedVersion: 3
+              time: 0
+              value: 5
+              inSlope: 0
+              outSlope: 5
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            - serializedVersion: 3
+              time: 1
+              value: 10
+              inSlope: 5
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            m_PreInfinity: 2
+            m_PostInfinity: 2
+            m_RotationOrder: 4
+          m_ConstantMin: 0
+          m_ConstantMax: 0
+        maxCurveTracker:
+          minMaxPoints: []
+          wrapMode: 2
+        minCurveTracker:
+          minMaxPoints: []
+          wrapMode: 2
+        maxValue: 0
+        minValue: 0
+      ContinueForIterationsMin: 1
+      ContinueForIterationsMax: 1
+      AdvanceAfterEventDetector:
+        detector: {fileID: 0}
+        methodName: OnDurationFinish
+      AdvanceAfterListedTimeGeneration:
+        useControl: 0
+        randomizeBetweenValues: 0
+        randomizeChosenEntry: 0
+        listedValues:
+        - 0
+        maxValue: 0
+        minValue: 0
+      AdvanceAfterCurvedTimeGeneration:
+        useControl: 0
+        minMaxCurve:
+          m_Mode: 2
+          m_CurveMultiplier: 1
+          m_CurveMin:
+            serializedVersion: 2
+            m_Curve:
+            - serializedVersion: 3
+              time: 0
+              value: 0
+              inSlope: 0
+              outSlope: 10
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            - serializedVersion: 3
+              time: 1
+              value: 10
+              inSlope: 10
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            m_PreInfinity: 2
+            m_PostInfinity: 2
+            m_RotationOrder: 4
+          m_CurveMax:
+            serializedVersion: 2
+            m_Curve:
+            - serializedVersion: 3
+              time: 0
+              value: 5
+              inSlope: 0
+              outSlope: 5
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            - serializedVersion: 3
+              time: 1
+              value: 10
+              inSlope: 5
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            m_PreInfinity: 2
+            m_PostInfinity: 2
+            m_RotationOrder: 4
+          m_ConstantMin: 0
+          m_ConstantMax: 0
+        maxCurveTracker:
+          minMaxPoints: []
+          wrapMode: 2
+        minCurveTracker:
+          minMaxPoints: []
+          wrapMode: 2
+        maxValue: 0
+        minValue: 0
+      AdvanceAfterIterationsMin: 1
+      AdvanceAfterIterationsMax: 1
+      LimitStarts: 0
+      MaxStartAmountMin: 1
+      MaxStartAmountMax: 1
+      LightControllers:
+      - {fileID: 1636565163}
+    - guid: b343625fcc84e0042962b6cda30a7174
+      ContinueFor: 3
+      AdvanceAfter: 3
       ContinueForEventDetector:
         detector: {fileID: 0}
         methodName: 
@@ -918,168 +919,8 @@ MonoBehaviour:
       LimitStarts: 0
       MaxStartAmountMin: 1
       MaxStartAmountMax: 1
-      LightControllers: []
-    - serializedInspectorInfo:
-        Name: (name your stage. . .)
-        Collapsed: 0
-      ContinueFor: 1
-      AdvanceAfter: 1
-      ContinueForEventDetector:
-        detector: {fileID: 0}
-        methodName: 
-      ContinueForListedTimeGeneration:
-        useControl: 0
-        randomizeBetweenValues: 0
-        randomizeChosenEntry: 0
-        listedValues:
-        - 0
-        maxValue: 0
-        minValue: 0
-      ContinueForCurvedTimeGeneration:
-        useControl: 0
-        minMaxCurve:
-          m_Mode: 2
-          m_CurveMultiplier: 1
-          m_CurveMin:
-            serializedVersion: 2
-            m_Curve:
-            - serializedVersion: 3
-              time: 0
-              value: 0
-              inSlope: 0
-              outSlope: 10
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            - serializedVersion: 3
-              time: 1
-              value: 10
-              inSlope: 10
-              outSlope: 0
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            m_PreInfinity: 2
-            m_PostInfinity: 2
-            m_RotationOrder: 4
-          m_CurveMax:
-            serializedVersion: 2
-            m_Curve:
-            - serializedVersion: 3
-              time: 0
-              value: 5
-              inSlope: 0
-              outSlope: 5
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            - serializedVersion: 3
-              time: 1
-              value: 10
-              inSlope: 5
-              outSlope: 0
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            m_PreInfinity: 2
-            m_PostInfinity: 2
-            m_RotationOrder: 4
-          m_ConstantMin: 0
-          m_ConstantMax: 0
-        maxCurveTracker:
-          minMaxPoints: []
-          wrapMode: 2
-        minCurveTracker:
-          minMaxPoints: []
-          wrapMode: 2
-        maxValue: 0
-        minValue: 0
-      ContinueForIterationsMin: 1
-      ContinueForIterationsMax: 1
-      AdvanceAfterEventDetector:
-        detector: {fileID: 0}
-        methodName: 
-      AdvanceAfterListedTimeGeneration:
-        useControl: 0
-        randomizeBetweenValues: 0
-        randomizeChosenEntry: 0
-        listedValues:
-        - 0
-        maxValue: 0
-        minValue: 0
-      AdvanceAfterCurvedTimeGeneration:
-        useControl: 0
-        minMaxCurve:
-          m_Mode: 2
-          m_CurveMultiplier: 1
-          m_CurveMin:
-            serializedVersion: 2
-            m_Curve:
-            - serializedVersion: 3
-              time: 0
-              value: 0
-              inSlope: 0
-              outSlope: 10
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            - serializedVersion: 3
-              time: 1
-              value: 10
-              inSlope: 10
-              outSlope: 0
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            m_PreInfinity: 2
-            m_PostInfinity: 2
-            m_RotationOrder: 4
-          m_CurveMax:
-            serializedVersion: 2
-            m_Curve:
-            - serializedVersion: 3
-              time: 0
-              value: 5
-              inSlope: 0
-              outSlope: 5
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            - serializedVersion: 3
-              time: 1
-              value: 10
-              inSlope: 5
-              outSlope: 0
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            m_PreInfinity: 2
-            m_PostInfinity: 2
-            m_RotationOrder: 4
-          m_ConstantMin: 0
-          m_ConstantMax: 0
-        maxCurveTracker:
-          minMaxPoints: []
-          wrapMode: 2
-        minCurveTracker:
-          minMaxPoints: []
-          wrapMode: 2
-        maxValue: 0
-        minValue: 0
-      AdvanceAfterIterationsMin: 1
-      AdvanceAfterIterationsMax: 1
-      LimitStarts: 0
-      MaxStartAmountMin: 1
-      MaxStartAmountMax: 1
-      LightControllers: []
+      LightControllers:
+      - {fileID: 82588944}
 --- !u!4 &854924526
 Transform:
   m_ObjectHideFlags: 0
@@ -1093,6 +934,60 @@ Transform:
   m_Father: {fileID: 2104241059}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &883782717
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 883782719}
+  - component: {fileID: 883782718}
+  m_Layer: 0
+  m_Name: GameObject (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &883782718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 883782717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef0c4398bcb53d548ac825b63a1d3800, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ControlInfo:
+  - ControlOptionInfo:
+      CurrentStage: 0
+      Lights:
+      - {fileID: 1505169335}
+      EmissiveMaterialRenderers:
+      - {fileID: 1647556780}
+      SaveLightColor: 0
+      SaveMaterialColor: 0
+      LightColors: []
+      IntensityMax: 0
+      IntensityMin: 0
+    LightControlOptions:
+    - {fileID: 11400000, guid: 035df0266fae0d146a8266ab0f6f2635, type: 2}
+--- !u!4 &883782719
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 883782717}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 12.184476, y: -6.092684, z: 6.8599577}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &921004983
 GameObject:
   m_ObjectHideFlags: 0
@@ -1104,7 +999,7 @@ GameObject:
   - component: {fileID: 921004985}
   - component: {fileID: 921004984}
   m_Layer: 0
-  m_Name: Point Light
+  m_Name: Point Light 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1122,7 +1017,7 @@ Light:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 10
   m_Range: 30
-  m_SpotAngle: 60.6
+  m_SpotAngle: 66.6
   m_CookieSize: 10
   m_Shadows:
     m_Type: 0
@@ -1154,7 +1049,7 @@ Transform:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 921004983}
-  m_LocalRotation: {x: 1, y: -0, z: -0, w: 0}
+  m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
   m_LocalPosition: {x: -0.068, y: 0, z: 0.17500001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1173,7 +1068,7 @@ GameObject:
   - component: {fileID: 987810571}
   - component: {fileID: 1636619333}
   m_Layer: 0
-  m_Name: Street Light
+  m_Name: Street Light 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1273,39 +1168,6 @@ Transform:
   m_Father: {fileID: 1056650043}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1244169735
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1244169736}
-  m_Layer: 0
-  m_Name: GameObject (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1244169736
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1244169735}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 2104241059}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1444926053
 Prefab:
   m_ObjectHideFlags: 0
@@ -1364,6 +1226,72 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e79f89cf16ba4164f947b71aa2ef0052, type: 2}
   m_IsPrefabAsset: 0
+--- !u!1 &1505169334
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1505169336}
+  - component: {fileID: 1505169335}
+  m_Layer: 0
+  m_Name: Spot Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!108 &1505169335
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1505169334}
+  m_Enabled: 1
+  serializedVersion: 8
+  m_Type: 0
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 34.6
+  m_Range: 11.5
+  m_SpotAngle: 94.7
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 2
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_Lightmapping: 1
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+--- !u!4 &1505169336
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1505169334}
+  m_LocalRotation: {x: 0.67181754, y: -0.2205929, z: -0.22059296, w: 0.6718176}
+  m_LocalPosition: {x: 4.44, y: 7.21, z: -20.82}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 126.354996, y: 89.99999, z: 89.99999}
 --- !u!1001 &1534344805
 Prefab:
   m_ObjectHideFlags: 0
@@ -1448,7 +1376,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1636565162}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef0c4398bcb53d548ac825b63a1d3800, type: 3}
   m_Name: 
@@ -1466,7 +1394,7 @@ MonoBehaviour:
       IntensityMax: 0
       IntensityMin: 0
     LightControlOptions:
-    - {fileID: 11400000, guid: d9bfd50cbb842d44c8e29aa974efb18a, type: 2}
+    - {fileID: 11400000, guid: c3a541b5136c2f3468aee86ef1691ccb, type: 2}
 --- !u!4 &1636565164
 Transform:
   m_ObjectHideFlags: 0
@@ -1516,6 +1444,92 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!1 &1647556777
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1647556778}
+  - component: {fileID: 1647556781}
+  - component: {fileID: 1647556780}
+  - component: {fileID: 1647556779}
+  m_Layer: 0
+  m_Name: Cylinder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1647556778
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1647556777}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -3.11, z: -21.27}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 829205894}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &1647556779
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1647556777}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5000001
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!23 &1647556780
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1647556777}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
+  m_Materials:
+  - {fileID: 2100000, guid: 1e34c82aadec92a47bbcdceefceeb2bb, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &1647556781
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1647556777}
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1806283946
 GameObject:
   m_ObjectHideFlags: 0
@@ -1667,13 +1681,13 @@ Prefab:
     - target: {fileID: 114736069154479368, guid: 2f91f0b25c78adf48a3af6d23e0d7386,
         type: 2}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114736069154479368, guid: 2f91f0b25c78adf48a3af6d23e0d7386,
         type: 2}
       propertyPath: ControlInfo.Array.data[0].LightControlOptions.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: 51e03033857c7a443afd7754a1cb6a30,
+      objectReference: {fileID: 11400000, guid: 687ce1451fc884340a253337da1bbdfa,
         type: 2}
     - target: {fileID: 114736069154479368, guid: 2f91f0b25c78adf48a3af6d23e0d7386,
         type: 2}
@@ -1701,6 +1715,28 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114736069154479368, guid: 2f91f0b25c78adf48a3af6d23e0d7386,
+        type: 2}
+      propertyPath: ControlInfo.Array.data[1].LightControlOptions.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 5b748d64acc94734fb69a93e11e8c6e5,
+        type: 2}
+    - target: {fileID: 114736069154479368, guid: 2f91f0b25c78adf48a3af6d23e0d7386,
+        type: 2}
+      propertyPath: ControlInfo.Array.data[1].LightControlOptions.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: e21758d0cc6aa5a48b3f84b21763ed5b,
+        type: 2}
+    - target: {fileID: 114736069154479368, guid: 2f91f0b25c78adf48a3af6d23e0d7386,
+        type: 2}
+      propertyPath: ControlInfo.Array.data[1].ControlOptionInfo.Lights.Array.data[0]
+      value: 
+      objectReference: {fileID: 921004984}
+    - target: {fileID: 114736069154479368, guid: 2f91f0b25c78adf48a3af6d23e0d7386,
+        type: 2}
+      propertyPath: ControlInfo.Array.data[1].ControlOptionInfo.Lights.Array.data[1]
+      value: 
+      objectReference: {fileID: 726898216}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f91f0b25c78adf48a3af6d23e0d7386, type: 2}
   m_IsPrefabAsset: 0
@@ -1718,7 +1754,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2104241059
 Transform:
   m_ObjectHideFlags: 0
@@ -1732,8 +1768,6 @@ Transform:
   - {fileID: 854924526}
   - {fileID: 1636565164}
   - {fileID: 82588945}
-  - {fileID: 323757078}
-  - {fileID: 1244169736}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

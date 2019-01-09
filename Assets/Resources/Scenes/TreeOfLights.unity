@@ -181,7 +181,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4983190039211358, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -20
+      value: -40
       objectReference: {fileID: 0}
     - target: {fileID: 4983190039211358, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
       propertyPath: m_LocalPosition.y
@@ -223,6 +223,10 @@ Prefab:
       propertyPath: m_Name
       value: Street Light 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1671827779310850, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
   m_IsPrefabAsset: 0
@@ -262,7 +266,8 @@ MonoBehaviour:
     RandomizeNextStage: 0
     CanSkipStages: 0
     Stages:
-    - ContinueFor: 1
+    - guid: 81fbf4100be0ca449a056a5f90499f1f
+      ContinueFor: 1
       AdvanceAfter: 0
       ContinueForEventDetector:
         detector: {fileID: 0}
@@ -425,7 +430,8 @@ MonoBehaviour:
       MaxStartAmountMax: 1
       LightControllers:
       - {fileID: 703188896}
-    - ContinueFor: 1
+    - guid: eea43cbf1adcf4242866c4b12136f841
+      ContinueFor: 1
       AdvanceAfter: 0
       ContinueForEventDetector:
         detector: {fileID: 0}
@@ -588,7 +594,8 @@ MonoBehaviour:
       MaxStartAmountMax: 1
       LightControllers:
       - {fileID: 1186224730}
-    - ContinueFor: 1
+    - guid: 9777eb0f2eef0324c967ccf9192ed932
+      ContinueFor: 1
       AdvanceAfter: 0
       ContinueForEventDetector:
         detector: {fileID: 0}
@@ -667,7 +674,7 @@ MonoBehaviour:
       ContinueForIterationsMin: 1
       ContinueForIterationsMax: 1
       AdvanceAfterEventDetector:
-        detector: {fileID: 478173897}
+        detector: {fileID: 0}
         methodName: AdvanceIf
       AdvanceAfterListedTimeGeneration:
         useControl: 0
@@ -751,6 +758,170 @@ MonoBehaviour:
       MaxStartAmountMax: 1
       LightControllers:
       - {fileID: 1977701832}
+    - guid: 848602952d2f2a94884f414f99acf09f
+      ContinueFor: 1
+      AdvanceAfter: 0
+      ContinueForEventDetector:
+        detector: {fileID: 0}
+        methodName: 
+      ContinueForListedTimeGeneration:
+        useControl: 0
+        randomizeBetweenValues: 0
+        randomizeChosenEntry: 0
+        listedValues:
+        - 0
+        maxValue: 0
+        minValue: 0
+      ContinueForCurvedTimeGeneration:
+        useControl: 0
+        minMaxCurve:
+          m_Mode: 2
+          m_CurveMultiplier: 1
+          m_CurveMin:
+            serializedVersion: 2
+            m_Curve:
+            - serializedVersion: 3
+              time: 0
+              value: 0
+              inSlope: 0
+              outSlope: 10
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            - serializedVersion: 3
+              time: 1
+              value: 10
+              inSlope: 10
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            m_PreInfinity: 2
+            m_PostInfinity: 2
+            m_RotationOrder: 4
+          m_CurveMax:
+            serializedVersion: 2
+            m_Curve:
+            - serializedVersion: 3
+              time: 0
+              value: 5
+              inSlope: 0
+              outSlope: 5
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            - serializedVersion: 3
+              time: 1
+              value: 10
+              inSlope: 5
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            m_PreInfinity: 2
+            m_PostInfinity: 2
+            m_RotationOrder: 4
+          m_ConstantMin: 0
+          m_ConstantMax: 0
+        maxCurveTracker:
+          minMaxPoints: []
+          wrapMode: 2
+        minCurveTracker:
+          minMaxPoints: []
+          wrapMode: 2
+        maxValue: 0
+        minValue: 0
+      ContinueForIterationsMin: 1
+      ContinueForIterationsMax: 1
+      AdvanceAfterEventDetector:
+        detector: {fileID: 0}
+        methodName: AdvanceIf
+      AdvanceAfterListedTimeGeneration:
+        useControl: 0
+        randomizeBetweenValues: 0
+        randomizeChosenEntry: 0
+        listedValues:
+        - 0
+        maxValue: 0
+        minValue: 0
+      AdvanceAfterCurvedTimeGeneration:
+        useControl: 1
+        minMaxCurve:
+          m_Mode: 0
+          m_CurveMultiplier: 1
+          m_CurveMin:
+            serializedVersion: 2
+            m_Curve:
+            - serializedVersion: 3
+              time: 0
+              value: 0
+              inSlope: 0
+              outSlope: 10
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            - serializedVersion: 3
+              time: 1
+              value: 10
+              inSlope: 10
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            m_PreInfinity: 2
+            m_PostInfinity: 2
+            m_RotationOrder: 4
+          m_CurveMax:
+            serializedVersion: 2
+            m_Curve:
+            - serializedVersion: 3
+              time: 0
+              value: 5
+              inSlope: 0
+              outSlope: 5
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            - serializedVersion: 3
+              time: 1
+              value: 10
+              inSlope: 5
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            m_PreInfinity: 2
+            m_PostInfinity: 2
+            m_RotationOrder: 4
+          m_ConstantMin: 0
+          m_ConstantMax: 0.3
+        maxCurveTracker:
+          minMaxPoints:
+          - 0
+          - 1
+          wrapMode: 2
+        minCurveTracker:
+          minMaxPoints:
+          - 0
+          - 1
+          wrapMode: 2
+        maxValue: 0.3
+        minValue: 0.3
+      AdvanceAfterIterationsMin: 3
+      AdvanceAfterIterationsMax: 3
+      LimitStarts: 0
+      MaxStartAmountMin: 1
+      MaxStartAmountMax: 1
+      LightControllers:
+      - {fileID: 350117242}
 --- !u!4 &285430614
 Transform:
   m_ObjectHideFlags: 0
@@ -762,7 +933,67 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &350117241
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 350117243}
+  - component: {fileID: 350117242}
+  m_Layer: 0
+  m_Name: Row 4 Light Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &350117242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 350117241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef0c4398bcb53d548ac825b63a1d3800, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ControlInfo:
+  - ControlOptionInfo:
+      CurrentStage: 0
+      Lights:
+      - {fileID: 1644033708}
+      - {fileID: 1892162811}
+      - {fileID: 548775899}
+      - {fileID: 1911240828}
+      EmissiveMaterialRenderers:
+      - {fileID: 2131779105}
+      - {fileID: 1828392836}
+      - {fileID: 1481164643}
+      - {fileID: 1434008274}
+      SaveLightColor: 0
+      SaveMaterialColor: 0
+      LightColors: []
+      IntensityMax: 0
+      IntensityMin: 0
+    LightControlOptions:
+    - {fileID: 11400000, guid: a178331c37f47a34aae9d757226a7a5b, type: 2}
+--- !u!4 &350117243
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 350117241}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -6.7999997, y: 16.25, z: 30}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &403231368
 GameObject:
@@ -786,13 +1017,13 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 403231368}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1803357117}
   - {fileID: 467119335}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &426982161 stripped
 Transform:
@@ -875,46 +1106,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4983190039211358, guid: e662b63da84f7454dab229ff72e755d8,
     type: 2}
   m_PrefabInternal: {fileID: 101654615}
---- !u!1 &478173896
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 478173898}
-  - component: {fileID: 478173897}
-  m_Layer: 0
-  m_Name: Event Holder
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &478173897
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 478173896}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6047a3bb206d2224eb5367f02f7ce7bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &478173898
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 478173896}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -6.7999997, y: 16.25, z: 30}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!108 &548775899 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 108709628416484488, guid: e662b63da84f7454dab229ff72e755d8,
+    type: 2}
+  m_PrefabInternal: {fileID: 186055341}
 --- !u!23 &581050646 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 23044548948488518, guid: e662b63da84f7454dab229ff72e755d8,
@@ -982,7 +1178,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &754059774
 Prefab:
@@ -1158,13 +1354,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1050199945}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.18301274, y: 0.6830127, z: -0.18301274, w: 0.6830127}
+  m_LocalPosition: {x: -97.9, y: 61, z: 26.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 30, y: 90, z: 0}
 --- !u!1001 &1064884017
 Prefab:
   m_ObjectHideFlags: 0
@@ -1278,7 +1474,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1214588043
 Prefab:
@@ -1289,7 +1485,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4983190039211358, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -20
+      value: -40
       objectReference: {fileID: 0}
     - target: {fileID: 4983190039211358, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
       propertyPath: m_LocalPosition.y
@@ -1297,7 +1493,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4983190039211358, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 15
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 4983190039211358, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
       propertyPath: m_LocalRotation.x
@@ -1386,13 +1582,23 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1413830200}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1648350560}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &1434008274 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 23044548948488518, guid: e662b63da84f7454dab229ff72e755d8,
+    type: 2}
+  m_PrefabInternal: {fileID: 1924033174}
+--- !u!23 &1481164643 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 23044548948488518, guid: e662b63da84f7454dab229ff72e755d8,
+    type: 2}
+  m_PrefabInternal: {fileID: 186055341}
 --- !u!1 &1494986086
 GameObject:
   m_ObjectHideFlags: 0
@@ -1415,7 +1621,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1494986086}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 920796041}
@@ -1483,6 +1689,11 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
   m_IsPrefabAsset: 0
+--- !u!108 &1644033708 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 108709628416484488, guid: e662b63da84f7454dab229ff72e755d8,
+    type: 2}
+  m_PrefabInternal: {fileID: 1214588043}
 --- !u!23 &1648350558 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 23044548948488518, guid: e662b63da84f7454dab229ff72e755d8,
@@ -1564,6 +1775,21 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4983190039211358, guid: e662b63da84f7454dab229ff72e755d8,
     type: 2}
   m_PrefabInternal: {fileID: 1924033174}
+--- !u!23 &1828392836 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 23044548948488518, guid: e662b63da84f7454dab229ff72e755d8,
+    type: 2}
+  m_PrefabInternal: {fileID: 1952738816}
+--- !u!108 &1892162811 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 108709628416484488, guid: e662b63da84f7454dab229ff72e755d8,
+    type: 2}
+  m_PrefabInternal: {fileID: 1952738816}
+--- !u!108 &1911240828 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 108709628416484488, guid: e662b63da84f7454dab229ff72e755d8,
+    type: 2}
+  m_PrefabInternal: {fileID: 1924033174}
 --- !u!1001 &1924033174
 Prefab:
   m_ObjectHideFlags: 0
@@ -1573,7 +1799,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4983190039211358, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 20
+      value: -40
       objectReference: {fileID: 0}
     - target: {fileID: 4983190039211358, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
       propertyPath: m_LocalPosition.y
@@ -1581,7 +1807,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4983190039211358, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 30
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 4983190039211358, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
       propertyPath: m_LocalRotation.x
@@ -1619,7 +1845,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4983190039211358, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -20
+      value: -40
       objectReference: {fileID: 0}
     - target: {fileID: 4983190039211358, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
       propertyPath: m_LocalPosition.y
@@ -1627,7 +1853,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4983190039211358, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 4983190039211358, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
       propertyPath: m_LocalRotation.x
@@ -1652,6 +1878,10 @@ Prefab:
     - target: {fileID: 1671827779310850, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
       propertyPath: m_Name
       value: Street Light (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1671827779310850, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e662b63da84f7454dab229ff72e755d8, type: 2}
@@ -1712,7 +1942,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1987175388
 GameObject:
@@ -1728,7 +1958,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1987175389
 Transform:
   m_ObjectHideFlags: 0
@@ -1736,7 +1966,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1987175388}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 689414700}
@@ -1756,3 +1986,8 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 23044548948488518, guid: e662b63da84f7454dab229ff72e755d8,
     type: 2}
   m_PrefabInternal: {fileID: 1635456679}
+--- !u!23 &2131779105 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 23044548948488518, guid: e662b63da84f7454dab229ff72e755d8,
+    type: 2}
+  m_PrefabInternal: {fileID: 1214588043}

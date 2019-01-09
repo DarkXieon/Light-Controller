@@ -2,23 +2,24 @@
 using LightControls.Controllers;
 using LightControls.ControlOptions.ControlGroups;
 using LightControls.ControlOptions.ControlGroups.Data;
+using LightControls.Utilities;
 using UnityEngine;
 
 namespace LightControls.ControlOptions.Stages
 {
-    [System.Serializable]
-    public abstract class Stage
+    public interface IUnique
     {
-        [System.Serializable]
-        public class SerializedInspectorInfo
-        {
-            public string Name = "(name your stage. . .)";
-            public bool Collapsed = false;
-        }
+        string GUID { get; }
+    }
+
+    [System.Serializable]
+    public abstract class Stage : IUnique
+    {
+        public string GUID => guid;
 
         [SerializeField]
-        private SerializedInspectorInfo serializedInspectorInfo = new SerializedInspectorInfo();
-
+        private string guid;
+        
         public StagingOptions ContinueFor = StagingOptions.Iterations;
         public StagingOptions AdvanceAfter = StagingOptions.Iterations;
 

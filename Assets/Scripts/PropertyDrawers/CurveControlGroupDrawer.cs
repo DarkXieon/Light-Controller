@@ -23,7 +23,7 @@ namespace LightControls.PropertyDrawers
 
         static CurveControlGroupDrawer()
         {
-            intensityListElementContent = new GUIContent("Intensity");
+            intensityListElementContent = new GUIContent("Rate of Change");
             singleCurveContent = new GUIContent("Single Curve", "Remember--be sure to make the graph continuious (not clamped) you'll want the graph to loop or ping-pong. You can change this by opening the curve editor and clicking on the gear near the end of the curve.");
             doubleCurveContent = new GUIContent("Double Curve", "Remember--be sure to make the graph continuious (not clamped) you'll want the graph to loop or ping-pong. You can change this by opening the curve editor and clicking on the gear near the end of the curve.");
             timeScaleContent = new GUIContent("Time Scale");

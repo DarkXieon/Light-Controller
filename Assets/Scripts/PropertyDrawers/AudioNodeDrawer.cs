@@ -88,6 +88,7 @@ namespace LightControls.PropertyDrawers
                 EditorGUI.LabelField(lineTwoRects[4], changeVolumeFromIntensityContent);
                 EditorGUI.BeginChangeCheck();
                 EditorGUI.PropertyField(lineTwoRects[5], currentProperty.ChangeVolumeFromIntensity, GUIContent.none);
+
                 if (EditorGUI.EndChangeCheck() && currentProperty.ChangeVolumeFromIntensity.boolValue)
                 {
                     if(!currentProperty.MinVolume.hasMultipleDifferentValues)
@@ -160,7 +161,7 @@ namespace LightControls.PropertyDrawers
 
             EditorGUI.EndProperty();
         }
-
+        
         public override float GetPropertyHeight(SerializedProperty currentProperty, GUIContent label)
         {
             return (EditorUtils.LineHeight + EditorUtils.VerticalBuffer) * EditorGUIUtility.pixelsPerPoint * 4;

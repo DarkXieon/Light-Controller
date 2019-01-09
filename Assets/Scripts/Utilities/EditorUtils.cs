@@ -2,7 +2,7 @@
 
 using System;
 using System.Linq;
-
+using LightControls.ControlOptions;
 using UnityEditor;
 
 using UnityEngine;
@@ -22,12 +22,20 @@ namespace LightControls.Utilities
     public class PropertyDrawerRect : IDisposable
     {
         public Rect CurrentRect { get; set; }
+        //public Rect AlignmentRect { get; set; }
 
-        //private int initialIndentAmount;
+        //private int additionalIndentAmount;
+        //private int previousIndentAmount;
+        //private float previousLabelWidth;
+        //private float previousFieldWidth;
 
         public PropertyDrawerRect(Rect startingRect)
         {
             CurrentRect = startingRect;
+
+            int indent = EditorGUI.indentLevel;
+            //previousLabelWidth = EditorGUIUtility.labelWidth;
+            //previousFieldWidth = EditorGUIUtility.fieldWidth;
 
             //initialIndentAmount = EditorGUI.indentLevel;
         }
@@ -37,6 +45,19 @@ namespace LightControls.Utilities
             return reference.CurrentRect;
         }
         
+        //public void Indent()
+        //{
+        //    additionalIndentAmount++;
+
+        //    EditorGUI.indentLevel = 
+        //    AlignmentRect = 
+        //}
+
+        //public void Unindent()
+        //{
+
+        //}
+
         public void Dispose()
         {
 
@@ -657,6 +678,101 @@ namespace LightControls.Utilities
                     Debug.LogWarning("Intensity modes were added but asserts were not... Potentially dangerous.");
                     break;
             }
+        }
+
+        private const float minIntensityModifierFieldWidth = 50f;
+        private static GUIContent intensityModifiersScaleContent = new GUIContent("Scale: ");
+        private static GUIContent intensityModifiersOffsetContent = new GUIContent("Offset: ");
+        private static GUIContent intensityModifiersRelateInverselyContent = new GUIContent("Relate Inversely: ");
+        private static GUIContent[] intensityModifiersElementContent = new GUIContent[]
+        {
+                    new GUIContent("Light Intensity:", ""),
+                    new GUIContent("Light Color Intensity:", ""),
+                    new GUIContent("Light Material Intensity:", ""),
+                    new GUIContent("Light Range:", ""),
+                    new GUIContent("Spotlight Angle:", "")
+        };
+
+        public static void DisplayIntensityModifiers(Rect rect, SerializedProperty controlTargetProperty, SerializedProperty intensityModifiersProperty)
+        {
+            string currentBinaryString = Convert.ToString(controlTargetProperty.intValue, 2);
+
+            Debug.Assert(currentBinaryString.Count() <= intensityModifiersProperty.arraySize || currentBinaryString.Count() == Convert.ToString(~0, 2).Count());
+
+            if(currentBinaryString.Count(character => character == '1') > 1)
+            {
+                Rect currentRect = GetTopRect(rect, EditorStyles.label);
+
+                for (int i = 0; i < currentBinaryString.Length && i < intensityModifiersProperty.arraySize; i++) // the only time the second condition will stop the loop is when currentProperty.ControlTargetProperty is set to IntensityControlTarget.Everything
+                {
+                    if (currentBinaryString[currentBinaryString.Length - 1 - i] == '1') //The binary number will have the lowest values on the right and not the left
+                    {
+                        SerializedProperty element = intensityModifiersProperty.GetArrayElementAtIndex(i);
+
+                        SerializedProperty multiplier = element.FindPropertyRelative("Multiplier");
+                        SerializedProperty offset = element.FindPropertyRelative("Offset");
+                        SerializedProperty relateInversely = element.FindPropertyRelative("RelateInversely");
+
+                        GUIContent contentAtIndex = intensityModifiersElementContent[i];
+
+                        //float previousLabelWidth = EditorGUIUtility.labelWidth;
+                        //float previousFieldWidth = EditorGUIUtility.fieldWidth;
+                        //EditorGUIUtility.labelWidth = 0f;
+                        //EditorGUIUtility.fieldWidth = 10f;
+                        
+                        Rect[] splitLine = SplitLineRect(
+                            lineRect: currentRect,
+                            labelContent: new GUIContent[] { contentAtIndex, intensityModifiersScaleContent, intensityModifiersOffsetContent, intensityModifiersRelateInverselyContent },
+                            sizePercentages: new float[] { .4f, .2f, .2f, .2f },
+                            labelStyle: EditorStyles.label,
+                            linesDownward: 0);
+
+                        EditorGUI.LabelField(splitLine[0], contentAtIndex);
+
+                        EditorGUI.LabelField(splitLine[2], intensityModifiersScaleContent);
+                        multiplier.floatValue = EditorGUI.FloatField(splitLine[3], multiplier.floatValue);
+
+                        EditorGUI.LabelField(splitLine[4], intensityModifiersOffsetContent);
+                        offset.floatValue = EditorGUI.FloatField(splitLine[5], offset.floatValue);
+
+                        EditorGUI.LabelField(splitLine[6], intensityModifiersRelateInverselyContent);
+                        relateInversely.boolValue = EditorGUI.Toggle(splitLine[7], relateInversely.boolValue);
+
+                        currentRect = GetRectBelow(currentRect, EditorStyles.label);
+
+                        //EditorGUILayout.BeginHorizontal();
+
+                        //EditorGUILayout.LabelField(contentAtIndex, GUILayout.Width(previousLabelWidth - 5f));
+
+                        //EditorGUILayout.LabelField(intensityModifiersScaleContent, GUILayout.MaxWidth((EditorGUIUtility.currentViewWidth - previousLabelWidth - 5f) * .15f), GUILayout.MinWidth(EditorStyles.label.CalcSize(intensityModifiersScaleContent).x));
+                        //EditorGUILayout.PropertyField(multiplier, GUIContent.none, GUILayout.MaxWidth((EditorGUIUtility.currentViewWidth - previousLabelWidth - 5f) * .15f), GUILayout.MinWidth(minIntensityModifierFieldWidth));
+
+                        //EditorGUILayout.LabelField(intensityModifiersOffsetContent, GUILayout.MaxWidth((EditorGUIUtility.currentViewWidth - previousLabelWidth - 5f) * .15f), GUILayout.MinWidth(EditorStyles.label.CalcSize(intensityModifiersOffsetContent).x));
+                        //EditorGUILayout.PropertyField(offset, GUIContent.none, GUILayout.MaxWidth((EditorGUIUtility.currentViewWidth - previousLabelWidth - 5f) * .15f), GUILayout.MinWidth(minIntensityModifierFieldWidth));
+
+                        //EditorGUILayout.LabelField(intensityModifiersRelateInverselyContent, GUILayout.MaxWidth((EditorGUIUtility.currentViewWidth - previousLabelWidth - 5f) * .275f), GUILayout.MinWidth(EditorStyles.label.CalcSize(intensityModifiersRelateInverselyContent).x));
+                        //EditorGUILayout.PropertyField(relateInversely, GUIContent.none, GUILayout.MaxWidth((EditorGUIUtility.currentViewWidth - previousLabelWidth - 5f) * .1f), GUILayout.MinWidth(10f));
+
+                        //EditorGUILayout.EndHorizontal();
+
+                        //EditorGUIUtility.labelWidth = previousLabelWidth;
+                        //EditorGUIUtility.fieldWidth = previousFieldWidth;
+                    }
+                }
+
+                //EditorGUILayout.Space();
+            }
+        }
+        
+        public static float GetIntensityModifiersHeight(SerializedProperty controlTargetProperty)
+        {
+            int lines = Convert.ToString(controlTargetProperty.intValue, 2).Count(character => character == '1');
+
+            lines = lines > 1
+                ? lines
+                : 0;
+
+            return LineHeight * lines + VerticalBuffer * (lines - 1);
         }
 
         public static void CopyFromTo<T>(T[] from, T[] to)

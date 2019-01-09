@@ -9,7 +9,6 @@ namespace LightControls.ControlOptions
     public class InstancedAudioControlOption : InstancedControlOption
     {
         private AudioControlOption audioControlOption;
-        
         private Dictionary<Light, AudioControlGroup> audioDictionary; //This is made to keep track of all the lights and thier corrosponding control, each light needs their own so the audio noise originates from each light individually
 
         public InstancedAudioControlOption(AudioControlOption option)
@@ -32,14 +31,9 @@ namespace LightControls.ControlOptions
         /// </returns>
         public override bool ApplyOn(ApplicationStages stage)
         {
-            if (stage == ApplicationStages.OtherApplications)
-            {
-                return true;
-            }
-
-            return false;
+            return (!audioControlOption.IntensityGenerator.HasAuthority && stage == ApplicationStages.OtherApplications) || (audioControlOption.IntensityGenerator.HasAuthority && audioControlOption.IntensityGenerator.ApplyOn(stage));
         }
-
+        
         /// <summary>
         /// Applies audio generation to the provided lights
         /// </summary>
@@ -49,7 +43,7 @@ namespace LightControls.ControlOptions
         /// </param>
         public override void ApplyControl(ControlOptionInfo controlOptionInfo)
         {
-            if (controlOptionInfo.CurrentStage == ApplicationStages.OtherApplications) //Audio application takes place in the last apply call
+            if(ApplyOn(controlOptionInfo.CurrentStage))
             {
                 UpdateLightAudio(controlOptionInfo);
             }
@@ -80,7 +74,7 @@ namespace LightControls.ControlOptions
                     audioDictionary.Add(light, controller); //And add it
                 }
 
-                LightInfo info = new LightInfo(light.intensity, controlOptionInfo.IntensityMax, controlOptionInfo.IntensityMin); //Just a data wrapper
+                LightInfo info = new LightInfo(controlOptionInfo, audioControlOption.IntensityGenerator, light.intensity, controlOptionInfo.IntensityMax, controlOptionInfo.IntensityMin); //Just a data wrapper
 
                 controller.SetIntensity(info, audioControlOption.AudioNodes);
             }

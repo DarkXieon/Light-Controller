@@ -37,7 +37,7 @@ namespace LightControls.Editors
         {
             AudioControlOption control = target as AudioControlOption;
 
-            EditorGUIUtility.labelWidth = 250f;
+            //EditorGUIUtility.labelWidth = 250f;
             
             EditorGUILayout.LabelField(mainLabelContent, EditorStyles.boldLabel);
             EditorGUILayout.Space();
@@ -46,6 +46,10 @@ namespace LightControls.Editors
             //EditorGUILayout.Space();
 
             EditorGUILayout.LabelField(audioGenerationContent, EditorStyles.boldLabel);
+
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("IntensityGenerator"), true);
+
+            serializedObject.ApplyModifiedProperties();
 
             Rect audioSourceRect = EditorGUILayout.GetControlRect();
             EditorGUI.ObjectField(audioSourceRect, serializedObject.FindProperty("AudioSourcePrefab"), typeof(AudioSource), audioSourcePrefabContent);

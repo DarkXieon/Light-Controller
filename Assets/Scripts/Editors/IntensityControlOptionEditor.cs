@@ -27,20 +27,9 @@ namespace LightControls.Editors
         private static readonly GUIContent rateOfChangeContent;
         private static readonly GUIContent roCGenerationModeLabelContent;
         private static readonly GUIContent roCMode;
-
-        private static readonly GUIContent lightIntensityControlTargetContent;
-        private static readonly GUIContent lightColorIntensityControlTargetContent;
-        private static readonly GUIContent materialColorIntensityControlTargetContent;
-        private static readonly GUIContent lightRangeControlTargetContent;
-        private static readonly GUIContent spotlightAngleControlTargetContent;
-        private static readonly GUIContent scaleContent;
-        private static readonly GUIContent offsetContent;
-        private static readonly GUIContent relateInverslyContent;
-
+        
         private static readonly GUIContent miscellaneousContent;
 
-        private const float fieldMinSize = 50f;
-        
         static IntensityControlOptionEditor()
         {
             mainLabelContent = new GUIContent(EditorUtils.GetRichText("Intensity Control Options", 12, EditorUtils.TextOptions.Bold), "These controls allow you to set how you would like the light controller to handle light intensity");
@@ -53,15 +42,6 @@ namespace LightControls.Editors
             rateOfChangeContent = new GUIContent(EditorUtils.GetRichText("Rate of Change (RoC) Generation", EditorUtils.TextOptions.Bold), "These options affect how the rate of change is calculated. Rate of change affects how quickly the lights transition from one intensity to another.");
             roCGenerationModeLabelContent = new GUIContent("Generation Mode");
             roCMode = new GUIContent("RoC Mode");
-
-            lightIntensityControlTargetContent = new GUIContent("Light Intensity:", "");
-            lightColorIntensityControlTargetContent = new GUIContent("Light Color Intensity:", "");
-            materialColorIntensityControlTargetContent = new GUIContent("Light Material Intensity:", "");
-            lightRangeControlTargetContent = new GUIContent("Light Range:", "");
-            spotlightAngleControlTargetContent = new GUIContent("Spotlight Angle:", "");
-            scaleContent = new GUIContent("Scale: ");
-            offsetContent = new GUIContent("Offset: ");
-            relateInverslyContent = new GUIContent("Relate Inversely: ");
 
             miscellaneousContent = new GUIContent(EditorUtils.GetRichText("Miscellaneous", EditorUtils.TextOptions.Bold), "These options are other useful utilities that can be used to further customize light intensity display.");
         }
@@ -93,7 +73,7 @@ namespace LightControls.Editors
         {
             Initialize(serializedObject);
             
-            EditorGUIUtility.labelWidth = 250f;
+            //EditorGUIUtility.labelWidth = 250f;
             
             if(EditorGUIUtility.currentViewWidth - EditorGUIUtility.labelWidth < 350f)
             {
@@ -125,47 +105,8 @@ namespace LightControls.Editors
                 EditorGUILayout.PropertyField(currentProperty.ListedIntensitiesProperty);
             }
             
-            string currentBinaryString = Convert.ToString(currentProperty.ControlTargetProperty.intValue, 2);
+            EditorUtils.DisplayIntensityModifiers(EditorGUILayout.GetControlRect(true, EditorUtils.GetIntensityModifiersHeight(currentProperty.ControlTargetProperty)), currentProperty.ControlTargetProperty, currentProperty.IntensityModifersProperty);
 
-            Debug.Assert(currentBinaryString.Count() <= currentProperty.IntensityModifersProperty.arraySize || currentBinaryString.Count() == Convert.ToString(~0, 2).Count());
-            
-            for (int i = 0; i < currentBinaryString.Length && i < currentProperty.IntensityModifersProperty.arraySize; i++) // the only time the second condition will stop the loop is when currentProperty.ControlTargetProperty is set to IntensityControlTarget.Everything
-            {
-                if (currentBinaryString[currentBinaryString.Length - 1 - i] == '1') //The binary number will have the lowest values on the right and not the left
-                {
-                    SerializedProperty element = currentProperty.IntensityModifersProperty.GetArrayElementAtIndex(i);
-
-                    SerializedProperty multiplier = element.FindPropertyRelative("Multiplier");
-                    SerializedProperty offset = element.FindPropertyRelative("Offset");
-                    SerializedProperty relateInversely = element.FindPropertyRelative("RelateInversely");
-
-                    GUIContent contentAtIndex = GetContentForControlTargetAtIndex(i);
-
-                    float previousLabelWidth = EditorGUIUtility.labelWidth;
-                    float previousFieldWidth = EditorGUIUtility.fieldWidth;
-                    EditorGUIUtility.labelWidth = 0f;
-                    EditorGUIUtility.fieldWidth = 10f;
-
-                    EditorGUILayout.BeginHorizontal();
-
-                    EditorGUILayout.LabelField(contentAtIndex, GUILayout.Width(previousLabelWidth - 5f));
-
-                    EditorGUILayout.LabelField(scaleContent, GUILayout.MaxWidth((EditorGUIUtility.currentViewWidth - previousLabelWidth - 5f) * .15f), GUILayout.MinWidth(EditorStyles.label.CalcSize(scaleContent).x));
-                    EditorGUILayout.PropertyField(multiplier, GUIContent.none, GUILayout.MaxWidth((EditorGUIUtility.currentViewWidth - previousLabelWidth - 5f) * .15f), GUILayout.MinWidth(fieldMinSize));
-
-                    EditorGUILayout.LabelField(offsetContent, GUILayout.MaxWidth((EditorGUIUtility.currentViewWidth - previousLabelWidth - 5f) * .15f), GUILayout.MinWidth(EditorStyles.label.CalcSize(offsetContent).x));
-                    EditorGUILayout.PropertyField(offset, GUIContent.none, GUILayout.MaxWidth((EditorGUIUtility.currentViewWidth - previousLabelWidth - 5f) * .15f), GUILayout.MinWidth(fieldMinSize));
-
-                    EditorGUILayout.LabelField(relateInverslyContent, GUILayout.MaxWidth((EditorGUIUtility.currentViewWidth - previousLabelWidth - 5f) * .275f), GUILayout.MinWidth(EditorStyles.label.CalcSize(relateInverslyContent).x));
-                    EditorGUILayout.PropertyField(relateInversely, GUIContent.none, GUILayout.MaxWidth((EditorGUIUtility.currentViewWidth - previousLabelWidth - 5f) * .1f), GUILayout.MinWidth(10f));
-
-                    EditorGUILayout.EndHorizontal();
-                        
-                    EditorGUIUtility.labelWidth = previousLabelWidth;
-                    EditorGUIUtility.fieldWidth = previousFieldWidth;
-                }
-            }
-            
             EditorGUILayout.Space();
 
             EditorGUILayout.LabelField(rateOfChangeContent, EditorUtils.RichTextStyle);
@@ -261,31 +202,31 @@ namespace LightControls.Editors
             }
         }
 
-        private IntensityControlTarget GetControlTargetFromIndex(int index)
-        {
-            return (IntensityControlTarget)Mathf.Pow(2f, index);
-        }
+        //private IntensityControlTarget GetControlTargetFromIndex(int index)
+        //{
+        //    return (IntensityControlTarget)Mathf.Pow(2f, index);
+        //}
 
-        private GUIContent GetContentForControlTargetAtIndex(int index)
-        {
-            IntensityControlTarget target = GetControlTargetFromIndex(index);
+        //private GUIContent GetContentForControlTargetAtIndex(int index)
+        //{
+        //    IntensityControlTarget target = GetControlTargetFromIndex(index);
 
-            switch(target)
-            {
-                case IntensityControlTarget.LightIntensity:
-                    return lightIntensityControlTargetContent;
-                case IntensityControlTarget.LightColorIntensity:
-                    return lightColorIntensityControlTargetContent;
-                case IntensityControlTarget.MaterialColorIntensity:
-                    return materialColorIntensityControlTargetContent;
-                case IntensityControlTarget.LightRange:
-                    return lightRangeControlTargetContent;
-                case IntensityControlTarget.SpotlightAngle:
-                    return spotlightAngleControlTargetContent;
-                default:
-                    throw new Exception("Added control targets but didn't add them here");
-            }
-        }
+        //    switch(target)
+        //    {
+        //        case IntensityControlTarget.LightIntensity:
+        //            return lightIntensityControlTargetContent;
+        //        case IntensityControlTarget.LightColorIntensity:
+        //            return lightColorIntensityControlTargetContent;
+        //        case IntensityControlTarget.MaterialColorIntensity:
+        //            return materialColorIntensityControlTargetContent;
+        //        case IntensityControlTarget.LightRange:
+        //            return lightRangeControlTargetContent;
+        //        case IntensityControlTarget.SpotlightAngle:
+        //            return spotlightAngleControlTargetContent;
+        //        default:
+        //            throw new Exception("Added control targets but didn't add them here");
+        //    }
+        //}
     }
 }
 

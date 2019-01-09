@@ -1,5 +1,6 @@
-﻿using LightControls.ControlOptions.Stages;
-
+﻿using System.Linq;
+using LightControls.ControlOptions.Stages;
+using LightControls.Utilities;
 using UnityEngine;
 
 namespace LightControls.ControlOptions
@@ -21,7 +22,7 @@ namespace LightControls.ControlOptions
         {
             Stager = Stager ?? new ControlOptionStager();
         }
-
+        
         public override InstancedControlOption GetInstanced()
         {
             return new InstancedStagedControlOption(this);

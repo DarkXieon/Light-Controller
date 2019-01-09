@@ -158,7 +158,7 @@ MonoBehaviour:
     maxValue: 0
     minValue: 0
   roCMode: 1
-  controlTarget: 7
+  controlTarget: 5
   intensityModifers:
   - Multiplier: 1
     Offset: 0

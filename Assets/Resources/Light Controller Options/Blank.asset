@@ -220,7 +220,7 @@ MonoBehaviour:
   - Multiplier: 0.2
     Offset: 0
     RelateInversely: 0
-  - Multiplier: 0.2
+  - Multiplier: 0.3
     Offset: 0
     RelateInversely: 0
   - Multiplier: 1

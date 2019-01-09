@@ -15,7 +15,7 @@ MonoBehaviour:
     RandomizeNextStage: 0
     CanSkipStages: 0
     Stages:
-    - Name: Green Blink
+    - guid: 109fa3251ed70534fa664e89f7e1c2f6
       ContinueFor: 1
       AdvanceAfter: 2
       ContinueForEventDetector:
@@ -95,8 +95,7 @@ MonoBehaviour:
       ContinueForIterationsMin: 1
       ContinueForIterationsMax: 10
       AdvanceAfterEventDetector:
-        detector: {fileID: 114482277882048714, guid: 9090ac42d7b2d26448b8e1250db236d3,
-          type: 2}
+        detector: {fileID: 0}
         methodName: OnDurationFinish
       AdvanceAfterListedTimeGeneration:
         useControl: 0
@@ -181,7 +180,7 @@ MonoBehaviour:
       ControlOptions:
       - {fileID: 11400000, guid: bf57e5474b2437741ac295fa26dc2c72, type: 2}
       - {fileID: 11400000, guid: a178331c37f47a34aae9d757226a7a5b, type: 2}
-    - Name: Red-Blue Flash
+    - guid: 6509b41a2a7472d4182ed9f2822b6bca
       ContinueFor: 0
       AdvanceAfter: 0
       ContinueForEventDetector:

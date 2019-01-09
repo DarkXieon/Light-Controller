@@ -1,0 +1,162 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 866d844daa9437c4b8f609d5fa2f7ad9, type: 3}
+  m_Name: New Color Control Option
+  m_EditorClassIdentifier: 
+  ColorControl:
+    minMaxGradient:
+      m_Mode: 0
+      m_GradientMin:
+        serializedVersion: 2
+        key0: {r: 1, g: 0, b: 0, a: 1}
+        key1: {r: 1, g: 0.7303549, b: 0.3176471, a: 1}
+        key2: {r: 0.99089116, g: 1, b: 0.5294118, a: 0}
+        key3: {r: 0.99433225, g: 1, b: 0.70718956, a: 0}
+        key4: {r: 0, g: 1, b: 0.16782904, a: 0}
+        key5: {r: 1, g: 1, b: 1, a: 0}
+        key6: {r: 0, g: 0, b: 0, a: 0}
+        key7: {r: 0, g: 0, b: 0, a: 0}
+        ctime0: 0
+        ctime1: 15420
+        ctime2: 30840
+        ctime3: 45296
+        ctime4: 55512
+        ctime5: 65535
+        ctime6: 0
+        ctime7: 0
+        atime0: 0
+        atime1: 65535
+        atime2: 0
+        atime3: 0
+        atime4: 0
+        atime5: 0
+        atime6: 0
+        atime7: 0
+        m_Mode: 0
+        m_NumColorKeys: 6
+        m_NumAlphaKeys: 2
+      m_GradientMax:
+        serializedVersion: 2
+        key0: {r: 0.49056602, g: 0.44392875, b: 0.40494835, a: 1}
+        key1: {r: 0.20425417, g: 0.412232, b: 0.8490566, a: 1}
+        key2: {r: 0, g: 0, b: 0, a: 0}
+        key3: {r: 0, g: 0, b: 0, a: 0}
+        key4: {r: 0, g: 0, b: 0, a: 0}
+        key5: {r: 0, g: 0, b: 0, a: 0}
+        key6: {r: 0, g: 0, b: 0, a: 0}
+        key7: {r: 0, g: 0, b: 0, a: 0}
+        ctime0: 0
+        ctime1: 65535
+        ctime2: 0
+        ctime3: 0
+        ctime4: 0
+        ctime5: 0
+        ctime6: 0
+        ctime7: 0
+        atime0: 0
+        atime1: 65535
+        atime2: 0
+        atime3: 0
+        atime4: 0
+        atime5: 0
+        atime6: 0
+        atime7: 0
+        m_Mode: 0
+        m_NumColorKeys: 2
+        m_NumAlphaKeys: 2
+      m_ColorMin: {r: 0.8773585, g: 0.21933962, b: 0.21933962, a: 1}
+      m_ColorMax: {r: 0.87070435, g: 0.9150943, b: 0, a: 1}
+    minMaxTracker:
+      minMaxPoints:
+      - 0
+      - 0.23529412
+      - 0.47058824
+      - 0.69117266
+      - 0.84705883
+      - 1
+      wrapMode: 0
+  ListedRoC:
+    useControl: 0
+    randomizeBetweenValues: 0
+    randomizeChosenEntry: 0
+    listedValues:
+    - 0
+    maxValue: 0
+    minValue: 0
+  CurvedRoC:
+    useControl: 1
+    minMaxCurve:
+      m_Mode: 3
+      m_CurveMultiplier: 1
+      m_CurveMin:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 0
+          outSlope: 21.73913
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 0.46
+          value: 10
+          inSlope: 21.73913
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_CurveMax:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0.007713318
+          value: 0.2015686
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 0.46991822
+          value: 3.8145447
+          inSlope: 10.869565
+          outSlope: 10.869565
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_ConstantMin: 0.05
+      m_ConstantMax: 0.2
+    maxCurveTracker:
+      minMaxPoints:
+      - 0.007713318
+      - 0.46991822
+      wrapMode: 2
+    minCurveTracker:
+      minMaxPoints:
+      - 0
+      - 0.46
+      wrapMode: 2
+    maxValue: 0.2
+    minValue: 0.05
+  RoCMode: 1
+  ColorTarget: 1
