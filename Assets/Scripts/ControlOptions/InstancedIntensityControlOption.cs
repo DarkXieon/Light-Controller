@@ -165,7 +165,7 @@ namespace LightControls.ControlOptions
             ControlTargetModifier[] modifiers,
             ControlOptionInfo controlOptionInfo)
         {
-            PrepareTargets(controlOptionInfo, currentTarget, ref previousTarget);
+            //PrepareTargets(controlOptionInfo, currentTarget, ref previousTarget);
             
             if (controlOptionInfo.CurrentStage == ApplicationStages.IntensityApplication && currentTarget.HasFlag(IntensityControlTarget.LightIntensity))
             {
@@ -442,45 +442,44 @@ namespace LightControls.ControlOptions
             ControlTargetModifier[] modifiers,
             ControlOptionInfo controlOptionInfo)
         {
-            for (int i = 0; i < controlOptionInfo.Lights.Length; i++)
+            int length = Mathf.Max(controlOptionInfo.Lights.Length, controlOptionInfo.EmissiveMaterialRenderers.Length);
+
+            for (int i = 0; i < length; i++)
             {
-                //precalculation stuff
-                switch (valueType)
-                {
-                    case IntensityControlTarget.MaterialColorIntensity:
-                        if (controlOptionInfo.Lights[i] == null)
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            if (controlOptionInfo.SaveMaterialColor)
-                            {
-                                controlOptionInfo.EmissiveMaterialRenderers[i].material.EnableKeyword("_EMISSION");
-                                controlOptionInfo.EmissiveMaterialRenderers[i].UpdateGIMaterials();
+                ////precalculation stuff
+                //switch (valueType)
+                //{
+                //    case IntensityControlTarget.MaterialColorIntensity:
+                //        if (controlOptionInfo.Lights[i] == null)
+                //        {
+                //            continue;
+                //        }
+                //        else if(controlOptionInfo.SaveMaterialColor)
+                //        {
+                //            controlOptionInfo.EmissiveMaterialRenderers[i].material.EnableKeyword("_EMISSION");
+                //            controlOptionInfo.EmissiveMaterialRenderers[i].UpdateGIMaterials();
 
-                                for (int k = 0; k < controlOptionInfo.EmissiveMaterialRenderers[i].materials.Length && k < controlOptionInfo.MaterialColors[i].Length; k++)
-                                {
-                                    if (controlOptionInfo.EmissiveMaterialRenderers[i].materials[k] != null)
-                                        controlOptionInfo.EmissiveMaterialRenderers[i].materials[k].SetColor("_EmissionColor", controlOptionInfo.MaterialColors[i][k]);
-                                }
-                            }
-                        }
+                //            for (int k = 0; k < controlOptionInfo.EmissiveMaterialRenderers[i].materials.Length && k < controlOptionInfo.MaterialColors[i].Length; k++)
+                //            {
+                //                if (controlOptionInfo.EmissiveMaterialRenderers[i].materials[k] != null)
+                //                    controlOptionInfo.EmissiveMaterialRenderers[i].materials[k].SetColor("_EmissionColor", controlOptionInfo.MaterialColors[i][k]);
+                //            }
+                //        }
 
-                        break;
+                //        break;
 
-                    default:
-                        if (controlOptionInfo.Lights[i] == null)
-                        {
-                            continue;
-                        }
-                        else if (valueType == IntensityControlTarget.LightColorIntensity && controlOptionInfo.SaveLightColor)
-                        {
-                            controlOptionInfo.Lights[i].color = controlOptionInfo.LightColors[i];
-                        }
+                //    case IntensityControlTarget.LightColorIntensity:
+                //        if (controlOptionInfo.Lights[i] == null)
+                //        {
+                //            continue;
+                //        }
+                //        else if (controlOptionInfo.SaveLightColor)
+                //        {
+                //            controlOptionInfo.Lights[i].color = controlOptionInfo.LightColors[i];
+                //        }
 
-                        break;
-                }
+                //        break;
+                //}
             
                 bool willScale = controlTargets.GetAllFlags().Length > 1;
                 int targetIndex = Mathf.FloorToInt(Mathf.Log((int)valueType, 2));
@@ -507,24 +506,43 @@ namespace LightControls.ControlOptions
                 switch (valueType)
                 {
                     case IntensityControlTarget.LightIntensity:
-                        controlOptionInfo.Lights[i].intensity = scaledIntensity;
+                        if(i < controlOptionInfo.Lights.Length)
+                        {
+                            controlOptionInfo.Lights[i].intensity = scaledIntensity;
+                        }
                         break;
                     case IntensityControlTarget.LightColorIntensity:
-                        controlOptionInfo.Lights[i].color *= scaledIntensity;
+                        if (i < controlOptionInfo.Lights.Length)
+                        {
+                            controlOptionInfo.Lights[i].color = controlOptionInfo.SaveLightColor
+                                ? controlOptionInfo.LightColors[i] * scaledIntensity
+                                : controlOptionInfo.Lights[i].color * scaledIntensity;
+                        }
                         break;
                     case IntensityControlTarget.MaterialColorIntensity:
-                        for (int k = 0; k < controlOptionInfo.EmissiveMaterialRenderers[i].materials.Length; k++)
+                        if(i < controlOptionInfo.EmissiveMaterialRenderers.Length)
                         {
-                            Color currentColor = controlOptionInfo.EmissiveMaterialRenderers[i].materials[k].GetColor("_EmissionColor");
+                            for (int k = 0; k < controlOptionInfo.EmissiveMaterialRenderers[i].materials.Length; k++)
+                            {
+                                Color currentColor = controlOptionInfo.SaveMaterialColor
+                                    ? controlOptionInfo.MaterialColors[i][k]
+                                    : controlOptionInfo.EmissiveMaterialRenderers[i].materials[k].GetColor("_EmissionColor");
 
-                            controlOptionInfo.EmissiveMaterialRenderers[i].materials[k].SetColor("_EmissionColor", currentColor * scaledIntensity);
+                                controlOptionInfo.EmissiveMaterialRenderers[i].materials[k].SetColor("_EmissionColor", currentColor * scaledIntensity);
+                            }
                         }
                         break;
                     case IntensityControlTarget.LightRange:
-                        controlOptionInfo.Lights[i].range = scaledIntensity;
+                        if (i < controlOptionInfo.Lights.Length)
+                        {
+                            controlOptionInfo.Lights[i].range = scaledIntensity;
+                        }
                         break;
                     case IntensityControlTarget.SpotlightAngle:
-                        controlOptionInfo.Lights[i].spotAngle = scaledIntensity;
+                        if (i < controlOptionInfo.Lights.Length)
+                        {
+                            controlOptionInfo.Lights[i].spotAngle = scaledIntensity;
+                        }
                         break;
                 }
             }

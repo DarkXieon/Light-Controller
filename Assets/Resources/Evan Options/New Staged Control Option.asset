@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -17,7 +18,7 @@ MonoBehaviour:
     Stages:
     - guid: d3496e784848cd046a7bb22fcc93aa62
       ContinueFor: 0
-      AdvanceAfter: 2
+      AdvanceAfter: 0
       ContinueForEventDetector:
         detector: {fileID: 0}
         methodName: 

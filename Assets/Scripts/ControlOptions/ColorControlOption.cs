@@ -11,10 +11,10 @@ namespace LightControls.ControlOptions
     [Flags]
     public enum ColorControlTarget
     {
+        Neither = 0,
         Light = 1,
         Material = 2,
-        Both = ~0,
-        Neither = 0
+        Both = ~0
     }
 
     /// <summary>

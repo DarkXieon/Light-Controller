@@ -12,13 +12,13 @@ namespace LightControls.ControlOptions
     [Flags]
     public enum IntensityControlTarget
     {
+        Nothing = 0,
         LightIntensity = 1,
         LightColorIntensity = 2,
         MaterialColorIntensity = 4,
         LightRange = 8,
         SpotlightAngle = 16,
-        Everything = ~0,
-        Nothing = 0
+        Everything = ~0
     }
 
     /// <summary>

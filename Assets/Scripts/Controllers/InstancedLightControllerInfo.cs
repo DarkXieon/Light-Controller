@@ -30,7 +30,7 @@ namespace LightControls.Controllers
             controlIterations = new int[controlOptions.Length];
             minIterations = 0;
         }
-
+        
         public bool UpdateControls()
         {
             if(controlOptions.Length > 0)

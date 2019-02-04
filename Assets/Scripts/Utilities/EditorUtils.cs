@@ -144,10 +144,10 @@ namespace LightControls.Utilities
         public static Rect[] SplitLineRect(Rect lineRect, GUIContent[] labelContent, float[] sizePercentages, GUIStyle labelStyle, int linesDownward)
         {
             Debug.Assert(labelContent.Length == sizePercentages.Length);
-
+            
             Rect[] lineRects = new Rect[labelContent.Length * 2];
-
-            float height = labelStyle.CalcSize(GUIContent.none).y;//labelStyle.lineHeight;
+            
+            float height = labelStyle.CalcSize(GUIContent.none).y;
             float verticalBuffer = VerticalBuffer;
             float additionalX = 0f;
             float additionalY = (height + verticalBuffer) * linesDownward;
@@ -696,7 +696,7 @@ namespace LightControls.Utilities
         public static void DisplayIntensityModifiers(Rect rect, SerializedProperty controlTargetProperty, SerializedProperty intensityModifiersProperty)
         {
             string currentBinaryString = Convert.ToString(controlTargetProperty.intValue, 2);
-
+            
             Debug.Assert(currentBinaryString.Count() <= intensityModifiersProperty.arraySize || currentBinaryString.Count() == Convert.ToString(~0, 2).Count());
 
             if(currentBinaryString.Count(character => character == '1') > 1)
@@ -707,6 +707,9 @@ namespace LightControls.Utilities
                 {
                     if (currentBinaryString[currentBinaryString.Length - 1 - i] == '1') //The binary number will have the lowest values on the right and not the left
                     {
+                        //GUIStyle otherStyle = new GUIStyle(EditorStyles.label);
+                        //otherStyle.alignment = TextAnchor.MiddleRight;
+
                         SerializedProperty element = intensityModifiersProperty.GetArrayElementAtIndex(i);
 
                         SerializedProperty multiplier = element.FindPropertyRelative("Multiplier");
@@ -766,7 +769,7 @@ namespace LightControls.Utilities
         
         public static float GetIntensityModifiersHeight(SerializedProperty controlTargetProperty)
         {
-            int lines = Convert.ToString(controlTargetProperty.intValue, 2).Count(character => character == '1');
+            int lines = Mathf.Min(Convert.ToString(controlTargetProperty.intValue, 2).Count(character => character == '1'), 5);
 
             lines = lines > 1
                 ? lines

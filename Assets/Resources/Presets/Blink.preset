@@ -4,7 +4,8 @@
 Preset:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: Blink
   m_TargetType:
     m_NativeTypeID: 114
@@ -21,606 +22,238 @@ Preset:
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: m_Name
-    value: Blink
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
     propertyPath: m_EditorClassIdentifier
     value: 
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: useControl
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: ListedIntensities.useControl
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: ListedIntensities.randomizeBetweenValues
+    propertyPath: listedIntensities.useControl
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: ListedIntensities.randomizeChosenEntry
+    propertyPath: listedIntensities.randomizeBetweenValues
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: ListedIntensities.listedValues.Array.size
+    propertyPath: listedIntensities.randomizeChosenEntry
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: listedIntensities.listedValues.Array.size
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: listedIntensities.maxValue
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: listedIntensities.minValue
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: curvedIntensities.useControl
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: curvedIntensities.minMaxCurve.m_Mode
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: curvedIntensities.minMaxCurve.m_CurveMultiplier
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: curvedIntensities.minMaxCurve.m_CurveMin.m_Curve.Array.size
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: curvedIntensities.minMaxCurve.m_CurveMin.m_PreInfinity
     value: 2
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: ListedIntensities.listedValues.Array.data[0]
-    value: 10
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: ListedIntensities.listedValues.Array.data[1]
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: ListedIntensities.maxValue
-    value: 10
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: ListedIntensities.minValue
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.useControl
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_Mode
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMultiplier
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_Curve.Array.size
+    propertyPath: curvedIntensities.minMaxCurve.m_CurveMin.m_PostInfinity
     value: 2
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_Curve.Array.data[0].time
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_Curve.Array.data[0].value
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_Curve.Array.data[0].inSlope
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_Curve.Array.data[0].outSlope
-    value: 10
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_Curve.Array.data[0].tangentMode
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_Curve.Array.data[0].weightedMode
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_Curve.Array.data[0].inWeight
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_Curve.Array.data[0].outWeight
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_Curve.Array.data[1].time
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_Curve.Array.data[1].value
-    value: 10
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_Curve.Array.data[1].inSlope
-    value: 10
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_Curve.Array.data[1].outSlope
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_Curve.Array.data[1].tangentMode
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_Curve.Array.data[1].weightedMode
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_Curve.Array.data[1].inWeight
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_Curve.Array.data[1].outWeight
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_PreInfinity
-    value: 2
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_PostInfinity
-    value: 2
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMin.m_RotationOrder
+    propertyPath: curvedIntensities.minMaxCurve.m_CurveMin.m_RotationOrder
     value: 4
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_Curve.Array.size
+    propertyPath: curvedIntensities.minMaxCurve.m_CurveMax.m_Curve.Array.size
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: curvedIntensities.minMaxCurve.m_CurveMax.m_PreInfinity
     value: 2
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_Curve.Array.data[0].time
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_Curve.Array.data[0].value
-    value: 5
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_Curve.Array.data[0].inSlope
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_Curve.Array.data[0].outSlope
-    value: 5
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_Curve.Array.data[0].tangentMode
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_Curve.Array.data[0].weightedMode
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_Curve.Array.data[0].inWeight
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_Curve.Array.data[0].outWeight
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_Curve.Array.data[1].time
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_Curve.Array.data[1].value
-    value: 10
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_Curve.Array.data[1].inSlope
-    value: 5
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_Curve.Array.data[1].outSlope
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_Curve.Array.data[1].tangentMode
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_Curve.Array.data[1].weightedMode
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_Curve.Array.data[1].inWeight
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_Curve.Array.data[1].outWeight
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_PreInfinity
+    propertyPath: curvedIntensities.minMaxCurve.m_CurveMax.m_PostInfinity
     value: 2
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_PostInfinity
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_CurveMax.m_RotationOrder
+    propertyPath: curvedIntensities.minMaxCurve.m_CurveMax.m_RotationOrder
     value: 4
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_ConstantMin
+    propertyPath: curvedIntensities.minMaxCurve.m_ConstantMin
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minMaxCurve.m_ConstantMax
+    propertyPath: curvedIntensities.minMaxCurve.m_ConstantMax
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedIntensities.maxCurveTracker.minMaxPoints.Array.size
+    propertyPath: curvedIntensities.maxCurveTracker.minMaxPoints.Array.size
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: curvedIntensities.maxCurveTracker.wrapMode
     value: 2
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedIntensities.maxCurveTracker.minMaxPoints.Array.data[0]
+    propertyPath: curvedIntensities.minCurveTracker.minMaxPoints.Array.size
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedIntensities.maxCurveTracker.minMaxPoints.Array.data[1]
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.maxCurveTracker.wrapMode
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minCurveTracker.minMaxPoints.Array.size
+    propertyPath: curvedIntensities.minCurveTracker.wrapMode
     value: 2
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minCurveTracker.minMaxPoints.Array.data[0]
+    propertyPath: curvedIntensities.maxValue
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minCurveTracker.minMaxPoints.Array.data[1]
-    value: 1
+    propertyPath: curvedIntensities.minValue
+    value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minCurveTracker.wrapMode
+    propertyPath: listedRoC.useControl
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: listedRoC.randomizeBetweenValues
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: listedRoC.randomizeChosenEntry
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: listedRoC.listedValues.Array.size
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: listedRoC.maxValue
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: listedRoC.minValue
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: curvedRoC.useControl
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: curvedRoC.minMaxCurve.m_Mode
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: curvedRoC.minMaxCurve.m_CurveMultiplier
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: curvedRoC.minMaxCurve.m_CurveMin.m_Curve.Array.size
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: curvedRoC.minMaxCurve.m_CurveMin.m_PreInfinity
     value: 2
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedIntensities.maxValue
-    value: 10
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedIntensities.minValue
-    value: 5
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: ListedRoC.useControl
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: ListedRoC.randomizeBetweenValues
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: ListedRoC.randomizeChosenEntry
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: ListedRoC.listedValues.Array.size
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: ListedRoC.listedValues.Array.data[0]
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: ListedRoC.maxValue
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: ListedRoC.minValue
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.useControl
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_Mode
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMultiplier
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_Curve.Array.size
+    propertyPath: curvedRoC.minMaxCurve.m_CurveMin.m_PostInfinity
     value: 2
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_Curve.Array.data[0].time
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_Curve.Array.data[0].value
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_Curve.Array.data[0].inSlope
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_Curve.Array.data[0].outSlope
-    value: 10
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_Curve.Array.data[0].tangentMode
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_Curve.Array.data[0].weightedMode
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_Curve.Array.data[0].inWeight
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_Curve.Array.data[0].outWeight
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_Curve.Array.data[1].time
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_Curve.Array.data[1].value
-    value: 10
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_Curve.Array.data[1].inSlope
-    value: 10
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_Curve.Array.data[1].outSlope
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_Curve.Array.data[1].tangentMode
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_Curve.Array.data[1].weightedMode
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_Curve.Array.data[1].inWeight
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_Curve.Array.data[1].outWeight
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_PreInfinity
-    value: 2
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_PostInfinity
-    value: 2
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMin.m_RotationOrder
+    propertyPath: curvedRoC.minMaxCurve.m_CurveMin.m_RotationOrder
     value: 4
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_Curve.Array.size
+    propertyPath: curvedRoC.minMaxCurve.m_CurveMax.m_Curve.Array.size
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: curvedRoC.minMaxCurve.m_CurveMax.m_PreInfinity
     value: 2
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_Curve.Array.data[0].time
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_Curve.Array.data[0].value
-    value: 5
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_Curve.Array.data[0].inSlope
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_Curve.Array.data[0].outSlope
-    value: 5
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_Curve.Array.data[0].tangentMode
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_Curve.Array.data[0].weightedMode
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_Curve.Array.data[0].inWeight
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_Curve.Array.data[0].outWeight
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_Curve.Array.data[1].time
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_Curve.Array.data[1].value
-    value: 10
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_Curve.Array.data[1].inSlope
-    value: 5
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_Curve.Array.data[1].outSlope
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_Curve.Array.data[1].tangentMode
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_Curve.Array.data[1].weightedMode
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_Curve.Array.data[1].inWeight
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_Curve.Array.data[1].outWeight
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_PreInfinity
+    propertyPath: curvedRoC.minMaxCurve.m_CurveMax.m_PostInfinity
     value: 2
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_PostInfinity
-    value: 2
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_CurveMax.m_RotationOrder
+    propertyPath: curvedRoC.minMaxCurve.m_CurveMax.m_RotationOrder
     value: 4
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_ConstantMin
+    propertyPath: curvedRoC.minMaxCurve.m_ConstantMin
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedRoC.minMaxCurve.m_ConstantMax
-    value: 0.5
+    propertyPath: curvedRoC.minMaxCurve.m_ConstantMax
+    value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedRoC.maxCurveTracker.minMaxPoints.Array.size
+    propertyPath: curvedRoC.maxCurveTracker.minMaxPoints.Array.size
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: curvedRoC.maxCurveTracker.wrapMode
     value: 2
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedRoC.maxCurveTracker.minMaxPoints.Array.data[0]
+    propertyPath: curvedRoC.minCurveTracker.minMaxPoints.Array.size
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedRoC.maxCurveTracker.minMaxPoints.Array.data[1]
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.maxCurveTracker.wrapMode
+    propertyPath: curvedRoC.minCurveTracker.wrapMode
     value: 2
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedRoC.minCurveTracker.minMaxPoints.Array.size
-    value: 2
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minCurveTracker.minMaxPoints.Array.data[0]
+    propertyPath: curvedRoC.maxValue
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedRoC.minCurveTracker.minMaxPoints.Array.data[1]
+    propertyPath: curvedRoC.minValue
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: roCMode
     value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: CurvedRoC.minCurveTracker.wrapMode
-    value: 2
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.maxValue
-    value: 0.5
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: CurvedRoC.minValue
-    value: 0.5
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: RoCMode
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: ControlTarget
-    value: 7
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: IntensityModifers.Array.size
-    value: 5
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: IntensityModifers.Array.data[0].Multiplier
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: IntensityModifers.Array.data[0].Offset
+    propertyPath: controlTarget
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: IntensityModifers.Array.data[0].RelateInversely
+    propertyPath: intensityModifers.Array.size
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: IntensityModifers.Array.data[1].Multiplier
-    value: 0.2
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: IntensityModifers.Array.data[1].Offset
+    propertyPath: noSmoothTransitions
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: IntensityModifers.Array.data[1].RelateInversely
+    propertyPath: useLightIntensityFloor
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: IntensityModifers.Array.data[2].Multiplier
-    value: 0.2
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: IntensityModifers.Array.data[2].Offset
+    propertyPath: useLightIntensityCeiling
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: IntensityModifers.Array.data[2].RelateInversely
+    propertyPath: floor
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: IntensityModifers.Array.data[3].Multiplier
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: IntensityModifers.Array.data[3].Offset
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: IntensityModifers.Array.data[3].RelateInversely
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: IntensityModifers.Array.data[4].Multiplier
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: IntensityModifers.Array.data[4].Offset
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: IntensityModifers.Array.data[4].RelateInversely
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: NoSmoothTransitions
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: UseLightIntensityFloor
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: UseLightIntensityCeiling
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: Floor
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: Ceiling
+    propertyPath: ceiling
     value: 0
     objectReference: {fileID: 0}

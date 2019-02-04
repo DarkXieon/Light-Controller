@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 
 using System.Collections.Generic;
+using System.Linq;
 using LightControls.ControlOptions;
 using LightControls.Utilities;
 
@@ -15,12 +16,16 @@ namespace LightControls.PropertyDrawers
     {
         private class PropertyData
         {
+            public string ClipAssetId;
+
             public SerializedProperty Clip;
             public SerializedProperty PlayAtIntensity;
             public SerializedProperty AudioStart;
             public SerializedProperty AudioEnd;
             public SerializedProperty MinVolume;
             public SerializedProperty MaxVolume;
+            public SerializedProperty MinSampleVolume;
+            public SerializedProperty MaxSampleVolume;
             public SerializedProperty Loop;
             public SerializedProperty ChangeVolumeFromIntensity;
         }
@@ -62,7 +67,18 @@ namespace LightControls.PropertyDrawers
 
             EditorGUI.LabelField(lineOneRects[0], clipContent);
 
+            EditorGUI.BeginChangeCheck();
             EditorGUI.ObjectField(lineOneRects[1], currentProperty.Clip, typeof(AudioClip), GUIContent.none);
+            currentProperty.Clip.serializedObject.ApplyModifiedProperties();
+
+            if(EditorGUI.EndChangeCheck())
+            {
+                AudioClip clip = (AudioClip)currentProperty.Clip.objectReferenceValue;
+                float[] samples = new float[clip.samples * clip.channels];
+                clip.GetData(samples, 0);
+                currentProperty.MinSampleVolume.floatValue = samples.Select(sample => Mathf.Abs(sample)).Min();
+                currentProperty.MaxSampleVolume.floatValue = samples.Max();
+            }
 
             if (currentProperty.Clip.objectReferenceValue != null)
             {
@@ -173,20 +189,24 @@ namespace LightControls.PropertyDrawers
             {
                 currentProperty = new PropertyData()
                 {
+                    ClipAssetId = property.FindPropertyRelative("Clip").objectReferenceValue != null
+                        ? AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(property.FindPropertyRelative("Clip").objectReferenceValue))
+                        : null,
                     Clip = property.FindPropertyRelative("Clip"),
                     PlayAtIntensity = property.FindPropertyRelative("PlayAtIntensity"),
                     AudioStart = property.FindPropertyRelative("AudioStart"),
                     AudioEnd = property.FindPropertyRelative("AudioEnd"),
                     MinVolume = property.FindPropertyRelative("MinVolume"),
                     MaxVolume = property.FindPropertyRelative("MaxVolume"),
+                    MinSampleVolume = property.FindPropertyRelative("MinSampleVolume"),
+                    MaxSampleVolume = property.FindPropertyRelative("MaxSampleVolume"),
                     Loop = property.FindPropertyRelative("Loop"),
                     ChangeVolumeFromIntensity = property.FindPropertyRelative("ChangeVolumeFromIntensity")
                 };
-
+                
                 currentPropertyPerPath.Add(property.propertyPath, currentProperty);
             }
         }
-
     }
 }
 

@@ -24,8 +24,6 @@ namespace LightControls.ControlOptions
         public bool ChangeVolumeFromIntensity; //This will cause the volume to be variable and change based on the current intensity of the light
 
         //This stuff gets set when the user drags on a clip and when they change other variables that affect this
-        public AudioClip ModifiedClip;
-        public float[] Samples;
         public float MaxSampleVolume;
         public float MinSampleVolume;
     }
@@ -114,31 +112,6 @@ namespace LightControls.ControlOptions
         {
             AudioNodes = AudioNodes ?? new AudioNode[0];
             IntensityGenerator = IntensityGenerator ?? new AudioIntensityGenerator();
-            
-            foreach(AudioNode node in AudioNodes)
-            {
-                node.Samples = new float[(int)(node.Clip.samples * node.Clip.channels)];// * node.Clip.channels];
-                node.Clip.GetData(node.Samples, 0);
-
-                //float startSample = node.Clip.frequency * node.AudioStart;
-                //float endSample = node.Clip.frequency * node.AudioEnd;
-                //float[] samples = new float[(int)(endSample - startSample)];
-                //int index = 0;
-
-                //for (int i = 0; i < node.Samples.Length; i++)
-                //{
-                //    if(i >= startSample || i <= endSample)
-                //    {
-                //        samples[index] = node.Samples[i];
-                //        index++;
-                //    }
-                //}
-
-                //node.Samples = samples;
-                node.MinSampleVolume = node.Samples.Select(sample => Mathf.Abs(sample)).Min();
-                node.MaxSampleVolume = node.Samples.Max();
-                //node.ModifiedClip = AudioClip.Create("", samples.Length, node.Clip.channels, node.Clip.frequency, false);
-            }
         }
 
         public override InstancedControlOption GetInstanced()
