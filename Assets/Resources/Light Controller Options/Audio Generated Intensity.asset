@@ -15,21 +15,21 @@ MonoBehaviour:
   AudioSourcePrefab: {fileID: 82310954438459590, guid: 27bb48cdf258a1b46ab635c8dc897734,
     type: 3}
   AudioNodes:
-  - Clip: {fileID: 8300000, guid: 70d4fe53e41fb0147b400efa76e67f89, type: 3}
+  - Clip: {fileID: 8300000, guid: 75dc2804038c9ce4b9984724e182e886, type: 3}
     PlayAtIntensity: 0
     AudioStart: 0
-    AudioEnd: 0.48558334
-    MinVolume: 0.51100004
-    MaxVolume: 0.629
+    AudioEnd: 53.576916
+    MinVolume: 0.147
+    MaxVolume: 1
     Loop: 1
-    ChangeVolumeFromIntensity: 0
-    MaxSampleVolume: 0.1399231
+    ChangeVolumeFromIntensity: 1
+    MaxSampleVolume: 0.14974976
     MinSampleVolume: 0
   IntensityGenerator:
     minIntensity: 8
     maxIntensity: 100
-    hasAuthority: 1
-    controlTarget: 3
+    hasAuthority: 0
+    controlTarget: 5
     intensityModifers:
     - Multiplier: 1
       Offset: 0

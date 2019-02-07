@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using LightControls.Controllers.Data;
 using LightControls.ControlOptions;
-using UnityEngine;
 
 namespace LightControls.Controllers
 {
-    public class InstancedLightControllerInfo : ILightControllerInfo
+    public class LightControllerGroup : ILightControllerGroup
     {
-        private LightControlInfo controllerInfo;
+        private LightControllerGroupData controllerGroupData;
+
+        private ControlOptionGroup controlOptionGroup;
         private InstancedControlOption[] controlOptions;
 
         private int[] controlIterations = new int[0];
@@ -18,15 +17,21 @@ namespace LightControls.Controllers
 
         private ApplicationStages[] applicationStages;
 
-        public InstancedLightControllerInfo(LightControlInfo info)
+        public LightControllerGroup(LightControllerGroupData info)
         {
-            controllerInfo = info;
+            controllerGroupData = info;
             controlOptions = info.LightControlOptions
                 .Where(option => option != null)
                 .Select(option => option.GetInstanced())
                 .ToArray();
 
-            applicationStages = ((ApplicationStages[])Enum.GetValues(typeof(ApplicationStages))).OrderBy(stage => (int)stage).Select(stage => (ApplicationStages)stage).ToArray();
+            controlOptionGroup = new ControlOptionGroup(info.ControlOptionGroupData, controlOptions);
+
+            applicationStages = ((ApplicationStages[])Enum.GetValues(typeof(ApplicationStages)))
+                .OrderBy(stage => (int)stage)
+                //.Select(stage => (ApplicationStages)stage)
+                .ToArray();
+
             controlIterations = new int[controlOptions.Length];
             minIterations = 0;
         }
@@ -63,15 +68,11 @@ namespace LightControls.Controllers
             {
                 for (int i = 0; i < applicationStages.Length; i++)
                 {
-                    controllerInfo.ControlOptionInfo.CurrentStage = applicationStages[i];
+                    controlOptionGroup.CurrentStage = applicationStages[i];
 
-                    controllerInfo.ControlOptionInfo.SaveLightColor = !controlOptions.Any(option => option.ApplyOn(ApplicationStages.LightColorApplication));
-
-                    controllerInfo.ControlOptionInfo.SaveMaterialColor = !controlOptions.Any(option => option.ApplyOn(ApplicationStages.MaterialColorApplication));
-                        
                     for (int k = 0; k < controlOptions.Length; k++)
                     {
-                        controlOptions[k].ApplyControl(controllerInfo.ControlOptionInfo);
+                        controlOptions[k].ApplyControl(controlOptionGroup);
                     }
                 }
             }

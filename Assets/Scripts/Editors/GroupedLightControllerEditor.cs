@@ -2,6 +2,7 @@
 
 using System.Linq;
 using LightControls.Controllers;
+using LightControls.Controllers.Data;
 using LightControls.ControlOptions;
 using LightControls.Utilities;
 
@@ -31,15 +32,21 @@ namespace LightControls.Editors
             EditorGUILayout.Space();
             EditorGUILayout.Space();
 
-            int size = EditorUtils.ArraySizeField(lightControlGroupsContent, controller.ControlInfo.Length);
-            
-            controller.ControlInfo = MiscUtils.ResizeAndFill(controller.ControlInfo, size);
+            LightControllerGroupData[] groupsData = ReflectionUtils.GetMemberAtPath<LightControllerGroupData[]>(target, "lightControllerGroupsData");
+
+            int size = EditorUtils.ArraySizeField(lightControlGroupsContent, groupsData.Length);
+            MiscUtils.ResizeAndFill(ref groupsData, size);
+
+            ReflectionUtils.SetMemberAtPath(target, groupsData, "lightControllerGroupsData");
             serializedObject.Update();
 
             EditorGUILayout.Space();
             EditorGUILayout.Space();
-            
-            EditorUtils.DisplayMultilinePropertyArray(serializedObject.FindProperty("ControlInfo"), lightControlGroupElementContent);
+
+            SerializedProperty groupsDataProperty = serializedObject.FindProperty("lightControllerGroupsData");
+            EditorUtils.DisplayMultilinePropertyArray(groupsDataProperty, lightControlGroupElementContent);
+
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }

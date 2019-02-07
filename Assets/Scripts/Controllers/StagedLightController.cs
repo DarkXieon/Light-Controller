@@ -91,7 +91,7 @@ namespace LightControls.Controllers
 
     public class StagedLightController : LightController
     {
-        public override ILightControllerInfo[] LightControllerInfo => new InstancedLightControllerStager[1] { instancedStager };
+        public override ILightControllerGroup[] LightControllerInfo => new InstancedLightControllerStager[1] { instancedStager };
 
         public LightControllerStager ControllerStager = new LightControllerStager();
 
@@ -106,7 +106,7 @@ namespace LightControls.Controllers
                 : new InstancedLightControllerStager(new LightControllerStager());
 
 #if UNITY_EDITOR
-            WarningSystem.DisplayStagedLightControllerWarnings(this);
+            //WarningSystem.DisplayStagedLightControllerWarnings(this);
 #endif
         }
 

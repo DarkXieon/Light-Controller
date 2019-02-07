@@ -324,5 +324,4 @@ namespace LightControls.Utilities
     }
 
     #endregion
-    
 }

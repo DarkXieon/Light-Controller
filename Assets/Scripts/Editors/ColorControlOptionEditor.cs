@@ -51,18 +51,19 @@ namespace LightControls.Editors
 
             EditorGUI.indentLevel++;
 
-            EditorGUI.BeginChangeCheck();
-            colorControlOptions.ColorTarget = (ColorControlTarget)EditorGUILayout.EnumFlagsField(colorTargetContent, colorControlOptions.ColorTarget);
-            bool changed = EditorGUI.EndChangeCheck();
+            //EditorGUI.BeginChangeCheck();
+            EditorUtils.DisplayColorControlTargetField(EditorGUILayout.GetControlRect(), serializedObject.FindProperty("ColorTarget"));
+            //colorControlOptions.ColorTarget = (ColorControlTarget)EditorGUILayout.EnumFlagsField(colorTargetContent, colorControlOptions.ColorTarget);
+            //bool changed = EditorGUI.EndChangeCheck();
 
-            if(changed)
-            {
-                serializedObject.Update();
-            }
+            //if(changed)
+            //{
+            //    serializedObject.Update();
+            //}
 
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(serializedObject.FindProperty("ColorControl"));
-            changed = EditorGUI.EndChangeCheck();
+            bool changed = EditorGUI.EndChangeCheck();
 
             //if (changed)
             //{

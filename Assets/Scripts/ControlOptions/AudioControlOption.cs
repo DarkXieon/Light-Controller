@@ -34,12 +34,12 @@ namespace LightControls.ControlOptions
     public struct LightInfo
     {
         public AudioIntensityGenerator IntensityGenerator;
-        public ControlOptionInfo ControlOptionInfo;
+        public ControlOptionGroup ControlOptionInfo;
         public float CurrentIntensity; //The current intensity of the lights
         public float MaxIntensity; //The max intensity possible based on the control options that the lights have attached to them
         public float MinIntensity; //The min intensity possible based on the control options that the lights have attached to them
 
-        public LightInfo(ControlOptionInfo controlOptionInfo, AudioIntensityGenerator intensityGenerator, float current, float max, float min)
+        public LightInfo(ControlOptionGroup controlOptionInfo, AudioIntensityGenerator intensityGenerator, float current, float max, float min)
         {
             ControlOptionInfo = controlOptionInfo;
             IntensityGenerator = intensityGenerator;
@@ -63,7 +63,7 @@ namespace LightControls.ControlOptions
         [SerializeField] private ControlTargetModifier[] intensityModifers; //each of these corrospond to a Control Target with a value > 0 in value. The equation for the correct index of a IntensityControlTarget with a value > 0 is
                                                                             //log base two of the enum's int value, going the other way it's the opposite, two to the index power ex. log2(int enum value) = index and 2^(index) = int enum value
                                                                             
-        private IntensityControlTarget previousTarget = IntensityControlTarget.Nothing;
+        //private IntensityControlTarget previousTarget = IntensityControlTarget.Nothing;
 
         public AudioIntensityGenerator()
         {
@@ -82,14 +82,14 @@ namespace LightControls.ControlOptions
             return InstancedIntensityControlOption.ApplyOn(stage, controlTarget);
         }
 
-        public void ApplyIntensity(ControlOptionInfo controlOptionInfo, float intensity)
+        public void ApplyIntensity(ControlOptionGroup controlOptionInfo, float intensity)
         {
             InstancedIntensityControlOption.ApplyControl(
                 intensity: intensity,
-                intensityFloor: 0f, //minIntensity,
-                intensityCeiling: float.MaxValue, //maxIntensity,
+                intensityFloor: minIntensity,
+                intensityCeiling: maxIntensity,
                 currentTarget: controlTarget,
-                previousTarget: ref previousTarget,
+                //previousTarget: ref previousTarget,
                 modifiers: intensityModifers,
                 controlOptionInfo: controlOptionInfo);
         }

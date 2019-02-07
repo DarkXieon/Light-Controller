@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
+using LightControls.Controllers.Data;
 using UnityEngine;
 
 namespace LightControls.Controllers
@@ -7,40 +9,33 @@ namespace LightControls.Controllers
     [System.Serializable]
     public class GroupedLightController : LightController
     {
-        public override ILightControllerInfo[] LightControllerInfo => instancedInfo;
+        public override ILightControllerGroup[] LightControllerInfo => lightControllerGroups;
 
-        public LightControlInfo[] ControlInfo = new LightControlInfo[0];
+        [SerializeField] private LightControllerGroupData[] lightControllerGroupsData = new LightControllerGroupData[1];
 
-        private InstancedLightControllerInfo[] instancedInfo;
+        private LightControllerGroup[] lightControllerGroups;
 
         private void Awake()
         {
-            ControlInfo = ControlInfo ?? new LightControlInfo[0];
+            lightControllerGroupsData = lightControllerGroupsData ?? new LightControllerGroupData[1];
 
-            instancedInfo = ControlInfo
-                .Select(info => new InstancedLightControllerInfo(info))
-                .ToArray();
-
-            InitializeColors();
+            InitilizeControllerGroups();
         }
 
-        private void InitializeColors()
+        private void InitilizeControllerGroups()
         {
-            for (int i = 0; i < LightControllerInfo.Length; i++)
+            lightControllerGroups = new LightControllerGroup[lightControllerGroupsData.Length];
+
+            for(int i = 0; i < lightControllerGroups.Length; i++)
             {
-                ControlInfo[i].ControlOptionInfo.LightColors = ControlInfo[i].ControlOptionInfo.Lights.Select(light => light.color).ToArray();
-
-                ControlInfo[i].ControlOptionInfo.EmissiveMaterialRenderers.ToList().ForEach(renderer => renderer.materials
-                    .ToList().ForEach(material => material.EnableKeyword("_EMISSION")));
-
-                ControlInfo[i].ControlOptionInfo.MaterialColors = new Color[ControlInfo[i].ControlOptionInfo.EmissiveMaterialRenderers.Length][];
-
-                for (int k = 0; k < ControlInfo[i].ControlOptionInfo.EmissiveMaterialRenderers.Length; k++)
-                {
-                    ControlInfo[i].ControlOptionInfo.EmissiveMaterialRenderers[k].UpdateGIMaterials();
-                    ControlInfo[i].ControlOptionInfo.MaterialColors[k] = ControlInfo[i].ControlOptionInfo.EmissiveMaterialRenderers[k].materials.Select(material => material.GetColor("_EmissionColor")).ToArray();
-                }
+                lightControllerGroups[i] = new LightControllerGroup(lightControllerGroupsData[i]);
             }
         }
+
+        //public LightControllerGroup GetGroupWithData(LightControllerGroupData data)
+        //{
+        //    return lightControllerGroups
+        //        .SingleOrDefault(group => group.InstancedVersionOf(data));
+        //}
     }
 }

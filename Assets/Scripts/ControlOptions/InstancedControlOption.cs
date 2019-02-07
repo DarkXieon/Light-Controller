@@ -42,30 +42,6 @@ namespace LightControls.ControlOptions
         /// The control info contains all of the lights and renderers that the current control group has in it, as well as the current application stage and the min and max intensity possible from an intensity control option if any are present.
         /// This method does not get called by the light controller if UseControl is false HOWEVER the method does not check UseControl and calling it will still cause the control to apply its values regardless to the value of UseControl.
         /// </param>
-        public virtual void ApplyControl(ControlOptionInfo controlInfo) { }
-        
-        //public static InstancedControlOption GetInstanceOf(LightControlOption controlOption)
-        //{
-        //    if(controlOption is IntensityControlOption)
-        //    {
-        //        return new InstancedIntensityControlOption((IntensityControlOption)controlOption);
-        //    }
-        //    else if(controlOption is ColorControlOption)
-        //    {
-
-        //    }
-        //    else if(controlOption is AudioControlOption)
-        //    {
-
-        //    }
-        //    else if(controlOption is StagedControlOption)
-        //    {
-
-        //    }
-        //    else
-        //    {
-
-        //    }
-        //}
+        public virtual void ApplyControl(ControlOptionGroup controlInfo) { }
     }
 }

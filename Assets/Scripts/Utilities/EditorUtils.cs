@@ -2,6 +2,9 @@
 
 using System;
 using System.Linq;
+using System.Reflection;
+using LightControls.Controllers;
+using LightControls.Controllers.Data;
 using LightControls.ControlOptions;
 using UnityEditor;
 
@@ -170,6 +173,153 @@ namespace LightControls.Utilities
             }
 
             return lineRects;
+        }
+
+        public enum FieldType { Text, Toggle }
+        private const int SMALLEST_ALLOWED_TEXT_FIELD_SIZE = 25;
+        private const int SMALLEST_ALLOWED_TOGGLE_FIELD_SIZE = 12;
+
+        //public static Rect[] ReplicateDefaultSplitLineRect(Rect lineRect, GUIContent[] labels, GUIStyle labelStyle)
+        //{
+        //    return ReplicateDefaultSplitLineRect(lineRect, labels, labels.Select(label => FieldType.Text).Take(Mathf.Max(labels.Length - 1, 1)).ToArray(), labelStyle);
+        //}
+
+        public static Rect[] ReplicateDefaultSplitLineRect(Rect lineRect, GUIContent[] labels, FieldType[] fieldTypes, GUIStyle labelStyle)
+        {
+            Debug.Assert(labels.Length > 1);
+
+            Rect leadingRect = LeadingLabel(lineRect, labels[0]);
+            lineRect.xMin += leadingRect.width;
+
+            if(labels.Length == 1)
+            {
+                return new Rect[] { leadingRect, lineRect };
+            }
+            else
+            {
+                GUIContent[] scaledLabels = new GUIContent[labels.Length - 1];
+
+                for(int i = 1; i < labels.Length; i++)
+                {
+                    scaledLabels[i - 1] = labels[i];
+                }
+
+                Rect[] scaledRects = ScaledSplitLineRect(lineRect, scaledLabels, fieldTypes, labelStyle);
+                Rect[] allRects = new Rect[scaledRects.Length + 1];
+                allRects[0] = leadingRect;
+
+                for(int i = 1; i < allRects.Length; i++)
+                {
+                    allRects[i] = scaledRects[i - 1];
+                }
+
+                return allRects;
+            }
+        }
+
+        public static Rect[] ScaledSplitLineRect(Rect lineRect, GUIContent[] labels, FieldType[] fieldTypes, GUIStyle labelStyle)
+        {
+            int fields = fieldTypes.Length;
+            int textFields = fieldTypes
+                .Where(type => type == FieldType.Text)
+                .Count();
+            int toggleFields = fieldTypes
+                .Where(type => type == FieldType.Toggle)
+                .Count();
+            int spaces = 2 + Mathf.Max(labels.Length - 1, 0) * 2;
+
+            //min sizes
+            float[] labelsWidthActual = labels
+                .Select(label => labelStyle.CalcSize(label).x)
+                .ToArray();
+            float textFieldsWidthMinimum = SMALLEST_ALLOWED_TEXT_FIELD_SIZE * textFields;
+
+            //ideal sizes
+            float labelsWidth = labelsWidthActual.Sum();
+            float textFieldsWidth = textFields * EditorGUIUtility.fieldWidth;
+            float toggleFieldsWidth = SMALLEST_ALLOWED_TOGGLE_FIELD_SIZE * toggleFields;
+            float spacingWidth = spaces * HorizontalBuffer;
+
+            //calculations
+            float totalWidth = labelsWidth + textFieldsWidth + toggleFieldsWidth + spacingWidth;
+
+            if (totalWidth < lineRect.width)
+            {
+                float multiplier = (lineRect.width - (spacingWidth + toggleFieldsWidth + labelsWidth)) / (totalWidth - (spacingWidth + toggleFieldsWidth + labelsWidth));
+
+                if (textFieldsWidth > 0)
+                {
+                    textFieldsWidth *= multiplier;
+                }
+                else
+                {
+                    spacingWidth *= multiplier;
+                }
+            }
+            else if (totalWidth > lineRect.width)
+            {
+                float multiplier = (lineRect.width - (spacingWidth + toggleFieldsWidth + labelsWidth)) / (totalWidth - (spacingWidth + toggleFieldsWidth + labelsWidth));
+
+                textFieldsWidth = Mathf.Max(textFieldsWidth * multiplier, textFieldsWidthMinimum);
+            }
+
+            Rect[] rects = new Rect[labels.Length + fields];
+
+            for (int i = 0; i < labels.Length + fields + spaces; i++)
+            {
+                if (i % 4 == 4 || i % 4 == 0)
+                {
+                    rects[i - i / 2] = new Rect(lineRect.x, lineRect.y, labelsWidthActual[i / 4], lineRect.height);
+                    lineRect.xMin += rects[i - i / 2].width;
+                }
+                else if (i % 4 == 1 || i % 4 == 3)
+                {
+                    lineRect.xMin += spacingWidth / spaces;
+                }
+                else if (i % 4 == 2)
+                {
+                    float width = fieldTypes[i / 4] == FieldType.Text
+                        ? textFieldsWidth / textFields
+                        : toggleFieldsWidth / toggleFields;
+
+                    rects[i - i / 2] = new Rect(lineRect.x, lineRect.y, width, lineRect.height);
+                    lineRect.xMin += rects[i - i / 2].width;
+                }
+            }
+
+            return rects;
+        }
+
+        public static Rect LeadingLabel(Rect lineRect, GUIContent label)
+        {
+            Rect labelRect = new Rect(lineRect.x, lineRect.y, EditorGUIUtility.labelWidth, lineRect.height);
+            lineRect.xMin += EditorGUIUtility.labelWidth;
+            
+            return labelRect;
+        }
+
+        public static float MinDefaultSpaceNeeded(GUIContent[] labels, GUIStyle labelStyle)
+        {
+            Debug.Assert(labels.Length > 1);
+
+            //amount of elements
+            int additionalLabels = labels.Length - 1;
+            int fields = Mathf.Max(additionalLabels, 1);
+            int spaces = 1 + Mathf.Max(additionalLabels - 1, 0) * 2;
+            
+            float[] labelsWidthActual = labels
+                .Select(label => labelStyle.CalcSize(label).x)
+                .ToArray();
+            labelsWidthActual[0] = EditorGUIUtility.labelWidth;
+
+            float fieldsWidthMinimum = SMALLEST_ALLOWED_TEXT_FIELD_SIZE * fields;
+            float additionalLabelsWidth = labelsWidthActual.Sum();
+            float spacingWidth = spaces * HorizontalBuffer;
+
+            //calculations
+            float totalWidth = fieldsWidthMinimum + additionalLabelsWidth + spacingWidth;
+
+            return totalWidth;
         }
 
         public static void StartCountingLines()
@@ -541,7 +691,9 @@ namespace LightControls.Utilities
 
                     EditorGUI.BeginChangeCheck();
 
+                    EditorGUI.indentLevel++;
                     EditorGUI.PropertyField(currentRect, element, currentContent);
+                    EditorGUI.indentLevel--;
 
                     if (EditorGUI.EndChangeCheck())
                     {
@@ -707,63 +859,15 @@ namespace LightControls.Utilities
                 {
                     if (currentBinaryString[currentBinaryString.Length - 1 - i] == '1') //The binary number will have the lowest values on the right and not the left
                     {
-                        //GUIStyle otherStyle = new GUIStyle(EditorStyles.label);
-                        //otherStyle.alignment = TextAnchor.MiddleRight;
-
                         SerializedProperty element = intensityModifiersProperty.GetArrayElementAtIndex(i);
-
-                        SerializedProperty multiplier = element.FindPropertyRelative("Multiplier");
-                        SerializedProperty offset = element.FindPropertyRelative("Offset");
-                        SerializedProperty relateInversely = element.FindPropertyRelative("RelateInversely");
-
+                        
                         GUIContent contentAtIndex = intensityModifiersElementContent[i];
 
-                        //float previousLabelWidth = EditorGUIUtility.labelWidth;
-                        //float previousFieldWidth = EditorGUIUtility.fieldWidth;
-                        //EditorGUIUtility.labelWidth = 0f;
-                        //EditorGUIUtility.fieldWidth = 10f;
+                        EditorGUI.PropertyField(currentRect, element, contentAtIndex);
                         
-                        Rect[] splitLine = SplitLineRect(
-                            lineRect: currentRect,
-                            labelContent: new GUIContent[] { contentAtIndex, intensityModifiersScaleContent, intensityModifiersOffsetContent, intensityModifiersRelateInverselyContent },
-                            sizePercentages: new float[] { .4f, .2f, .2f, .2f },
-                            labelStyle: EditorStyles.label,
-                            linesDownward: 0);
-
-                        EditorGUI.LabelField(splitLine[0], contentAtIndex);
-
-                        EditorGUI.LabelField(splitLine[2], intensityModifiersScaleContent);
-                        multiplier.floatValue = EditorGUI.FloatField(splitLine[3], multiplier.floatValue);
-
-                        EditorGUI.LabelField(splitLine[4], intensityModifiersOffsetContent);
-                        offset.floatValue = EditorGUI.FloatField(splitLine[5], offset.floatValue);
-
-                        EditorGUI.LabelField(splitLine[6], intensityModifiersRelateInverselyContent);
-                        relateInversely.boolValue = EditorGUI.Toggle(splitLine[7], relateInversely.boolValue);
-
                         currentRect = GetRectBelow(currentRect, EditorStyles.label);
-
-                        //EditorGUILayout.BeginHorizontal();
-
-                        //EditorGUILayout.LabelField(contentAtIndex, GUILayout.Width(previousLabelWidth - 5f));
-
-                        //EditorGUILayout.LabelField(intensityModifiersScaleContent, GUILayout.MaxWidth((EditorGUIUtility.currentViewWidth - previousLabelWidth - 5f) * .15f), GUILayout.MinWidth(EditorStyles.label.CalcSize(intensityModifiersScaleContent).x));
-                        //EditorGUILayout.PropertyField(multiplier, GUIContent.none, GUILayout.MaxWidth((EditorGUIUtility.currentViewWidth - previousLabelWidth - 5f) * .15f), GUILayout.MinWidth(minIntensityModifierFieldWidth));
-
-                        //EditorGUILayout.LabelField(intensityModifiersOffsetContent, GUILayout.MaxWidth((EditorGUIUtility.currentViewWidth - previousLabelWidth - 5f) * .15f), GUILayout.MinWidth(EditorStyles.label.CalcSize(intensityModifiersOffsetContent).x));
-                        //EditorGUILayout.PropertyField(offset, GUIContent.none, GUILayout.MaxWidth((EditorGUIUtility.currentViewWidth - previousLabelWidth - 5f) * .15f), GUILayout.MinWidth(minIntensityModifierFieldWidth));
-
-                        //EditorGUILayout.LabelField(intensityModifiersRelateInverselyContent, GUILayout.MaxWidth((EditorGUIUtility.currentViewWidth - previousLabelWidth - 5f) * .275f), GUILayout.MinWidth(EditorStyles.label.CalcSize(intensityModifiersRelateInverselyContent).x));
-                        //EditorGUILayout.PropertyField(relateInversely, GUIContent.none, GUILayout.MaxWidth((EditorGUIUtility.currentViewWidth - previousLabelWidth - 5f) * .1f), GUILayout.MinWidth(10f));
-
-                        //EditorGUILayout.EndHorizontal();
-
-                        //EditorGUIUtility.labelWidth = previousLabelWidth;
-                        //EditorGUIUtility.fieldWidth = previousFieldWidth;
                     }
                 }
-
-                //EditorGUILayout.Space();
             }
         }
         
@@ -776,6 +880,148 @@ namespace LightControls.Utilities
                 : 0;
 
             return LineHeight * lines + VerticalBuffer * (lines - 1);
+        }
+
+        private static readonly GUIContent intensityControlTargetLabelContent = new GUIContent("Affecting Properties");
+
+        public static void DisplayIntensityControlTargetField(Rect rect, SerializedProperty intensityControlTargetProperty)
+        {
+            IntensityControlTarget previous = (IntensityControlTarget)intensityControlTargetProperty.intValue;
+
+            EditorGUI.BeginChangeCheck();
+            intensityControlTargetProperty.intValue = (int)(IntensityControlTarget)EditorGUI.EnumFlagsField(rect, intensityControlTargetLabelContent, (IntensityControlTarget)intensityControlTargetProperty.intValue);
+
+            if(EditorGUI.EndChangeCheck() && EditorApplication.isPlaying)
+            {
+                intensityControlTargetProperty.serializedObject.ApplyModifiedProperties();
+
+                IntensityControlTarget current = (IntensityControlTarget)intensityControlTargetProperty.intValue;
+
+                for (int j = 0; j < intensityControlTargetProperty.serializedObject.targetObjects.Length; j++)
+                {
+                    LightControlOption option = (LightControlOption)intensityControlTargetProperty.serializedObject.targetObjects[j];
+
+                    GameObject.FindObjectsOfType<GroupedLightController>()
+                        .SelectMany(groupedController => ReflectionUtils.GetMemberAtPath<LightControllerGroup[]>(groupedController, "lightControllerGroups"))
+                        .Where(group => ReflectionUtils.GetMemberAtPath<InstancedControlOption[]>(group, "controlOptions")
+                            .Any(controlOption => group != null && InstancedVersionOf(controlOption, option))) //controlOption.InstancedVersionOf(option)))
+                        .ToList().ForEach(controllerGroup =>
+                        {
+                            ControlOptionGroup optionGroup = ReflectionUtils.GetMemberAtPath<ControlOptionGroup>(controllerGroup, "controlOptionGroup");
+
+                            if (optionGroup.SaveLightColor
+                            && previous.HasFlag(IntensityControlTarget.LightColorIntensity)
+                            && !current.HasFlag(IntensityControlTarget.LightColorIntensity))
+                            {
+                                Debug.Assert(optionGroup.Lights.Length == optionGroup.LightColors.Length);
+
+                                for (int i = 0; i < optionGroup.Lights.Length; i++)
+                                {
+                                    if (optionGroup.Lights[i] != null)
+                                    {
+                                        optionGroup.Lights[i].color = optionGroup.LightColors[i];
+                                    }
+                                }
+                            }
+
+                            if (optionGroup.SaveMaterialColor
+                            && previous.HasFlag(IntensityControlTarget.MaterialColorIntensity)
+                            && !current.HasFlag(IntensityControlTarget.MaterialColorIntensity))
+                            {
+                                Debug.Assert(optionGroup.EmissiveMaterialRenderers.Length == optionGroup.MaterialColors.Length);
+
+                                for (int i = 0; i < optionGroup.EmissiveMaterialRenderers.Length; i++)
+                                {
+                                    if (optionGroup.EmissiveMaterialRenderers[i] != null)
+                                    {
+                                        for (int k = 0; k < optionGroup.EmissiveMaterialRenderers[i].materials.Length; k++)
+                                        {
+                                            if (optionGroup.EmissiveMaterialRenderers[i].materials[k] != null)
+                                            {
+                                                optionGroup.EmissiveMaterialRenderers[i].materials[k].SetColor("_EmissionColor", optionGroup.MaterialColors[i][k]);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                }
+
+                intensityControlTargetProperty.serializedObject.Update();
+            }
+        }
+
+
+        public static void DisplayColorControlTargetField(Rect rect, SerializedProperty colorControlTargetProperty)
+        {
+            ColorControlTarget previous = (ColorControlTarget)colorControlTargetProperty.intValue;
+
+            EditorGUI.BeginChangeCheck();
+            colorControlTargetProperty.intValue = (int)(ColorControlTarget)EditorGUI.EnumFlagsField(rect, intensityControlTargetLabelContent, (ColorControlTarget)colorControlTargetProperty.intValue);
+
+            if (EditorGUI.EndChangeCheck() && EditorApplication.isPlaying)
+            {
+                colorControlTargetProperty.serializedObject.ApplyModifiedProperties();
+
+                ColorControlTarget current = (ColorControlTarget)colorControlTargetProperty.intValue;
+
+                for (int i = 0; i < colorControlTargetProperty.serializedObject.targetObjects.Length; i++)
+                {
+                    LightControlOption option = (LightControlOption)colorControlTargetProperty.serializedObject.targetObjects[i];
+
+                    GameObject.FindObjectsOfType<GroupedLightController>()
+                        .SelectMany(groupedController => ReflectionUtils.GetMemberAtPath<LightControllerGroup[]>(groupedController, "lightControllerGroups"))
+                        .Where(group => ReflectionUtils.GetMemberAtPath<InstancedControlOption[]>(group, "controlOptions")
+                            .Any(controlOption => group != null && InstancedVersionOf(controlOption, option))) //controlOption.InstancedVersionOf(option)))
+                        .ToList().ForEach(controllerGroup =>
+                        {
+                            ControlOptionGroup optionGroup = ReflectionUtils.GetMemberAtPath<ControlOptionGroup>(controllerGroup, "controlOptionGroup");
+                            LightControllerGroupData controllerGroupData = ReflectionUtils.GetMemberAtPath<LightControllerGroupData>(controllerGroup, "controllerGroupData");
+
+                            if ((current ^ previous).HasFlag(ColorControlTarget.Light))
+                            {
+                                bool hasLightColorController = controllerGroupData.LightControlOptions
+                                    .Any(controlOption => controlOption is ColorControlOption &&
+                                                         (controlOption as ColorControlOption).ColorTarget.HasFlag(ColorControlTarget.Light));
+
+                                ReflectionUtils.SetMemberAtPath(optionGroup, !hasLightColorController, "saveLightColor");
+                            }
+
+                            if ((current ^ previous).HasFlag(ColorControlTarget.Material))
+                            {
+                                bool hasMaterialColorController = controllerGroupData.LightControlOptions
+                                    .Any(controlOption => controlOption is ColorControlOption &&
+                                                         (controlOption as ColorControlOption).ColorTarget.HasFlag(ColorControlTarget.Material));
+
+                                ReflectionUtils.SetMemberAtPath(optionGroup, !hasMaterialColorController, "saveMaterialColor");
+                            }
+                        });
+                }
+
+                colorControlTargetProperty.serializedObject.Update();
+            }
+        }
+
+        public static bool InstancedVersionOf(InstancedControlOption instanced, LightControlOption option)
+        {
+            if(typeof(IntensityControlOption).IsAssignableFrom(option.GetType()) && instanced.GetType().GetField("intensityControlOption", BindingFlags.Instance | BindingFlags.NonPublic) != null)
+            {
+                return ReflectionUtils.GetMemberAtPath<IntensityControlOption>(instanced, "intensityControlOption") != null;
+            }
+            else if (typeof(ColorControlOption).IsAssignableFrom(option.GetType()) && instanced.GetType().GetField("colorControlOption", BindingFlags.Instance | BindingFlags.NonPublic) != null)
+            {
+                return ReflectionUtils.GetMemberAtPath<ColorControlOption>(instanced, "colorControlOption") != null;
+            }
+            else if (typeof(AudioControlOption).IsAssignableFrom(option.GetType()) && instanced.GetType().GetField("audioControlOption", BindingFlags.Instance | BindingFlags.NonPublic) != null)
+            {
+                return ReflectionUtils.GetMemberAtPath<AudioControlOption>(instanced, "audioControlOption") != null;
+            }
+            else if (typeof(StagedControlOption).IsAssignableFrom(option.GetType()) && instanced.GetType().GetField("stagedControlOption", BindingFlags.Instance | BindingFlags.NonPublic) != null)
+            {
+                return ReflectionUtils.GetMemberAtPath<StagedControlOption>(instanced, "stagedControlOption") != null;
+            }
+
+            return false;
         }
 
         public static void CopyFromTo<T>(T[] from, T[] to)

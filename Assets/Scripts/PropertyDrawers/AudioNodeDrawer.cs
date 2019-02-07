@@ -59,6 +59,8 @@ namespace LightControls.PropertyDrawers
             EditorGUIUtility.labelWidth = 0;
             EditorGUIUtility.fieldWidth = 0;
 
+            indentedPosition = EditorUtils.GetTopRect(indentedPosition, EditorStyles.label);
+
             Rect[] lineOneRects = EditorUtils.SplitLineRect(
                 lineRect: indentedPosition,
                 labelContent: new GUIContent[] { clipContent },
@@ -82,18 +84,24 @@ namespace LightControls.PropertyDrawers
 
             if (currentProperty.Clip.objectReferenceValue != null)
             {
-                Rect[] lineTwoRects = EditorUtils.SplitLineRect(
-                    lineRect: indentedPosition,
-                    labelContent: new GUIContent[] { playAtIntensityContent, loopContent, changeVolumeFromIntensityContent },
-                    sizePercentages: new float[] { .50f, .15f, .35f },
-                    labelStyle: EditorStyles.label,
-                    linesDownward: 1);
+                //Rect[] lineTwoRects = EditorUtils.SplitLineRect(
+                //    lineRect: indentedPosition,
+                //    labelContent: new GUIContent[] { playAtIntensityContent, loopContent, changeVolumeFromIntensityContent },
+                //    sizePercentages: new float[] { .50f, .15f, .35f },
+                //    labelStyle: EditorStyles.label,
+                //    linesDownward: 1);
+
+                indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorStyles.label);
+
+                Rect[] lineTwoRects = EditorUtils.ScaledSplitLineRect(indentedPosition, new GUIContent[] { playAtIntensityContent, loopContent, changeVolumeFromIntensityContent }, new EditorUtils.FieldType[] { EditorUtils.FieldType.Text, EditorUtils.FieldType.Toggle, EditorUtils.FieldType.Toggle }, EditorStyles.label);
+
+                indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorStyles.label);
 
                 Rect[] lineThreeRects = EditorUtils.SplitLineRect(
                     lineRect: indentedPosition,
                     labelContent: new GUIContent[] { audioStartConent, audioEndConent },
                     labelStyle: EditorStyles.label,
-                    linesDownward: 2);
+                    linesDownward: 0);
 
                 EditorGUI.LabelField(lineTwoRects[0], playAtIntensityContent);
                 EditorGUI.PropertyField(lineTwoRects[1], currentProperty.PlayAtIntensity, GUIContent.none);
@@ -134,17 +142,19 @@ namespace LightControls.PropertyDrawers
                     currentProperty.AudioStart.floatValue = currentProperty.AudioEnd.floatValue - 0.01f;
                 }
 
+                indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorStyles.label);
+
                 Rect[] lineFourRects = currentProperty.ChangeVolumeFromIntensity.boolValue
                     ? EditorUtils.SplitLineRect(
                         lineRect: indentedPosition,
                         labelContent: new GUIContent[] { minVolumeConent, maxVolumeConent },
                         labelStyle: EditorStyles.label,
-                        linesDownward: 3)
+                        linesDownward: 0)
                     : EditorUtils.SplitLineRect(
                         lineRect: indentedPosition,
                         labelContent: new GUIContent[] { volumeConent },
                         labelStyle: EditorStyles.label,
-                        linesDownward: 3);
+                        linesDownward: 0);
 
                 if (currentProperty.ChangeVolumeFromIntensity.boolValue)
                 {

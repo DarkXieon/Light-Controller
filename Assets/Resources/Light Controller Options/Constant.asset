@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -22,7 +23,7 @@ MonoBehaviour:
   curvedIntensities:
     useControl: 1
     minMaxCurve:
-      m_Mode: 0
+      m_Mode: 1
       m_CurveMultiplier: 1
       m_CurveMin:
         serializedVersion: 2
@@ -55,37 +56,48 @@ MonoBehaviour:
           time: 0
           value: 5
           inSlope: 0
-          outSlope: 5
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        - serializedVersion: 3
-          time: 1
-          value: 10
-          inSlope: 5
           outSlope: 0
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
           outWeight: 0
+        - serializedVersion: 3
+          time: 0.242095
+          value: 12.629573
+          inSlope: 5
+          outSlope: 5
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.8718872
+          value: 5.6356964
+          inSlope: 5
+          outSlope: 5
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
         m_PreInfinity: 2
-        m_PostInfinity: 2
+        m_PostInfinity: 0
         m_RotationOrder: 4
       m_ConstantMin: 0
       m_ConstantMax: 10
     maxCurveTracker:
       minMaxPoints:
       - 0
-      - 1
-      wrapMode: 2
+      - 0.27656987
+      - 0.83741236
+      - 0.8718872
+      wrapMode: 0
     minCurveTracker:
       minMaxPoints:
       - 0
       - 1
       wrapMode: 2
-    maxValue: 10
-    minValue: 10
+    maxValue: 12.714096
+    minValue: 5
   listedRoC:
     useControl: 0
     randomizeBetweenValues: 0
@@ -158,7 +170,7 @@ MonoBehaviour:
     maxValue: 0
     minValue: 0
   roCMode: 1
-  controlTarget: 5
+  controlTarget: 7
   intensityModifers:
   - Multiplier: 1
     Offset: 0

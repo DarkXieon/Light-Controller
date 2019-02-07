@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-using LightControls.Controllers;
+﻿using LightControls.Controllers;
 using LightControls.ControlOptions.ControlGroups;
 using LightControls.Utilities;
 
@@ -32,8 +29,7 @@ namespace LightControls.ControlOptions
         private CurveControlGroup curvedRoC;
 
         #endregion
-
-        private IntensityControlTarget previousTarget;
+        
         private float goalIntensity;
         private float currentIntensity;
         private float currentRateOfChange;
@@ -49,9 +45,7 @@ namespace LightControls.ControlOptions
 
             listedRoC = new ListControlGroup(intensityControlOption.ListedRoC);
             curvedRoC = new CurveControlGroup(intensityControlOption.CurvedRoC);
-
-            previousTarget = intensityControlOption.ControlTarget;
-
+            
             currentRateOfChange = 0f;
             currentIntensity = intensityControlOption.CurvedIntensities.UseControl
                 ? curvedIntensities.GetControlValue()
@@ -68,10 +62,6 @@ namespace LightControls.ControlOptions
             UpdateIntensityGoal();
             UpdateRateOfChange();
             UpdateCurrentIntensity();
-
-            //bool finished = curvedIntensities.UseControl && curvedIntensities.CurveMode == ParticleSystemCurveMode.Curve && intensityControlOption.RoCMode == RoCMode.Time //under these conditions, the iterations finished variable will be set one update early
-            //    ? previousValue
-            //    : iterationFinished;
             
             return curvedIntensities.UseControl && curvedIntensities.CurveMode == ParticleSystemCurveMode.Curve && intensityControlOption.RoCMode == RoCMode.Time //under these conditions, the iterations finished variable will be set one update early
                 ? previousValue
@@ -81,23 +71,8 @@ namespace LightControls.ControlOptions
         public override bool ApplyOn(ApplicationStages stage)
         {
             return ApplyOn(stage, intensityControlOption.ControlTarget);
-
-            //if (stage == ApplicationStages.IntensityApplication)
-            //{
-            //    return intensityControlOption.ControlTarget.HasFlag(IntensityControlTarget.LightIntensity);
-            //}
-            //if (stage == ApplicationStages.ColorIntensityApplication)
-            //{
-            //    return intensityControlOption.ControlTarget.HasFlag(IntensityControlTarget.LightColorIntensity) || intensityControlOption.ControlTarget.HasFlag(IntensityControlTarget.MaterialColorIntensity);
-            //}
-            //if (stage == ApplicationStages.OtherApplications)
-            //{
-            //    return intensityControlOption.ControlTarget.HasFlag(IntensityControlTarget.LightRange) || intensityControlOption.ControlTarget.HasFlag(IntensityControlTarget.SpotlightAngle);
-            //}
-
-            //return false;
         }
-
+        
         public static bool ApplyOn(ApplicationStages stage, IntensityControlTarget controlTarget)
         {
             if (stage == ApplicationStages.IntensityApplication)
@@ -116,7 +91,7 @@ namespace LightControls.ControlOptions
             return false;
         }
 
-        public override void ApplyControl(ControlOptionInfo controlOptionInfo)
+        public override void ApplyControl(ControlOptionGroup controlOptionInfo)
         {
             float valueMin;
             float valueMax;
@@ -128,32 +103,8 @@ namespace LightControls.ControlOptions
                 intensityFloor: valueMin,
                 intensityCeiling: valueMax,
                 currentTarget: intensityControlOption.ControlTarget,
-                previousTarget: ref previousTarget,
                 modifiers: intensityControlOption.IntensityModifers,
                 controlOptionInfo: controlOptionInfo);
-
-            //PrepareTargets(controlOptionInfo);
-
-            //if (controlOptionInfo.CurrentStage == ApplicationStages.IntensityApplication && intensityControlOption.ControlTarget.HasFlag(IntensityControlTarget.LightIntensity))
-            //{
-            //    SetLightIntensity(controlOptionInfo, currentIntensity);
-            //}
-            //if (controlOptionInfo.CurrentStage == ApplicationStages.ColorIntensityApplication && intensityControlOption.ControlTarget.HasFlag(IntensityControlTarget.LightColorIntensity))
-            //{
-            //    SetLightColorIntensity(controlOptionInfo, currentIntensity);
-            //}
-            //if (controlOptionInfo.CurrentStage == ApplicationStages.ColorIntensityApplication && intensityControlOption.ControlTarget.HasFlag(IntensityControlTarget.MaterialColorIntensity))
-            //{
-            //    SetMaterialColorIntensity(controlOptionInfo, currentIntensity);
-            //}
-            //if (controlOptionInfo.CurrentStage == ApplicationStages.OtherApplications && intensityControlOption.ControlTarget.HasFlag(IntensityControlTarget.LightRange))
-            //{
-            //    SetLightRange(controlOptionInfo, currentIntensity);
-            //}
-            //if (controlOptionInfo.CurrentStage == ApplicationStages.OtherApplications && intensityControlOption.ControlTarget.HasFlag(IntensityControlTarget.SpotlightAngle))
-            //{
-            //    SetLightSpotAngle(controlOptionInfo, currentIntensity);
-            //}
         }
 
         public static void ApplyControl(
@@ -161,12 +112,9 @@ namespace LightControls.ControlOptions
             float intensityFloor,
             float intensityCeiling,
             IntensityControlTarget currentTarget,
-            ref IntensityControlTarget previousTarget,
             ControlTargetModifier[] modifiers,
-            ControlOptionInfo controlOptionInfo)
+            ControlOptionGroup controlOptionInfo)
         {
-            //PrepareTargets(controlOptionInfo, currentTarget, ref previousTarget);
-            
             if (controlOptionInfo.CurrentStage == ApplicationStages.IntensityApplication && currentTarget.HasFlag(IntensityControlTarget.LightIntensity))
             {
                 SetLightValue(
@@ -228,69 +176,7 @@ namespace LightControls.ControlOptions
         {
             return intensityControlOption.UseCustomRateOfChange;
         }
-
-        public static void PrepareTargets(ControlOptionInfo controlOptionInfo, IntensityControlTarget controlTarget, ref IntensityControlTarget previousTarget)
-        {
-            IntensityControlTarget xOrTarget = controlTarget ^ previousTarget;
-            previousTarget = controlTarget;
-
-            IntensityControlTarget[] targets = xOrTarget.GetAllFlags();
-
-            if (controlOptionInfo.SaveLightColor && targets.Contains(IntensityControlTarget.LightColorIntensity))
-            {
-                for (int i = 0; i < controlOptionInfo.Lights.Length; i++)
-                {
-                    controlOptionInfo.Lights[i].color = controlOptionInfo.LightColors[i];
-                }
-            }
-            if (controlOptionInfo.SaveMaterialColor && targets.Contains(IntensityControlTarget.MaterialColorIntensity))
-            {
-                for (int i = 0; i < controlOptionInfo.EmissiveMaterialRenderers.Length; i++)
-                {
-                    for (int k = 0; k < controlOptionInfo.EmissiveMaterialRenderers[i].materials.Length; k++)
-                    {
-                        controlOptionInfo.EmissiveMaterialRenderers[i].material.EnableKeyword("_EMISSION");
-                        controlOptionInfo.EmissiveMaterialRenderers[i].UpdateGIMaterials();
-
-                        Color currentColor = controlOptionInfo.MaterialColors[i][k];
-                        controlOptionInfo.EmissiveMaterialRenderers[i].materials[k].SetColor("_EmissionColor", currentColor);
-                    }
-                }
-            }
-        }
-
-        private void PrepareTargets(ControlOptionInfo controlOptionInfo)
-        {
-            PrepareTargets(controlOptionInfo, intensityControlOption.ControlTarget, ref previousTarget);
-
-            //IntensityControlTarget xOrTarget = intensityControlOption.ControlTarget ^ previousTarget;
-            //previousTarget = intensityControlOption.ControlTarget;
-
-            //IntensityControlTarget[] targets = xOrTarget.GetAllFlags();
-
-            //if (controlOptionInfo.SaveLightColor && targets.Contains(IntensityControlTarget.LightColorIntensity))
-            //{
-            //    for (int i = 0; i < controlOptionInfo.Lights.Length; i++)
-            //    {
-            //        controlOptionInfo.Lights[i].color = controlOptionInfo.LightColors[i];
-            //    }
-            //}
-            //if (controlOptionInfo.SaveMaterialColor && targets.Contains(IntensityControlTarget.MaterialColorIntensity))
-            //{
-            //    for (int i = 0; i < controlOptionInfo.EmissiveMaterialRenderers.Length; i++)
-            //    {
-            //        for (int k = 0; k < controlOptionInfo.EmissiveMaterialRenderers[i].materials.Length; k++)
-            //        {
-            //            controlOptionInfo.EmissiveMaterialRenderers[i].material.EnableKeyword("_EMISSION");
-            //            controlOptionInfo.EmissiveMaterialRenderers[i].UpdateGIMaterials();
-
-            //            Color currentColor = controlOptionInfo.MaterialColors[i][k];
-            //            controlOptionInfo.EmissiveMaterialRenderers[i].materials[k].SetColor("_EmissionColor", currentColor);
-            //        }
-            //    }
-            //}
-        }
-
+        
         /// <summary>
         /// Updates the currentRateOfChange variable which is used to update the currentIntenisty variable
         /// </summary>
@@ -368,7 +254,6 @@ namespace LightControls.ControlOptions
 
         private void UpdateIntensityGoal()
         {
-            //TODO: FIX THIS... SEE COLOR CONTROL OPTIONS FOR DETAILS
             if (currentIntensity == goalIntensity)
             {
                 goalIntensity = GetNextIntensityGoal();
@@ -440,47 +325,12 @@ namespace LightControls.ControlOptions
             float intensityCeiling,
             IntensityControlTarget controlTargets,
             ControlTargetModifier[] modifiers,
-            ControlOptionInfo controlOptionInfo)
+            ControlOptionGroup controlOptionInfo)
         {
             int length = Mathf.Max(controlOptionInfo.Lights.Length, controlOptionInfo.EmissiveMaterialRenderers.Length);
 
             for (int i = 0; i < length; i++)
             {
-                ////precalculation stuff
-                //switch (valueType)
-                //{
-                //    case IntensityControlTarget.MaterialColorIntensity:
-                //        if (controlOptionInfo.Lights[i] == null)
-                //        {
-                //            continue;
-                //        }
-                //        else if(controlOptionInfo.SaveMaterialColor)
-                //        {
-                //            controlOptionInfo.EmissiveMaterialRenderers[i].material.EnableKeyword("_EMISSION");
-                //            controlOptionInfo.EmissiveMaterialRenderers[i].UpdateGIMaterials();
-
-                //            for (int k = 0; k < controlOptionInfo.EmissiveMaterialRenderers[i].materials.Length && k < controlOptionInfo.MaterialColors[i].Length; k++)
-                //            {
-                //                if (controlOptionInfo.EmissiveMaterialRenderers[i].materials[k] != null)
-                //                    controlOptionInfo.EmissiveMaterialRenderers[i].materials[k].SetColor("_EmissionColor", controlOptionInfo.MaterialColors[i][k]);
-                //            }
-                //        }
-
-                //        break;
-
-                //    case IntensityControlTarget.LightColorIntensity:
-                //        if (controlOptionInfo.Lights[i] == null)
-                //        {
-                //            continue;
-                //        }
-                //        else if (controlOptionInfo.SaveLightColor)
-                //        {
-                //            controlOptionInfo.Lights[i].color = controlOptionInfo.LightColors[i];
-                //        }
-
-                //        break;
-                //}
-            
                 bool willScale = controlTargets.GetAllFlags().Length > 1;
                 int targetIndex = Mathf.FloorToInt(Mathf.Log((int)valueType, 2));
 
@@ -500,8 +350,9 @@ namespace LightControls.ControlOptions
                     ? InverseValue(intensity, intensityFloor, intensityCeiling)
                     : intensity;
 
-                scaledIntensity = Mathf.Clamp(intensity * multiplier + offset, intensityFloor, intensityCeiling);
-                
+                //scaledIntensity = Mathf.Clamp(intensity * multiplier + offset, intensityFloor, intensityCeiling);
+                scaledIntensity = Mathf.Clamp(intensity, intensityFloor, intensityCeiling) * multiplier + offset;
+
                 //set value to lights
                 switch (valueType)
                 {
@@ -553,282 +404,8 @@ namespace LightControls.ControlOptions
                 controlOptionInfo.IntensityMax = intensityCeiling;
             }
         }
-
-        //private void SetLightIntensity(ControlOptionInfo controlOptionInfo, float value)
-        //{
-        //    bool reachedIntensityGoal = currentIntensity == goalIntensity;
-
-        //    if (!intensityControlOption.NoSmoothTransitions || (intensityControlOption.NoSmoothTransitions && reachedIntensityGoal))
-        //    {
-        //        float valueMin;
-        //        float valueMax;
-
-        //        GetMinMax(controlOptionInfo, out valueMin, out valueMax);
-
-        //        SetLightValue(
-        //            valueType: IntensityControlTarget.LightIntensity,
-        //            intensity: value,
-        //            intensityFloor: valueMin,
-        //            intensityCeiling: valueMax,
-        //            controlTargets: intensityControlOption.ControlTarget,
-        //            modifiers: intensityControlOption.IntensityModifers,
-        //            controlOptionInfo: controlOptionInfo);
-
-        //        //for (int i = 0; i < controlOptionInfo.Lights.Length; i++)
-        //        //{
-        //        //    if (controlOptionInfo.Lights[i] == null)
-        //        //    {
-        //        //        continue;
-        //        //    }
-
-        //        //    bool willScale = intensityControlOption.ControlTarget.GetAllFlags().Length > 1;
-
-        //        //    value = willScale && intensityControlOption.IntensityModifers[0].RelateInversely
-        //        //        ? InverseValue(value, intensityControlOption.MinValue, intensityControlOption.MaxValue) //InverseValue(value)
-        //        //        : value;
-
-        //        //    float scaledValue = willScale
-        //        //        ? value * intensityControlOption.IntensityModifers[0].Multiplier + intensityControlOption.IntensityModifers[0].Offset
-        //        //        : value;
-
-        //        //    scaledValue = intensityControlOption.UseLightIntensityFloor && scaledValue < intensityControlOption.Floor
-        //        //        ? intensityControlOption.Floor
-        //        //        : scaledValue;
-
-        //        //    scaledValue = intensityControlOption.UseLightIntensityCeiling && scaledValue > intensityControlOption.Ceiling
-        //        //        ? intensityControlOption.Ceiling
-        //        //        : scaledValue;
-
-        //        //    controlOptionInfo.Lights[i].intensity = scaledValue;
-        //        //}
-
-        //        //SetMinMaxs(controlOptionInfo);
-        //    }
-        //}
-
-        //private void SetLightColorIntensity(ControlOptionInfo controlOptionInfo, float value)
-        //{
-        //    bool reachedIntensityGoal = currentIntensity == goalIntensity;
-
-        //    if (!intensityControlOption.NoSmoothTransitions || (intensityControlOption.NoSmoothTransitions && reachedIntensityGoal))
-        //    {
-        //        float valueMin;
-        //        float valueMax;
-
-        //        GetMinMax(controlOptionInfo, out valueMin, out valueMax);
-
-        //        SetLightValue(
-        //            valueType: IntensityControlTarget.LightColorIntensity,
-        //            intensity: value,
-        //            intensityFloor: valueMin,
-        //            intensityCeiling: valueMax,
-        //            controlTargets: intensityControlOption.ControlTarget,
-        //            modifiers: intensityControlOption.IntensityModifers,
-        //            controlOptionInfo: controlOptionInfo);
-
-        //        //for (int i = 0; i < controlOptionInfo.Lights.Length; i++)
-        //        //{
-        //        //    if (controlOptionInfo.Lights[i] == null)
-        //        //    {
-        //        //        continue;
-        //        //    }
-
-        //        //    if (controlOptionInfo.SaveLightColor)
-        //        //    {
-        //        //        controlOptionInfo.Lights[i].color = controlOptionInfo.LightColors[i];
-        //        //    }
-
-        //        //    bool willScale = intensityControlOption.ControlTarget.GetAllFlags().Length > 1;
-
-        //        //    value = willScale && intensityControlOption.IntensityModifers[1].RelateInversely
-        //        //        ? InverseValue(value, intensityControlOption.MinValue, intensityControlOption.MaxValue) //InverseValue(value)
-        //        //        : value;
-
-        //        //    float scaledValue = willScale
-        //        //        ? value * intensityControlOption.IntensityModifers[1].Multiplier + intensityControlOption.IntensityModifers[1].Offset
-        //        //        : value;
-
-        //        //    scaledValue = intensityControlOption.UseLightIntensityFloor && scaledValue < intensityControlOption.Floor
-        //        //        ? intensityControlOption.Floor
-        //        //        : scaledValue;
-
-        //        //    scaledValue = intensityControlOption.UseLightIntensityCeiling && scaledValue > intensityControlOption.Ceiling
-        //        //        ? intensityControlOption.Ceiling
-        //        //        : scaledValue;
-
-        //        //    controlOptionInfo.Lights[i].color *= scaledValue;
-        //        //}
-        //    }
-        //}
-
-        //private void SetMaterialColorIntensity(ControlOptionInfo controlOptionInfo, float value)
-        //{
-        //    bool reachedIntensityGoal = currentIntensity == goalIntensity;
-
-        //    if (!intensityControlOption.NoSmoothTransitions || (intensityControlOption.NoSmoothTransitions && reachedIntensityGoal))
-        //    {
-        //        float valueMin;
-        //        float valueMax;
-
-        //        GetMinMax(controlOptionInfo, out valueMin, out valueMax);
-
-        //        SetLightValue(
-        //            valueType: IntensityControlTarget.MaterialColorIntensity,
-        //            intensity: value,
-        //            intensityFloor: valueMin,
-        //            intensityCeiling: valueMax,
-        //            controlTargets: intensityControlOption.ControlTarget,
-        //            modifiers: intensityControlOption.IntensityModifers,
-        //            controlOptionInfo: controlOptionInfo);
-
-        //        //for (int i = 0; i < controlOptionInfo.EmissiveMaterialRenderers.Length; i++)
-        //        //{
-        //        //    if (controlOptionInfo.EmissiveMaterialRenderers[i] == null)
-        //        //    {
-        //        //        continue;
-        //        //    }
-
-        //        //    if (controlOptionInfo.SaveMaterialColor)
-        //        //    {
-        //        //        controlOptionInfo.EmissiveMaterialRenderers[i].material.EnableKeyword("_EMISSION");
-        //        //        controlOptionInfo.EmissiveMaterialRenderers[i].UpdateGIMaterials();
-
-        //        //        for (int k = 0; k < controlOptionInfo.EmissiveMaterialRenderers[i].materials.Length && k < controlOptionInfo.MaterialColors[i].Length; k++)
-        //        //        {
-        //        //            if (controlOptionInfo.EmissiveMaterialRenderers[i].materials[k] != null)
-        //        //                controlOptionInfo.EmissiveMaterialRenderers[i].materials[k].SetColor("_EmissionColor", controlOptionInfo.MaterialColors[i][k]);
-        //        //        }
-        //        //    }
-
-        //        //    bool willScale = intensityControlOption.ControlTarget.GetAllFlags().Length > 1;
-
-        //        //    value = willScale && intensityControlOption.IntensityModifers[2].RelateInversely
-        //        //        ? InverseValue(value, intensityControlOption.MinValue, intensityControlOption.MaxValue) //InverseValue(value)
-        //        //        : value;
-
-        //        //    float scaledValue = willScale
-        //        //        ? value * intensityControlOption.IntensityModifers[2].Multiplier + intensityControlOption.IntensityModifers[2].Offset
-        //        //        : value;
-
-        //        //    scaledValue = intensityControlOption.UseLightIntensityFloor && scaledValue < intensityControlOption.Floor
-        //        //        ? intensityControlOption.Floor
-        //        //        : scaledValue;
-
-        //        //    scaledValue = intensityControlOption.UseLightIntensityCeiling && scaledValue > intensityControlOption.Ceiling
-        //        //        ? intensityControlOption.Ceiling
-        //        //        : scaledValue;
-
-        //        //    for (int k = 0; k < controlOptionInfo.EmissiveMaterialRenderers[i].materials.Length; k++)
-        //        //    {
-        //        //        Color currentColor = controlOptionInfo.EmissiveMaterialRenderers[i].materials[k].GetColor("_EmissionColor");
-
-        //        //        controlOptionInfo.EmissiveMaterialRenderers[i].materials[k].SetColor("_EmissionColor", currentColor * scaledValue);
-        //        //    }
-        //        //}
-        //    }
-        //}
-
-        //private void SetLightRange(ControlOptionInfo controlOptionInfo, float value)
-        //{
-        //    bool reachedIntensityGoal = currentIntensity == goalIntensity;
-
-        //    if (!intensityControlOption.NoSmoothTransitions || (intensityControlOption.NoSmoothTransitions && reachedIntensityGoal))
-        //    {
-        //        float valueMin;
-        //        float valueMax;
-
-        //        GetMinMax(controlOptionInfo, out valueMin, out valueMax);
-
-        //        SetLightValue(
-        //            valueType: IntensityControlTarget.LightRange,
-        //            intensity: value,
-        //            intensityFloor: valueMin,
-        //            intensityCeiling: valueMax,
-        //            controlTargets: intensityControlOption.ControlTarget,
-        //            modifiers: intensityControlOption.IntensityModifers,
-        //            controlOptionInfo: controlOptionInfo);
-
-        //        //for (int i = 0; i < controlOptionInfo.Lights.Length; i++)
-        //        //{
-        //        //    if (controlOptionInfo.Lights[i] == null)
-        //        //    {
-        //        //        continue;
-        //        //    }
-
-        //        //    bool willScale = intensityControlOption.ControlTarget.GetAllFlags().Length > 1;
-
-        //        //    value = willScale && intensityControlOption.IntensityModifers[3].RelateInversely
-        //        //        ? InverseValue(value, intensityControlOption.MinValue, intensityControlOption.MaxValue) //InverseValue(value)
-        //        //        : value;
-
-        //        //    float scaledValue = willScale
-        //        //        ? value * intensityControlOption.IntensityModifers[3].Multiplier + intensityControlOption.IntensityModifers[3].Offset
-        //        //        : value;
-
-        //        //    scaledValue = intensityControlOption.UseLightIntensityFloor && scaledValue < intensityControlOption.Floor
-        //        //        ? intensityControlOption.Floor
-        //        //        : scaledValue;
-
-        //        //    scaledValue = intensityControlOption.UseLightIntensityCeiling && scaledValue > intensityControlOption.Ceiling
-        //        //        ? intensityControlOption.Ceiling
-        //        //        : scaledValue;
-
-        //        //    controlOptionInfo.Lights[i].range = scaledValue;
-        //        //}
-        //    }
-        //}
-
-        //private void SetLightSpotAngle(ControlOptionInfo controlOptionInfo, float value)
-        //{
-        //    bool reachedIntensityGoal = currentIntensity == goalIntensity;
-
-        //    if (!intensityControlOption.NoSmoothTransitions || (intensityControlOption.NoSmoothTransitions && reachedIntensityGoal))
-        //    {
-        //        float valueMin;
-        //        float valueMax;
-
-        //        GetMinMax(controlOptionInfo, out valueMin, out valueMax);
-
-        //        SetLightValue(
-        //            valueType: IntensityControlTarget.SpotlightAngle,
-        //            intensity: value,
-        //            intensityFloor: valueMin,
-        //            intensityCeiling: valueMax,
-        //            controlTargets: intensityControlOption.ControlTarget,
-        //            modifiers: intensityControlOption.IntensityModifers,
-        //            controlOptionInfo: controlOptionInfo);
-
-        //        //for (int i = 0; i < controlOptionInfo.Lights.Length; i++)
-        //        //{
-        //        //    if (controlOptionInfo.Lights[i] == null)
-        //        //    {
-        //        //        continue;
-        //        //    }
-
-        //        //    bool willScale = intensityControlOption.ControlTarget.GetAllFlags().Length > 1;
-
-        //        //    value = willScale && intensityControlOption.IntensityModifers[4].RelateInversely
-        //        //        ? InverseValue(value, intensityControlOption.MinValue, intensityControlOption.MaxValue) //InverseValue(value)
-        //        //        : value;
-
-        //        //    float scaledValue = willScale
-        //        //        ? value * intensityControlOption.IntensityModifers[4].Multiplier + intensityControlOption.IntensityModifers[4].Offset
-        //        //        : value;
-
-        //        //    scaledValue = intensityControlOption.UseLightIntensityFloor && scaledValue < intensityControlOption.Floor
-        //        //        ? intensityControlOption.Floor
-        //        //        : scaledValue;
-
-        //        //    scaledValue = intensityControlOption.UseLightIntensityCeiling && scaledValue > intensityControlOption.Ceiling
-        //        //        ? intensityControlOption.Ceiling
-        //        //        : scaledValue;
-
-        //        //    controlOptionInfo.Lights[i].spotAngle = scaledValue;
-        //        //}
-        //    }
-        //}
         
-        private void GetMinMax(ControlOptionInfo lightInfo, out float min, out float max)
+        private void GetMinMax(ControlOptionGroup lightInfo, out float min, out float max)
         {
             float tempMin = 0f;
             float tempMax = 0f;
@@ -852,26 +429,7 @@ namespace LightControls.ControlOptions
                 ? Mathf.Min(intensityControlOption.Ceiling, tempMax) //chooses the more restrictive one
                 : tempMax;
         }
-
-        //private void SetMinMaxs(ControlOptionInfo lightInfo)
-        //{
-        //    if (curvedIntensities.UseControl)
-        //    {
-        //        lightInfo.IntensityMin = curvedIntensities.MinValue;
-        //        lightInfo.IntensityMax = curvedIntensities.MaxValue;
-        //    }
-        //    else if (listedIntensities.UseControl)
-        //    {
-        //        lightInfo.IntensityMin = listedIntensities.MinValue;
-        //        lightInfo.IntensityMax = listedIntensities.MaxValue;
-        //    }
-        //    else
-        //    {
-        //        lightInfo.IntensityMin = 0f;
-        //        lightInfo.IntensityMax = 0f;
-        //    }
-        //}
-
+        
         public static float InverseValue(float value, float minValue, float maxValue)
         {
             float inversePercent = 1f - (value - minValue) / (maxValue - minValue);
@@ -880,14 +438,5 @@ namespace LightControls.ControlOptions
 
             return inverseValue;
         }
-        
-        //private float InverseValue(float value)
-        //{
-        //    float inversePercent = 1f - (value - intensityControlOption.MinValue) / (intensityControlOption.MaxValue - intensityControlOption.MinValue);
-
-        //    float inverseValue = inversePercent * (intensityControlOption.MaxValue - intensityControlOption.MinValue) + intensityControlOption.MinValue;
-
-        //    return inverseValue;
-        //}
     }
 }

@@ -64,23 +64,26 @@ namespace LightControls.PropertyDrawers
             {
                 indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorStyles.label);
 
-                Rect[] splitLine = EditorUtils.SplitLineRect(
-                    lineRect: indentedPosition,
-                    labelContent: new GUIContent[] { minMaxLabelContent, minIntensityContent, maxIntensityContent },
-                    sizePercentages: new float[] { .4f, .30f, .30f },
-                    labelStyle: EditorStyles.label,
-                    linesDownward: 0);
+                //Rect[] splitLine = EditorUtils.SplitLineRect(
+                //    lineRect: indentedPosition,
+                //    labelContent: new GUIContent[] { minMaxLabelContent, minIntensityContent, maxIntensityContent },
+                //    sizePercentages: new float[] { .4f, .30f, .30f },
+                //    labelStyle: EditorStyles.label,
+                //    linesDownward: 0);
+
+                Rect[] splitLine = EditorUtils.ReplicateDefaultSplitLineRect(indentedPosition, new GUIContent[] { minMaxLabelContent, minIntensityContent, maxIntensityContent }, new EditorUtils.FieldType[] { EditorUtils.FieldType.Text, EditorUtils.FieldType.Text }, EditorStyles.label);
 
                 EditorGUI.LabelField(splitLine[0], minMaxLabelContent);
 
-                EditorGUI.LabelField(splitLine[2], minIntensityContent);
-                currentProperty.MinIntensityProperty.floatValue = EditorGUI.FloatField(splitLine[3], currentProperty.MinIntensityProperty.floatValue);
+                EditorGUI.LabelField(splitLine[1], minIntensityContent);
+                currentProperty.MinIntensityProperty.floatValue = EditorGUI.FloatField(splitLine[2], currentProperty.MinIntensityProperty.floatValue);
 
-                EditorGUI.LabelField(splitLine[4], maxIntensityContent);
-                currentProperty.MaxIntensityProperty.floatValue = EditorGUI.FloatField(splitLine[5], currentProperty.MaxIntensityProperty.floatValue);
+                EditorGUI.LabelField(splitLine[3], maxIntensityContent);
+                currentProperty.MaxIntensityProperty.floatValue = EditorGUI.FloatField(splitLine[4], currentProperty.MaxIntensityProperty.floatValue);
 
                 indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorStyles.label);
-                currentProperty.ControlTargetProperty.intValue = (int)(IntensityControlTarget)EditorGUI.EnumFlagsField(indentedPosition, controlTargetContent, (IntensityControlTarget)currentProperty.ControlTargetProperty.intValue);
+                //currentProperty.ControlTargetProperty.intValue = (int)(IntensityControlTarget)EditorGUI.EnumFlagsField(indentedPosition, controlTargetContent, (IntensityControlTarget)currentProperty.ControlTargetProperty.intValue);
+                EditorUtils.DisplayIntensityControlTargetField(indentedPosition, currentProperty.ControlTargetProperty);
 
                 indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorUtils.GetIntensityModifiersHeight(currentProperty.ControlTargetProperty));
                 EditorUtils.DisplayIntensityModifiers(indentedPosition, currentProperty.ControlTargetProperty, currentProperty.IntensityModifiers);

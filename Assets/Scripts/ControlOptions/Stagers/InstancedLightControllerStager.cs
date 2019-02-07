@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace LightControls.ControlOptions.Stages
 {
-    public class InstancedLightControllerStager : InstancedStager, ILightControllerInfo
+    public class InstancedLightControllerStager : InstancedStager, ILightControllerGroup
     {
         protected override Stager stagerData => controllerStager;
         protected override InstancedStage[] stagerStages => controllerStages;

@@ -241,9 +241,8 @@ GameObject:
 --- !u!114 &82588944
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114736069154479368, guid: 2f91f0b25c78adf48a3af6d23e0d7386,
-    type: 2}
-  m_PrefabInstance: {fileID: 1987682997}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 82588943}
   m_Enabled: 1
@@ -251,19 +250,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef0c4398bcb53d548ac825b63a1d3800, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ControlInfo:
-  - ControlOptionInfo:
-      CurrentStage: 0
-      Lights:
+  lightControllerGroupsData:
+  - controlOptionGroupData:
+      lights:
       - {fileID: 921004984}
-      EmissiveMaterialRenderers:
+      emissiveMaterialRenderers:
       - {fileID: 1636619333}
-      SaveLightColor: 1
-      SaveMaterialColor: 1
-      LightColors: []
-      IntensityMax: 0
-      IntensityMin: 0
-    LightControlOptions:
+    lightControlOptions:
+    - {fileID: 11400000, guid: 8c0ea105f1c009640bbb051f8d346034, type: 2}
     - {fileID: 11400000, guid: ec3da4ef102e9324d8c39dc2bcd9d981, type: 2}
 --- !u!4 &82588945
 Transform:
@@ -917,7 +911,7 @@ MonoBehaviour:
       MaxStartAmountMin: 1
       MaxStartAmountMax: 1
       LightControllers:
-      - {fileID: 82588944}
+      - {fileID: 0}
 --- !u!4 &854924526
 Transform:
   m_ObjectHideFlags: 0
@@ -948,7 +942,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &883782718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -961,20 +955,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef0c4398bcb53d548ac825b63a1d3800, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ControlInfo:
-  - ControlOptionInfo:
-      CurrentStage: 0
-      Lights:
-      - {fileID: 1505169335}
-      EmissiveMaterialRenderers:
-      - {fileID: 1647556780}
-      SaveLightColor: 0
-      SaveMaterialColor: 0
-      LightColors: []
-      IntensityMax: 0
-      IntensityMin: 0
-    LightControlOptions:
-    - {fileID: 11400000, guid: 035df0266fae0d146a8266ab0f6f2635, type: 2}
+  lightControllerGroupsData: []
 --- !u!4 &883782719
 Transform:
   m_ObjectHideFlags: 0
@@ -1135,6 +1116,81 @@ Transform:
   m_Father: {fileID: 1056650043}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!21 &1253213413
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: lamp material (Instance) (Instance)
+  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: _EMISSION _METALLICGLOSSMAP _NORMALMAP
+  m_LightmapFlags: 1
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: 098ced1747a91654580bf4878572ea10, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 2800000, guid: 6f43bbb030ef981459243ab9cf65e107, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: bc19696bdaf07684c95bbc6e7330390f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 2800000, guid: 62a4d663069ecbf4fa3275739297e80d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _BumpScale: 1
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _GlossMapScale: 0.311
+    - _Glossiness: 0.5
+    - _GlossyReflections: 1
+    - _Metallic: 0
+    - _Mode: 0
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _UVSec: 0
+    - _ZWrite: 1
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0.49056602, g: 0.48362404, b: 0.48362404, a: 1}
 --- !u!1001 &1444926053
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1351,20 +1407,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef0c4398bcb53d548ac825b63a1d3800, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ControlInfo:
-  - ControlOptionInfo:
-      CurrentStage: 0
-      Lights:
-      - {fileID: 921004984}
-      EmissiveMaterialRenderers:
-      - {fileID: 1636619333}
-      SaveLightColor: 1
-      SaveMaterialColor: 1
-      LightColors: []
-      IntensityMax: 0
-      IntensityMin: 0
-    LightControlOptions:
-    - {fileID: 11400000, guid: c3a541b5136c2f3468aee86ef1691ccb, type: 2}
+  lightControllerGroupsData: []
 --- !u!4 &1636565164
 Transform:
   m_ObjectHideFlags: 0
@@ -1397,7 +1440,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e2394951d04738b45acb499604ebd5f7, type: 2}
+  - {fileID: 1253213413}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1718,7 +1761,8 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2f91f0b25c78adf48a3af6d23e0d7386, type: 2}
 --- !u!1 &2104241058
 GameObject:

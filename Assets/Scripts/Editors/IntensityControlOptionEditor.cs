@@ -85,8 +85,9 @@ namespace LightControls.Editors
             
             EditorGUILayout.LabelField(intensityGenerationLabel, EditorUtils.RichTextStyle);
             
-            currentProperty.ControlTargetProperty.intValue = (int)(IntensityControlTarget)EditorGUILayout.EnumFlagsField(intensityTargetLabel, (IntensityControlTarget)currentProperty.ControlTargetProperty.intValue);
-            
+            //currentProperty.ControlTargetProperty.intValue = (int)(IntensityControlTarget)EditorGUILayout.EnumFlagsField(intensityTargetLabel, (IntensityControlTarget)currentProperty.ControlTargetProperty.intValue);
+            EditorUtils.DisplayIntensityControlTargetField(EditorGUILayout.GetControlRect(), currentProperty.ControlTargetProperty);
+
             EditorGUI.BeginChangeCheck();
 
             ValueGenerationMode intensityGenerationMode = (ValueGenerationMode)EditorGUILayout.EnumPopup(intensityGenerationModeLabelContent, EditorUtils.GetValueGenerationMode(currentProperty.CurvedIntensitiesProperty, currentProperty.ListedIntensitiesProperty));

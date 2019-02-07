@@ -26,7 +26,7 @@ namespace LightControls.ControlOptions
             return instancedOptionStager.UpdateControls();
         }
 
-        public override void ApplyControl(ControlOptionInfo controlInfo)
+        public override void ApplyControl(ControlOptionGroup controlInfo)
         {
             instancedOptionStager.ApplyControl(controlInfo);
         }

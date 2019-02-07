@@ -28,7 +28,7 @@ namespace LightControls.ControlOptions.Stages
             return instancedStages.Any(instanced => instanced.ApplyOn(stage));
         }
 
-        public void ApplyControl(ControlOptionInfo controlInfo)
+        public void ApplyControl(ControlOptionGroup controlInfo)
         {
             foreach (InstancedControlOptionStage instanced in activeStages)
             {

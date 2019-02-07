@@ -9,7 +9,7 @@ namespace LightControls.Utilities
 {
     public static class MiscUtils
     {
-        public static ArrayType[] ResizeAndFill<ArrayType>(ArrayType[] array, int size)
+        public static void ResizeAndFill<ArrayType>(ref ArrayType[] array, int size)
             where ArrayType : new()
         {
             if (array.Length != size)
@@ -26,8 +26,6 @@ namespace LightControls.Utilities
                     }
                 }
             }
-
-            return array;
         }
         
         public static ArrayType[] ResizeAndFillWith<ArrayType>(ArrayType[] array, int size, ArrayType defaultValue = default(ArrayType))

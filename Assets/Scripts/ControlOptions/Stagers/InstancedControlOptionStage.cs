@@ -64,7 +64,7 @@ namespace LightControls.ControlOptions.Stages
             return false;
         }
 
-        public void ApplyControl(ControlOptionInfo controlInfo)
+        public void ApplyControl(ControlOptionGroup controlInfo)
         {
             for (int i = 0; i < controlOptions.Length; i++)
             {

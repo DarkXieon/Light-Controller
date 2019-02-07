@@ -41,14 +41,14 @@ namespace LightControls.ControlOptions
         /// <param name="controlOptionInfo">
         /// The info that this control is updating
         /// </param>
-        public override void ApplyControl(ControlOptionInfo controlOptionInfo)
+        public override void ApplyControl(ControlOptionGroup controlOptionInfo)
         {
             if(ApplyOn(controlOptionInfo.CurrentStage))
             {
                 UpdateLightAudio(controlOptionInfo);
             }
         }
-
+        
         /// <summary>
         /// Implementation of the above method
         /// </summary>
@@ -56,7 +56,7 @@ namespace LightControls.ControlOptions
         /// <param name="controlOptionInfo">
         /// The info that this control is updating
         /// </param>
-        private void UpdateLightAudio(ControlOptionInfo controlOptionInfo)
+        private void UpdateLightAudio(ControlOptionGroup controlOptionInfo)
         {
             for (int i = 0; i < controlOptionInfo.Lights.Length; i++)
             {

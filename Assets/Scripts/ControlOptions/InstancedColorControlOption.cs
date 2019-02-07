@@ -77,7 +77,7 @@ namespace LightControls.ControlOptions
             return false;
         }
 
-        public override void ApplyControl(ControlOptionInfo controlOptionInfo)
+        public override void ApplyControl(ControlOptionGroup controlOptionInfo)
         {
             if (controlOptionInfo.CurrentStage == ApplicationStages.LightColorApplication && colorControlOption.ColorTarget.HasFlag(ColorControlTarget.Light))
             {
@@ -89,7 +89,7 @@ namespace LightControls.ControlOptions
                 ApplyColorToMaterials(controlOptionInfo.EmissiveMaterialRenderers);
             }
         }
-
+        
         private void UpdateRateOfChange()
         {
             if (UseCustomRateOfChange())

@@ -1,6 +1,6 @@
 ﻿namespace LightControls.Controllers
 {
-    public interface ILightControllerInfo
+    public interface ILightControllerGroup
     {
         bool UpdateControls();
         void ApplyControls();

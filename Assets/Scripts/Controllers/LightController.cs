@@ -6,7 +6,7 @@ namespace LightControls.Controllers
 {
     public abstract class LightController : MonoBehaviour
     {
-        public abstract ILightControllerInfo[] LightControllerInfo { get; }
+        public abstract ILightControllerGroup[] LightControllerInfo { get; }
 
         [NonSerialized]
         public bool IsChild = false;

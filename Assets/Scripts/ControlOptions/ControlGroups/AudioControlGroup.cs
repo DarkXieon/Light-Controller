@@ -17,7 +17,6 @@ namespace LightControls.ControlOptions.ControlGroups
 
         public void SetIntensity(LightInfo lightInfo, AudioNode[] audioClips)
         {
-            lightInfo.CurrentIntensity = 1;
             int? index = IndexOf(audioClips, lightInfo.CurrentIntensity);
             
             if ((lightInfo.IntensityGenerator.HasAuthority && lightInfo.ControlOptionInfo.CurrentStage == ApplicationStages.IntensityApplication) 
@@ -31,6 +30,7 @@ namespace LightControls.ControlOptions.ControlGroups
                         Source.clip = audioClips[index.Value].Clip;
                         Source.time = audioClips[index.Value].AudioStart;
                         Source.loop = false; // maybe? might need a fixed update call to make this work better
+                        Source.volume = audioClips[index.Value].MaxVolume;
                         Source.Play();
                         previousEndIndex = Source.timeSamples;
                     }
@@ -41,19 +41,6 @@ namespace LightControls.ControlOptions.ControlGroups
                         Source.Play();
                         
                     }
-                    if (audioClips[index.Value].ChangeVolumeFromIntensity && !lightInfo.IntensityGenerator.HasAuthority && lightInfo.MinIntensity != lightInfo.MaxIntensity)
-                    {
-                        float volume = index.Value == audioClips.Length - 1
-                            ? (lightInfo.CurrentIntensity - audioClips[index.Value].PlayAtIntensity) / (lightInfo.MaxIntensity - audioClips[index.Value].PlayAtIntensity)
-                            : (lightInfo.CurrentIntensity - audioClips[index.Value].PlayAtIntensity) / (audioClips[index.Value + 1].PlayAtIntensity - audioClips[index.Value].PlayAtIntensity);
-
-                        volume = audioClips[index.Value].MinVolume == audioClips[index.Value].MaxVolume
-                            ? audioClips[index.Value].MinVolume
-                            : Utilities.MathUtils.ReMap(volume, 0f, 1f, audioClips[index.Value].MinVolume, audioClips[index.Value].MaxVolume);
-
-                        Source.volume = volume;
-                    }
-
                     previousIndex = index;
 
                     if (lightInfo.IntensityGenerator.HasAuthority)
@@ -63,8 +50,8 @@ namespace LightControls.ControlOptions.ControlGroups
                         if (endingSample > previousEndIndex)
                         {
                             int samplesLength = (int)Mathf.Pow(2, Mathf.Min(14, (int)Mathf.Log(endingSample - previousEndIndex, 2) + 1));
-                            float[] samples = new float[samplesLength];
-                            Source.GetOutputData(samples, 0);
+                            float[] samples = GetAllOutputSamples(samplesLength); //new float[samplesLength];
+                            //Source.GetOutputData(samples, 0);
 
                             float minSample = 1f;
                             float maxSample = 0f;
@@ -99,6 +86,23 @@ namespace LightControls.ControlOptions.ControlGroups
 
                             previousEndIndex = endingSample;
                         }
+                    }
+                    
+                    if (audioClips[index.Value].ChangeVolumeFromIntensity) /*&& !lightInfo.IntensityGenerator.HasAuthority*/// && lightInfo.MinIntensity != lightInfo.MaxIntensity)
+                    {
+                        float volume = index.Value == audioClips.Length - 1
+                            ? (lightInfo.CurrentIntensity - audioClips[index.Value].PlayAtIntensity) / (lightInfo.MaxIntensity - audioClips[index.Value].PlayAtIntensity)
+                            : (lightInfo.CurrentIntensity - audioClips[index.Value].PlayAtIntensity) / (audioClips[index.Value + 1].PlayAtIntensity - audioClips[index.Value].PlayAtIntensity);
+
+                        volume = audioClips[index.Value].MinVolume == audioClips[index.Value].MaxVolume
+                            ? audioClips[index.Value].MinVolume
+                            : Utilities.MathUtils.ReMap(volume, 0f, 1f, audioClips[index.Value].MinVolume, audioClips[index.Value].MaxVolume);
+
+                        Source.volume = volume;
+                    }
+                    else if(!audioClips[index.Value].ChangeVolumeFromIntensity)
+                    {
+                        Source.volume = audioClips[index.Value].MaxVolume;
                     }
                 }
                 else
@@ -148,6 +152,24 @@ namespace LightControls.ControlOptions.ControlGroups
             float percentage = (currentVolume - minVolume) / (maxVolume - minVolume);
 
             return Mathf.Pow(maxIntensity, percentage) * Mathf.Pow(minIntensity, 1f - percentage);
+        }
+
+        private float[] GetAllOutputSamples(int outputPerChannel)
+        {
+            float[] allSamples = new float[outputPerChannel * Source.clip.channels];
+            
+            for(int i = 0; i < Source.clip.channels; i++)
+            {
+                float[] samples = new float[outputPerChannel];
+                Source.GetOutputData(samples, i);
+
+                for(int k = 0; k < samples.Length; k++)
+                {
+                    allSamples[k + outputPerChannel * i] = samples[k];
+                }
+            }
+
+            return allSamples;
         }
     }
 }
