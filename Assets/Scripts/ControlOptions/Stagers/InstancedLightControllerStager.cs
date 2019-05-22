@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+
 using LightControls.Controllers;
-using LightControls.ControlOptions.ControlGroups;
-using LightControls.Utilities;
-using UnityEngine;
 
 namespace LightControls.ControlOptions.Stages
 {
@@ -20,27 +17,27 @@ namespace LightControls.ControlOptions.Stages
             : base(stager)
         {
             controllerStager = stager;
-            controllerStages = stager.Stages
-                .Select(stage => new InstancedLightControllerStage(stage))
+            controllerStages = stager.StagerStages
+                .Select(stage => new InstancedLightControllerStage((LightControllerStage)stage))
                 .ToArray();
             
             iterations = new int[controllerStages.Length];
         }
 
-        public void UpdateInstanced()
-        {
-            if(controllerStager.Stages.Length != controllerStages.Length)
-            {
-                int previousSize = controllerStages.Length;
+        //public void UpdateInstanced()
+        //{
+        //    if(controllerStager.stages.Length != controllerStages.Length)
+        //    {
+        //        int previousSize = controllerStages.Length;
 
-                Array.Resize(ref controllerStages, controllerStager.Stages.Length);
+        //        Array.Resize(ref controllerStages, controllerStager.stages.Length);
                 
-                for(int i = previousSize; i < controllerStages.Length; i++)
-                {
-                    controllerStages[i] = new InstancedLightControllerStage(controllerStager.Stages[i]);
-                }
-            }
-        }
+        //        for(int i = previousSize; i < controllerStages.Length; i++)
+        //        {
+        //            controllerStages[i] = new InstancedLightControllerStage(controllerStager.stages[i]);
+        //        }
+        //    }
+        //}
 
         public void ApplyControls()
         {

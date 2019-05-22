@@ -21,6 +21,7 @@ namespace LightControls.Controllers
 
         public ApplicationStages CurrentStage;
 
+        public bool UpdateColorInfo;
         public float IntensityMax;
         public float IntensityMin;
 
@@ -36,13 +37,60 @@ namespace LightControls.Controllers
         {
             controlOptionGroupData = data;
 
+            UpdateColorInfo = false;
             lightColors = new Color[0];
             materialColors = new Color[0][];
 
+            InitializeColors();
+
+            UpdateColorSaving(options);
+        }
+
+        public void UpdateColorSaving(InstancedControlOption[] options)
+        {
+            bool wasSavingLightColor = saveLightColor;
+            bool wasSavingMaterialColor = saveMaterialColor;
+
             saveLightColor = !options.Any(option => option != null && option.ApplyOn(ApplicationStages.LightColorApplication));
             saveMaterialColor = !options.Any(option => option != null && option.ApplyOn(ApplicationStages.MaterialColorApplication));
+            
+            if (!wasSavingLightColor && saveLightColor)
+            {
+                RestoreLightColors();
+            }
 
-            InitializeColors();
+            if(!wasSavingMaterialColor && saveMaterialColor)
+            {
+                RestoreMaterialColors();
+            }
+        }
+
+        private void RestoreLightColors()
+        {
+            for(int i = 0; i < Lights.Length; i++)
+            {
+                if(Lights[i] != null)
+                {
+                    Lights[i].color = lightColors[i];
+                }
+            }
+        }
+
+        private void RestoreMaterialColors()
+        {
+            for (int i = 0; i < EmissiveMaterialRenderers.Length; i++)
+            {
+                if (EmissiveMaterialRenderers[i] != null)
+                {
+                    for (int k = 0; k < materialColors[i].Length; k++)
+                    {
+                        if (EmissiveMaterialRenderers[i].materials[k] != null)
+                        {
+                            EmissiveMaterialRenderers[i].materials[k].SetColor("_EmissionColor", materialColors[i][k]);
+                        }
+                    }
+                }
+            }
         }
 
         private void InitializeColors()

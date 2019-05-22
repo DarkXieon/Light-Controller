@@ -1,13 +1,16 @@
 ﻿#if UNITY_EDITOR
 
+using System;
 using System.Collections.Generic;
-
+using System.Linq;
+using LightControls.ControlOptions;
 using LightControls.ControlOptions.Stages;
 using LightControls.Utilities;
 
 using UnityEditor;
 
 using UnityEngine;
+using static LightControls.Utilities.EditorUtils;
 
 namespace LightControls.PropertyDrawers
 {
@@ -18,7 +21,6 @@ namespace LightControls.PropertyDrawers
         private class PropertyData
         {
             public StagerReorderableListWrapper DisplayList;
-            public SerializedProperty Stages;
         }
 
         private Dictionary<string, PropertyData> currentPropertyPerPath = new Dictionary<string, PropertyData>();
@@ -62,12 +64,59 @@ namespace LightControls.PropertyDrawers
             {
                 currentProperty = new PropertyData()
                 {
-                    DisplayList = new StagerReorderableListWrapper(property.serializedObject, property.FindPropertyRelative("Stages")),
-                    Stages = property.FindPropertyRelative("Stages")
+                    DisplayList = new StagerReorderableListWrapper(
+                        property.FindPropertyRelative("stages"),
+                        UpdateInstancedAdd,
+                        UpdateInstancedRemove,
+                        UpdateInstancedReorder)
                 };
 
                 currentPropertyPerPath.Add(property.propertyPath, currentProperty);
             }
+        }
+
+        private void UpdateInstancedAdd(SerializedProperty list)
+        {
+            UpdateInstancedBase<FoundControl>(
+                property: list,
+                info: EditorUtils.FindControls<StagedControlOption>(list),
+                instancedOperation: foundControl => StagerReorderableListWrapper.DefaultUpdateInstancedAdd<ControlOptionStage, InstancedControlOptionStage>(
+                    container: foundControl.ControlOption,
+                    instancedContainer: foundControl.InstancedOption,
+                    stagesPath: "stager.stages",
+                    instancedStagesPath: "instancedOptionStager.instancedStages",
+                    iterationsPath: "instancedOptionStager.iterations",
+                    stage => new InstancedControlOptionStage(stage)));
+        }
+
+        private void UpdateInstancedRemove(SerializedProperty list, int removedAt)
+        {
+            UpdateInstancedBase<FoundControl>(
+                property: list,
+                info: EditorUtils.FindControls<StagedControlOption>(list),
+                instancedOperation: foundControl => StagerReorderableListWrapper.DefaultInstancedRemove<ControlOptionStage, InstancedControlOptionStage>(
+                    container: foundControl.ControlOption,
+                    instancedContainer: foundControl.InstancedOption,
+                    removedAt: removedAt,
+                    stagesPath: "stager.stages",
+                    instancedStagesPath: "instancedOptionStager.instancedStages",
+                    iterationsPath: "instancedOptionStager.iterations"));
+        }
+
+
+        private void UpdateInstancedReorder(SerializedProperty list, int oldIndex, int newIndex)
+        {
+            UpdateInstancedBase<FoundControl>(
+                property: list,
+                info: EditorUtils.FindControls<StagedControlOption>(list),
+                instancedOperation: foundControl => StagerReorderableListWrapper.DefaultInstancedReorder<ControlOptionStage, InstancedControlOptionStage>(
+                    container: foundControl.ControlOption,
+                    instancedContainer: foundControl.InstancedOption,
+                    oldIndex: oldIndex,
+                    newIndex: newIndex,
+                    stagesPath: "stager.stages",
+                    instancedStagesPath: "instancedOptionStager.instancedStages",
+                    iterationsPath: "instancedOptionStager.iterations"));
         }
     }
 }

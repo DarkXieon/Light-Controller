@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace LightControls.ControlOptions.ControlGroups
 {
-    [System.Serializable]
     public class ListControlGroup
     {
         public bool UseControl => listData.UseControl;
@@ -21,7 +20,7 @@ namespace LightControls.ControlOptions.ControlGroups
         public ListControlGroup(ListControlGroupData data)
         {
             listData = data;
-
+            
             currentValue = listData.ListedValues[0];
             currentEntry = 0;
             nextEntry = FindNextIndex();

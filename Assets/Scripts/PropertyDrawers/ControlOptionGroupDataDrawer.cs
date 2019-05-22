@@ -48,20 +48,13 @@ namespace LightControls.PropertyDrawers
 
             bool lightsChanged = false;
             bool renderersChanged = false;
-
-            int indent = EditorGUI.indentLevel;
-            float previousLabelWidth = EditorGUIUtility.labelWidth;
-            float previousFieldWidth = EditorGUIUtility.fieldWidth;
             
             EditorGUI.BeginProperty(position, label, property);
 
-            Rect indentedPosition = EditorGUI.IndentedRect(position);
-            EditorGUI.indentLevel = 0;
-            EditorGUIUtility.labelWidth = 0;
-            EditorGUIUtility.fieldWidth = 0;
-
+            Rect indentedPosition = EditorUtils.BeginPropertyDrawer(position);
+            
             indentedPosition = EditorUtils.GetTopRect(indentedPosition, EditorStyles.numberField);
-            currentProperty.LightsProperty.arraySize = EditorUtils.ArraySizeField(indentedPosition, lightArrayLengthContent, currentProperty.LightsProperty.arraySize);
+            EditorUtils.ArraySizeField<Light>(indentedPosition, currentProperty.LightsProperty, lightArrayLengthContent);
 
             indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorUtils.GetSinglelinePropertyArrayHeight(currentProperty.LightsProperty, lightArrayElementContent));
             EditorGUI.BeginChangeCheck();
@@ -71,7 +64,7 @@ namespace LightControls.PropertyDrawers
             indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorUtils.VerticalSpace);
 
             indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorStyles.numberField);
-            currentProperty.RenderersProperty.arraySize = EditorUtils.ArraySizeField(indentedPosition, rendererArrayLengthContent, currentProperty.RenderersProperty.arraySize);
+            EditorUtils.ArraySizeField<Renderer>(indentedPosition, currentProperty.RenderersProperty, rendererArrayLengthContent);
 
             indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorUtils.GetSinglelinePropertyArrayHeight(currentProperty.LightsProperty, rendererArrayElementContent));
             EditorGUI.BeginChangeCheck();
@@ -93,10 +86,8 @@ namespace LightControls.PropertyDrawers
                 }
             }
 
-            EditorGUI.indentLevel = indent;
-            EditorGUIUtility.labelWidth = previousLabelWidth;
-            EditorGUIUtility.fieldWidth = previousFieldWidth;
-
+            EditorUtils.EndPropertyDrawer();
+            
             EditorGUI.EndProperty();
         }
 

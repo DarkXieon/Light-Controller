@@ -1,13 +1,17 @@
-﻿namespace LightControls.ControlOptions.Stages
+﻿using UnityEngine;
+
+namespace LightControls.ControlOptions.Stages
 {
     [System.Serializable]
     public class ControlOptionStage : Stage
     {
-        public LightControlOption[] ControlOptions;
+        public LightControlOption[] ControlOptions => controlOptions;
+
+        [SerializeField] private LightControlOption[] controlOptions;
 
         public ControlOptionStage() : base()
         {
-            ControlOptions = ControlOptions ?? new LightControlOption[0];
+            controlOptions = controlOptions ?? new LightControlOption[0];
         }
     }
 }

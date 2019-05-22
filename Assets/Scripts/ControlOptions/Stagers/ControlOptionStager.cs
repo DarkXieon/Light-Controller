@@ -11,13 +11,15 @@ namespace LightControls.ControlOptions.Stages
     [System.Serializable]
     public class ControlOptionStager : Stager
     {
-        public override Stage[] StagerStages => Stages;
+        public override Stage[] StagerStages => stages;
 
-        public ControlOptionStage[] Stages;// = new ControlOptionStage[1];
+        public ControlOptionStage[] Stages => stages;
+
+        [SerializeField] private ControlOptionStage[] stages;
 
         public ControlOptionStager() : base()
         {
-            Stages = Stages ?? new ControlOptionStage[1];
+            stages = stages ?? new ControlOptionStage[1];
         }
     }
 }

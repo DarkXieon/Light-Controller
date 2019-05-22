@@ -21,6 +21,7 @@ namespace LightControls.ControlOptions.Stages
             lightControllerStage = stage;
 
             clonedLightControllers = lightControllerStage.LightControllers
+                .Where(controller => controller != null)
                 .Select(controller =>
                 {
                     return controller.gameObject.scene.name == null
@@ -59,7 +60,7 @@ namespace LightControls.ControlOptions.Stages
 
             timeActive += Time.deltaTime;
 
-            if (iterations.Min() > minIterations)
+            if (iterations.Length > 0 && iterations.Min() > minIterations)
             {
                 minIterations = iterations.Min();
 

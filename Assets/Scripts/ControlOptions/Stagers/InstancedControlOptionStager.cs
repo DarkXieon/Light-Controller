@@ -25,7 +25,7 @@ namespace LightControls.ControlOptions.Stages
 
         public bool ApplyOn(ApplicationStages stage)
         {
-            return instancedStages.Any(instanced => instanced.ApplyOn(stage));
+            return activeStages.Any(instanced => ((InstancedControlOptionStage)instanced).ApplyOn(stage));
         }
 
         public void ApplyControl(ControlOptionGroup controlInfo)
@@ -36,6 +36,8 @@ namespace LightControls.ControlOptions.Stages
             }
 
             PerformRemoves();
+
+            controlInfo.UpdateColorInfo = controlInfo.UpdateColorInfo || updatedStages;
         }
     }
 }

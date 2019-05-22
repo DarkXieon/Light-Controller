@@ -8,42 +8,114 @@ using UnityEngine;
 
 namespace LightControls.ControlOptions.Stages
 {
+    public class ActiveStage
+    {
+        public bool Advanced { get; set; }
+
+        public bool ReadyToEnd { get; private set; }
+        public bool ReadyToAdvance { get; private set; }
+
+        private InstancedStage stage;
+
+        public ActiveStage(InstancedStage toActivate)
+        {
+            stage = toActivate;
+
+            stage.Start();
+
+            Advanced = false;
+            ReadyToEnd = false;
+            ReadyToAdvance = false;
+        }
+
+        public bool Update()
+        {
+            bool iterated = stage.Update();
+
+            ReadyToEnd = !stage.Continue();
+            ReadyToAdvance = !stage.Advance();
+
+            return iterated;
+        }
+    }
+
     public abstract class InstancedStager
     {
-        public List<InstancedStage> ActiveStages => activeStages.ToList();
+        //public List<InstancedStage> ActiveStages => activeStages.ToList();
 
         protected abstract Stager stagerData { get; }
         protected abstract InstancedStage[] stagerStages { get; }
 
+        //protected List<ActiveStage> activeStages;
         protected List<InstancedStage> activeStages;
         protected List<InstancedStage> waitingForRemove;
         protected int currentStage;
         protected bool waitingForAdvance;
-        
+        protected bool updatedStages;
+
         protected int[] iterations;
         private int minIterations;
         
         protected InstancedStager(Stager stager)
         {
+            //activeStages = new List<ActiveStage>();
             activeStages = new List<InstancedStage>();
             waitingForRemove = new List<InstancedStage>();
             currentStage = -1;
             waitingForAdvance = true;
+            updatedStages = false;
 
             minIterations = 0;
         }
         
         public bool UpdateControls()
         {
+            //foreach (ActiveStage stage in activeStages)
+            //{
+            //    bool iterated = stage.Update();
+
+            //    if (iterated)
+            //    {
+            //        iterations[Array.IndexOf(stagerStages, stage)]++;
+            //    }
+
+            //    if(stage.ReadyToAdvance && !stage.Advanced && TryAdvanceStage())
+            //    {
+            //        activeStages.Add(new ActiveStage(stagerStages[currentStage]));
+
+            //        stage.Advanced = true;
+
+            //    }
+            //}
+
+            //PerformRemoves();
+
+            //bool finishedIteration = false;
+
+            //if (iterations.Min() > minIterations)
+            //{
+            //    minIterations = iterations.Min();
+
+            //    finishedIteration = true;
+            //}
+
+            //return finishedIteration;
+
+            updatedStages = false;
+
             if (waitingForAdvance && TryAdvanceStage())
             {
                 activeStages.Add(stagerStages[currentStage]);
 
                 waitingForAdvance = false;
+
+                updatedStages = true;
             }
 
-            foreach (InstancedStage stage in activeStages)
+            //foreach (InstancedStage stage in activeStages)
+            for (int i = 0; i < activeStages.Count; i++)
             {
+                InstancedStage stage = activeStages[i];
                 bool iterated = stage.Update();
 
                 if (iterated)
@@ -56,6 +128,11 @@ namespace LightControls.ControlOptions.Stages
                     Debug.Log("Ending!");
 
                     waitingForRemove.Add(stage);
+                    activeStages.Remove(stage);
+
+                    updatedStages = true;
+
+                    i--;
                 }
             }
 
@@ -68,7 +145,7 @@ namespace LightControls.ControlOptions.Stages
                 finishedIteration = true;
             }
 
-            if (currentStage > -1 && !activeStages.Contains(stagerStages[currentStage]) && stagerStages[currentStage].AdvanceAfter == StagingOptions.Iterations)
+            if (currentStage > -1 && !activeStages.Contains(stagerStages[currentStage]) && stagerStages[currentStage].AdvanceAfter != StagingOptions.None)
             {
                 stagerStages[currentStage].Update();
             }
@@ -90,8 +167,17 @@ namespace LightControls.ControlOptions.Stages
             //    iterations[Array.IndexOf(stagerStages, stage)] = 0;
             //}
 
-            activeStages = activeStages.Except(waitingForRemove).ToList();
+            //activeStages = activeStages.Except(waitingForRemove).ToList();
             waitingForRemove.Clear();
+
+            //for (int i = 0; i < activeStages.Count; i++)
+            //{
+            //    if(activeStages[i].ReadyToAdvance && activeStages[i].ReadyToEnd)
+            //    {
+            //        activeStages.RemoveAt(i);
+            //        i--;
+            //    }
+            //}
         }
 
         private bool TryAdvanceStage()
@@ -100,6 +186,7 @@ namespace LightControls.ControlOptions.Stages
 
             //if(timeWaited >= timeToWait)
             //{
+
             int found = GetNextAvailableStage();
 
             if (found > -1)

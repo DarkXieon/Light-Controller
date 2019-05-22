@@ -93,26 +93,28 @@ namespace LightControls.Controllers
     {
         public override ILightControllerGroup[] LightControllerInfo => new InstancedLightControllerStager[1] { instancedStager };
 
-        public LightControllerStager ControllerStager = new LightControllerStager();
+         [SerializeField] private LightControllerStager controllerStager = new LightControllerStager();
 
         private InstancedLightControllerStager instancedStager;
 
         private void Awake()
         {
-            ControllerStager = ControllerStager ?? new LightControllerStager();
+            controllerStager = controllerStager ?? new LightControllerStager();
 
-            instancedStager = this.enabled 
-                ? new InstancedLightControllerStager(ControllerStager)
-                : new InstancedLightControllerStager(new LightControllerStager());
+            //instancedStager = this.enabled 
+            //    ? new InstancedLightControllerStager(controllerStager)
+            //    : new InstancedLightControllerStager(new LightControllerStager());
+
+            instancedStager = new InstancedLightControllerStager(controllerStager);
 
 #if UNITY_EDITOR
             //WarningSystem.DisplayStagedLightControllerWarnings(this);
 #endif
         }
 
-        public void UpdateInstancedController()
-        {
-            instancedStager.UpdateInstanced();
-        }
+        //public void UpdateInstancedController()
+        //{
+        //    instancedStager.UpdateInstanced();
+        //}
     }
 }

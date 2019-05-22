@@ -39,18 +39,11 @@ namespace LightControls.PropertyDrawers
             Initialize(property);
 
             bool optionsChanged = false;
-
-            int indent = EditorGUI.indentLevel;
-            float previousLabelWidth = EditorGUIUtility.labelWidth;
-            float previousFieldWidth = EditorGUIUtility.fieldWidth;
             
             EditorGUI.BeginProperty(position, label, property);
 
-            Rect indentedPosition = EditorGUI.IndentedRect(position);
+            Rect indentedPosition = EditorUtils.BeginPropertyDrawer(position);
             indentedPosition = EditorUtils.GetTopRect(indentedPosition, EditorUtils.VerticalSpace);
-            EditorGUI.indentLevel = 0;
-            EditorGUIUtility.labelWidth = 0;
-            EditorGUIUtility.fieldWidth = 0;
 
             indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorGUI.GetPropertyHeight(currentProperty.ControlOptionGroupDataProperty));
             EditorGUI.PropertyField(indentedPosition, currentProperty.ControlOptionGroupDataProperty, true);
@@ -58,8 +51,8 @@ namespace LightControls.PropertyDrawers
             indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorUtils.VerticalSpace);
 
             indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorStyles.numberField);
-            currentProperty.LightControlOptionsProperty.arraySize = EditorUtils.ArraySizeField(indentedPosition, controlOptionsLengthContent, currentProperty.LightControlOptionsProperty.arraySize);
-
+            EditorUtils.ArraySizeField<LightControlOption>(indentedPosition, currentProperty.LightControlOptionsProperty, controlOptionsLengthContent);
+            
             indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorUtils.GetSinglelinePropertyArrayHeight(currentProperty.LightControlOptionsProperty, controlOptionsElementContent));
             EditorGUI.BeginChangeCheck();
             EditorUtils.DisplaySinglelinePropertyArray(indentedPosition, currentProperty.LightControlOptionsProperty, controlOptionsElementContent);
@@ -69,10 +62,8 @@ namespace LightControls.PropertyDrawers
             {
                 UpdateInstancedControls(property);
             }
-
-            EditorGUI.indentLevel = indent;
-            EditorGUIUtility.labelWidth = previousLabelWidth;
-            EditorGUIUtility.fieldWidth = previousFieldWidth;
+            
+            EditorUtils.EndPropertyDrawer();
 
             EditorGUI.EndProperty();
         }

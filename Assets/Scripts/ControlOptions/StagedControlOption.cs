@@ -16,11 +16,13 @@ namespace LightControls.ControlOptions
     [CreateAssetMenu(menuName = "Light Controller/Staged Control Option")]
     public class StagedControlOption : LightControlOption
     {
-        public ControlOptionStager Stager;
+        public ControlOptionStager Stager => stager;
+
+        [SerializeField] private ControlOptionStager stager;
 
         private void OnEnable()
         {
-            Stager = Stager ?? new ControlOptionStager();
+            stager = stager ?? new ControlOptionStager();
         }
         
         public override InstancedControlOption GetInstanced()

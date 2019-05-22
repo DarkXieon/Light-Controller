@@ -79,7 +79,7 @@ namespace LightControls.Utilities
             }
             else
             {
-                throw new Exception("Type given and type found at path did not match");
+                throw new Exception($"Type {typeof(MemberType).Name} given is not assignable from object's type {memberAtPath.GetType().Name}");
             }
         }
 
@@ -105,10 +105,14 @@ namespace LightControls.Utilities
                                 string newPath = path.Substring(propertyNames[0].Length + propertyNames[1].Length + 2, path.Length - (propertyNames[0].Length + propertyNames[1].Length) - 2);
                                 
                                 SetMemberAtPath(specialValue, setAs, newPath);
+
+                                return; //I think this fixes it?
                             }
                             else
                             {
                                 (memberContainer as Array).SetValue(setAs, index);
+
+                                return;
                             }
                         }
                         break;

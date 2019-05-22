@@ -6,6 +6,7 @@ using LightControls.Utilities;
 using UnityEditor;
 
 using UnityEngine;
+using static LightControls.Utilities.EditorUtils;
 
 namespace LightControls.Editors
 {
@@ -37,7 +38,7 @@ namespace LightControls.Editors
         public override void OnInspectorGUI()
         {
             ColorControlOption colorControlOptions = (ColorControlOption)target;
-
+            
             EditorGUIUtility.labelWidth = 250f;
             
             EditorGUILayout.LabelField(mainLabelContent, EditorUtils.RichTextStyle);

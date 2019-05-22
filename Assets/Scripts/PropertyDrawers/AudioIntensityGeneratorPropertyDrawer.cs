@@ -14,11 +14,11 @@ namespace LightControls.PropertyDrawers
     [CustomPropertyDrawer(typeof(AudioIntensityGenerator))]
     public class AudioIntensityGeneratorPropertyDrawer : PropertyDrawer
     {
-        private static GUIContent hasAuthorityContent;
-        private static GUIContent minMaxLabelContent;
-        private static GUIContent minIntensityContent;
-        private static GUIContent maxIntensityContent;
-        private static GUIContent controlTargetContent;
+        private static readonly GUIContent hasAuthorityContent;
+        private static readonly GUIContent minMaxLabelContent;
+        private static readonly GUIContent minIntensityContent;
+        private static readonly GUIContent maxIntensityContent;
+        private static readonly GUIContent controlTargetContent;
 
         static AudioIntensityGeneratorPropertyDrawer()
         {
@@ -44,17 +44,10 @@ namespace LightControls.PropertyDrawers
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             Initialize(property);
-
-            int indent = EditorGUI.indentLevel;
-            float previousLabelWidth = EditorGUIUtility.labelWidth;
-            float previousFieldWidth = EditorGUIUtility.fieldWidth;
-
+            
             EditorGUI.BeginProperty(position, label, property);
 
-            Rect indentedPosition = EditorGUI.IndentedRect(position);
-            EditorGUI.indentLevel = 0;
-            EditorGUIUtility.labelWidth = 0;
-            EditorGUIUtility.fieldWidth = 0;
+            Rect indentedPosition = EditorUtils.BeginPropertyDrawer(position);
 
             indentedPosition = EditorUtils.GetTopRect(indentedPosition, EditorStyles.label);
 
@@ -82,16 +75,13 @@ namespace LightControls.PropertyDrawers
                 currentProperty.MaxIntensityProperty.floatValue = EditorGUI.FloatField(splitLine[4], currentProperty.MaxIntensityProperty.floatValue);
 
                 indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorStyles.label);
-                //currentProperty.ControlTargetProperty.intValue = (int)(IntensityControlTarget)EditorGUI.EnumFlagsField(indentedPosition, controlTargetContent, (IntensityControlTarget)currentProperty.ControlTargetProperty.intValue);
                 EditorUtils.DisplayIntensityControlTargetField(indentedPosition, currentProperty.ControlTargetProperty);
 
                 indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorUtils.GetIntensityModifiersHeight(currentProperty.ControlTargetProperty));
                 EditorUtils.DisplayIntensityModifiers(indentedPosition, currentProperty.ControlTargetProperty, currentProperty.IntensityModifiers);
             }
             
-            EditorGUI.indentLevel = indent;
-            EditorGUIUtility.labelWidth = previousLabelWidth;
-            EditorGUIUtility.fieldWidth = previousFieldWidth;
+            EditorUtils.EndPropertyDrawer();
 
             EditorGUI.EndProperty();
         }

@@ -44,13 +44,13 @@ namespace LightControls.Controllers
                 {
                     Array.Resize(ref controlIterations, controlOptions.Length);
                 }
-
+                
                 for (int i = 0; i < controlOptions.Length; i++)
                 {
                     if (controlOptions[i].UpdateControl())
                         controlIterations[i]++;
                 }
-
+                
                 if (controlIterations.Min() > minIterations)
                 {
                     minIterations = controlIterations.Min();
@@ -74,6 +74,13 @@ namespace LightControls.Controllers
                     {
                         controlOptions[k].ApplyControl(controlOptionGroup);
                     }
+                }
+                
+                if (controlOptionGroup.UpdateColorInfo)
+                {
+                    controlOptionGroup.UpdateColorSaving(controlOptions);
+
+                    controlOptionGroup.UpdateColorInfo = false;
                 }
             }
         }

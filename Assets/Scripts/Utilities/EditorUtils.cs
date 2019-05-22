@@ -6,6 +6,7 @@ using System.Reflection;
 using LightControls.Controllers;
 using LightControls.Controllers.Data;
 using LightControls.ControlOptions;
+using LightControls.ControlOptions.Stages;
 using UnityEditor;
 
 using UnityEngine;
@@ -92,7 +93,6 @@ namespace LightControls.Utilities
     public sealed partial class EditorUtils
     {
         public static GUIStyle RichTextStyle;
-        //public static GUIStyle DefaultStyle;
 
         public static float LineHeight;
 
@@ -105,13 +105,16 @@ namespace LightControls.Utilities
         public static string EditedValue;
         public static string EditedControl;
 
+        private static int previousIndent;
+        private static float previousFieldWidth;
+        private static float previousLabelWidth;
+
         private static int lineCount;
         
         [InitializeOnLoadMethod]
         private static void Initialize()
         {
             RichTextStyle = new GUIStyle() { richText = true, alignment = TextAnchor.MiddleLeft, fontSize = 14 };
-            //DefaultStyle = new GUIStyle() { alignment = TextAnchor.MiddleLeft, fontSize = 14 }; //the font size should really be 11
             LineHeight = EditorGUIUtility.singleLineHeight;
             HorizontalBuffer = 2f;
             IndentSpace = 15f;
@@ -132,6 +135,27 @@ namespace LightControls.Utilities
             return new Indent(rect, IndentSpace * indentAmount);
         }
         
+        public static Rect BeginPropertyDrawer(Rect rect)
+        {
+            previousIndent = EditorGUI.indentLevel;
+            previousLabelWidth = EditorGUIUtility.labelWidth;
+            previousFieldWidth = EditorGUIUtility.fieldWidth;
+            
+            Rect indentedPosition = EditorGUI.IndentedRect(rect);
+            EditorGUI.indentLevel = 0;
+            EditorGUIUtility.labelWidth = 0;
+            EditorGUIUtility.fieldWidth = 0;
+            
+            return indentedPosition;
+        }
+
+        public static void EndPropertyDrawer()
+        {
+            EditorGUI.indentLevel = previousIndent;
+            EditorGUIUtility.labelWidth = previousLabelWidth;
+            EditorGUIUtility.fieldWidth = previousFieldWidth;
+        }
+
         public static Rect[] SplitLineRect(Rect lineRect, GUIContent[] labelContent, GUIStyle labelStyle, int linesDownward)
         {
             float[] sizePercentages = new float[labelContent.Length];
@@ -489,15 +513,14 @@ namespace LightControls.Utilities
 
                 // Draw textfield, somehow this makes it work better when pressing enter
                 // No idea why...
-                //EditorGUILayout.BeginHorizontal();
                 EditedValue = EditorGUILayout.TextField(label, EditedValue, EditorStyles.numberField);
-                //EditorGUILayout.EndHorizontal();
 
                 // Parse number
                 int number = 0;
+
                 if (int.TryParse(EditedValue, out number))
                 {
-                    value = number;
+                    value = Mathf.Min(number, 100);
                 }
 
                 // Reset values, the edit value must go back to its original state
@@ -540,6 +563,88 @@ namespace LightControls.Utilities
             return value;
         }
 
+        public static void ArrayDragAndDropArea<Type>(Rect controlRect, SerializedProperty array)
+            where Type : UnityEngine.Object
+        {
+            Type[] droppedObjects = DetectDraggedObjects<Type>(controlRect);
+
+            if(droppedObjects.Length > 0)
+            {
+                array.serializedObject.ApplyModifiedProperties();
+
+                for (int j = 0; j < array.serializedObject.targetObjects.Length; j++)
+                {
+                    UnityEngine.Object currentTarget = array.serializedObject.targetObjects[j];
+
+                    Type[] currentArray = ReflectionUtils.GetMemberAtPath<Type[]>(currentTarget, array.propertyPath);
+                    Array.Resize(ref currentArray, currentArray.Length + droppedObjects.Length);
+                    
+                    for (int i = currentArray.Length - droppedObjects.Length; i < currentArray.Length; i++)
+                    {
+                        currentArray[i] = droppedObjects[i - (currentArray.Length - droppedObjects.Length)];
+                    }
+
+                    ReflectionUtils.SetMemberAtPath(currentTarget, currentArray, array.propertyPath);
+                }
+
+                array.serializedObject.Update();
+
+                GUI.changed = true;
+            }
+        }
+
+        public static Type[] DetectDraggedObjects<Type>(Rect controlRect)
+            where Type : UnityEngine.Object
+        {
+            Type[] convertedObjects = new Type[0];
+
+            if (controlRect.Contains(Event.current.mousePosition)
+                && (Event.current.type == EventType.DragUpdated
+                || Event.current.type == EventType.DragExited))
+            {
+                convertedObjects = DragAndDrop.objectReferences
+                    .Select(obj =>
+                    {
+                        if (typeof(Type).IsAssignableFrom(obj.GetType()))
+                        {
+                            return (Type)obj;
+                        }
+                        else if (typeof(GameObject).IsAssignableFrom(obj.GetType()))
+                        {
+                            GameObject gameObject = (GameObject)obj;
+                            Type component = gameObject.GetComponent<Type>();
+
+                            if (component != null)
+                            {
+                                return component;
+                            }
+                        }
+
+                        return null;
+                    })
+                    .Where(obj => obj != null)
+                    .ToArray();
+            }
+            
+            if (controlRect.Contains(Event.current.mousePosition)
+                && Event.current.type == EventType.DragUpdated
+                && convertedObjects.Any())
+            {
+                DragAndDrop.visualMode = DragAndDropVisualMode.Move;
+            }
+            
+            if (controlRect.Contains(Event.current.mousePosition)
+                && Event.current.type == EventType.DragExited
+                && convertedObjects.Any())
+            {
+                DragAndDrop.AcceptDrag();
+
+                return convertedObjects;
+            }
+
+            return new Type[0];
+        }
+
         /// <summary>
         /// Creates an special IntField that only changes the actual value when pressing enter or losing focus
         /// </summary>
@@ -567,7 +672,7 @@ namespace LightControls.Utilities
                 int number = 0;
                 if (int.TryParse(EditedValue, out number))
                 {
-                    value = number;
+                    value = Mathf.Min(number, 100);
                 }
 
                 // Reset values, the edit value must go back to its original state
@@ -609,6 +714,88 @@ namespace LightControls.Utilities
             GUI.changed = false;
 
             return value;
+        }
+
+        public static void ArraySizeField(Rect rect, SerializedProperty array, GUIContent label)
+        {
+            bool guiChanged = false;
+
+            // Get current control id
+            int controlID = GUIUtility.GetControlID(FocusType.Passive);
+
+            // Assign real value if out of focus or enter pressed,
+            // the edited value cannot be empty and the tooltip must match to the current control
+
+            if ((EditedValue != string.Empty && EditedControl == controlID.ToString()) &&
+                ((Event.current.Equals(Event.KeyboardEvent("[enter]")) || Event.current.Equals(Event.KeyboardEvent("return")) ||
+                Event.current.Equals(Event.KeyboardEvent("tab")) || (Event.current.type == EventType.MouseDown))))
+            {
+
+                // Draw textfield, somehow this makes it work better when pressing enter
+                // No idea why...
+                EditedValue = EditorGUI.TextField(rect, label, EditedValue, EditorStyles.numberField);
+
+                // Parse number
+                int number = 0;
+                if (int.TryParse(EditedValue, out number))
+                {
+                    array.arraySize = Mathf.Min(number, 100);
+                }
+
+                // Reset values, the edit value must go back to its original state
+                EditedValue = string.Empty;
+                EditedControl = string.Empty;
+                guiChanged = true;
+
+                return;
+            }
+            else if (EditedControl != controlID.ToString())
+            {
+                GUI.SetNextControlName(controlID.ToString());
+
+                string entered = array.hasMultipleDifferentValues
+                    ? EditorGUI.TextField(rect, label, "-", EditorStyles.numberField)
+                    : EditorGUI.TextField(rect, label, array.arraySize.ToString(), EditorStyles.numberField);
+
+                if (GUI.GetNameOfFocusedControl() == controlID.ToString())
+                {
+                    EditedControl = controlID.ToString();
+                    EditedValue = entered != "-"
+                        ? entered
+                        : array.arraySize.ToString();
+                }
+            }
+            else
+            {
+                GUI.SetNextControlName(controlID.ToString());
+
+                string entered = array.hasMultipleDifferentValues
+                    ? EditorGUI.TextField(rect, label, "-", EditorStyles.numberField)
+                    : EditorGUI.TextField(rect, label, EditedValue, EditorStyles.numberField);
+
+                EditedValue = entered != "-"
+                        ? entered
+                        : array.arraySize.ToString();
+            }
+
+            GUI.changed = guiChanged;
+        }
+
+        public static void ArraySizeField<Type>(Rect rect, SerializedProperty array, GUIContent label)
+            where Type : UnityEngine.Object
+        {
+            ArraySizeField(rect, array, label);
+
+            Rect dragAndDropArea = new Rect(rect.x, rect.y, EditorStyles.numberField.CalcSize(label).x, rect.height);
+
+            EditorGUI.BeginChangeCheck();
+
+            ArrayDragAndDropArea<Type>(dragAndDropArea, array);
+
+            if(EditorGUI.EndChangeCheck())
+            {
+                EditedValue = $"{array.arraySize}";
+            }
         }
 
         public static void DisplayMultilinePropertyArray(SerializedProperty arrayProperty, GUIContent elementContent, bool highlight = false, bool addSpacing = false, int? length = null)
@@ -1006,22 +1193,224 @@ namespace LightControls.Utilities
         {
             if(typeof(IntensityControlOption).IsAssignableFrom(option.GetType()) && instanced.GetType().GetField("intensityControlOption", BindingFlags.Instance | BindingFlags.NonPublic) != null)
             {
-                return ReflectionUtils.GetMemberAtPath<IntensityControlOption>(instanced, "intensityControlOption") != null;
+                LightControlOption found = ReflectionUtils.GetMemberAtPath<IntensityControlOption>(instanced, "intensityControlOption");
+
+                return found != null && found == option;
             }
             else if (typeof(ColorControlOption).IsAssignableFrom(option.GetType()) && instanced.GetType().GetField("colorControlOption", BindingFlags.Instance | BindingFlags.NonPublic) != null)
             {
-                return ReflectionUtils.GetMemberAtPath<ColorControlOption>(instanced, "colorControlOption") != null;
+                LightControlOption found = ReflectionUtils.GetMemberAtPath<ColorControlOption>(instanced, "colorControlOption");
+
+                return found != null && found == option;
             }
             else if (typeof(AudioControlOption).IsAssignableFrom(option.GetType()) && instanced.GetType().GetField("audioControlOption", BindingFlags.Instance | BindingFlags.NonPublic) != null)
             {
-                return ReflectionUtils.GetMemberAtPath<AudioControlOption>(instanced, "audioControlOption") != null;
+                LightControlOption found = ReflectionUtils.GetMemberAtPath<AudioControlOption>(instanced, "audioControlOption");
+
+                return found != null && found == option;
             }
             else if (typeof(StagedControlOption).IsAssignableFrom(option.GetType()) && instanced.GetType().GetField("stagedControlOption", BindingFlags.Instance | BindingFlags.NonPublic) != null)
             {
-                return ReflectionUtils.GetMemberAtPath<StagedControlOption>(instanced, "stagedControlOption") != null;
+                LightControlOption found = ReflectionUtils.GetMemberAtPath<StagedControlOption>(instanced, "stagedControlOption");
+
+                return found != null && found == option;
             }
 
             return false;
+        }
+
+        public class FoundControl
+        {
+            public GroupedLightController Controller;
+            public LightControlOption ControlOption;
+            public InstancedControlOption InstancedOption;
+            public string OptionPath;
+            public string InstancedPath;
+        }
+
+        //Only use when the serializedObject's target objects are LightControlOptions
+        public static FoundControl[] FindControls<TOption>(SerializedProperty targetIsControlOption)
+            where TOption : LightControlOption
+        {
+            return targetIsControlOption.serializedObject.targetObjects
+                .Select(target => (TOption)target)
+                .SelectMany(target => GameObject.FindObjectsOfType<GroupedLightController>()
+                    .Select(controller => FindIn(controller, target))
+                    .Where(found => found != null))
+                .ToArray();
+        }
+
+        public static FoundControl[] FindControls(LightControlOption controlOption)
+        {
+            return GameObject.FindObjectsOfType<GroupedLightController>()
+                .Select(controller => FindIn(controller, controlOption))
+                .Where(found => found != null)
+                .ToArray();
+        }
+
+        private const string lightControllerGroupDataPath = "lightControllerGroupsData";
+        private const string groupLightControlsPath = "lightControlOptions";
+        private const string instancedGroupPath = "lightControllerGroups";
+        private const string instancedControlOptionsPath = "controlOptions";
+
+        public static FoundControl FindIn(GroupedLightController controller, LightControlOption option)
+        {
+            LightControllerGroupData[] groupData = ReflectionUtils.GetMemberAtPath<LightControllerGroupData[]>(controller, lightControllerGroupDataPath);
+
+            for(int i = 0; i < groupData.Length; i++)
+            {
+                LightControlOption[] options = ReflectionUtils.GetMemberAtPath<LightControlOption[]>(groupData[i], groupLightControlsPath);
+
+                for(int k = 0; k < options.Length; k++)
+                {
+                    if (options[k] == option)
+                    {
+                        return new FoundControl()
+                        {
+                            Controller = controller,
+                            ControlOption = option,
+                            InstancedOption = ReflectionUtils.GetMemberAtPath<InstancedControlOption>(controller, $"{instancedGroupPath}.Array.data[{i}].{instancedControlOptionsPath}.Array.data[{k}]"),
+                            OptionPath = $"{lightControllerGroupDataPath}.Array.data[{i}].{groupLightControlsPath}.Array.data[{k}]",
+                            InstancedPath = $"{instancedGroupPath}.Array.data[{i}].{instancedControlOptionsPath}.Array.data[{k}]"
+                        };
+                    }
+                    else if (options[k] is StagedControlOption)
+                    {
+                        FoundControl found = FindIn(controller, (StagedControlOption)options[k], option, $"{lightControllerGroupDataPath}.Array.data[{i}].{groupLightControlsPath}.Array.data[{k}]");
+
+                        if (found != null)
+                        {
+                            return found;
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private const string stagedStagesPath = "stager.stages";
+        private const string stagedStageControlsPath = "controlOptions";
+
+        private const string instancedStagesPath = "instancedOptionStager.instancedStages";
+        private const string instancedStageControlsPath = "controlOptions";
+
+        public static FoundControl FindIn(GroupedLightController controller, StagedControlOption staged, LightControlOption toFind, string path)
+        {
+            ControlOptionStage[] stages = ReflectionUtils.GetMemberAtPath<ControlOptionStage[]>(staged, stagedStagesPath);
+
+            for(int i = 0; i < stages.Length; i++)
+            {
+                LightControlOption[] foundControls = ReflectionUtils.GetMemberAtPath<LightControlOption[]>(stages[i], stagedStageControlsPath);
+
+                for (int k = 0; k < foundControls.Length; k++)
+                {
+                    path += $".{stagedStagesPath}.Array.data[{i}].{stagedStageControlsPath}.Array.data[{k}]";
+                    
+                    if (foundControls[k] == toFind)
+                    {
+                        string instancedPath = path
+                            .Replace(lightControllerGroupDataPath, instancedGroupPath)
+                            .Replace(groupLightControlsPath, instancedControlOptionsPath)
+                            .Replace(stagedStagesPath, instancedStagesPath)
+                            .Replace(stagedStageControlsPath, instancedStageControlsPath);
+
+                        return new FoundControl()
+                        {
+                            Controller = controller,
+                            ControlOption = toFind,
+                            InstancedOption = ReflectionUtils.GetMemberAtPath<InstancedControlOption>(controller, instancedPath),
+                            OptionPath = path,
+                            InstancedPath = instancedPath
+                        };
+                    }
+                    else if (foundControls[k] is StagedControlOption)
+                    {
+                        FoundControl found = FindIn(controller, (StagedControlOption)foundControls[k], toFind, path);
+
+                        if (found != null)
+                        {
+                            return found;
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public static void UpdateInstancedArray<TSerialized, TInstanced>(
+            object[] serializedContainers,
+            object[] instancedContainers,
+            string serializedPath,
+            string instancedPath,
+            string iterationsPath,
+            Func<TSerialized, TInstanced, bool> isInstancedVersion,
+            Func<TSerialized, TInstanced> getInstancedVersion)
+            where TSerialized : class
+            where TInstanced : class
+        {
+            for(int i = 0; i < instancedContainers.Length; i++)
+            {
+                UpdateInstancedArray(
+                    serializedContainer: serializedContainers[i],
+                    instancedContainer: instancedContainers[i],
+                    serializedPath: serializedPath,
+                    instancedPath: instancedPath,
+                    iterationsPath: iterationsPath,
+                    isInstancedVersion: isInstancedVersion,
+                    getInstancedVersion: getInstancedVersion);
+            }
+        }
+
+        public static void UpdateInstancedArray<TSerialized, TInstanced>(
+            object serializedContainer,
+            object instancedContainer,
+            string serializedPath,
+            string instancedPath,
+            string iterationsPath,
+            Func<TSerialized, TInstanced, bool> isInstancedVersion,
+            Func<TSerialized, TInstanced> getInstancedVersion)
+            where TSerialized : class
+            where TInstanced : class
+        {
+            TSerialized[] savedData = ReflectionUtils.GetMemberAtPath<TSerialized[]>(serializedContainer, serializedPath);
+            TInstanced[] instancedData = ReflectionUtils.GetMemberAtPath<TInstanced[]>(instancedContainer, instancedPath);
+            int[] iterations = ReflectionUtils.GetMemberAtPath<int[]>(instancedContainer, iterationsPath);
+            
+            if (savedData.Length == instancedData.Length)
+            {
+                for (int i = 0; i < savedData.Length; i++)
+                {
+                    if(!isInstancedVersion(savedData[i], instancedData[i]))
+                    {
+                        instancedData[i] = getInstancedVersion(savedData[i]);
+                    }
+                }
+            }
+            else
+            {
+                bool addedInfo = savedData.Length > instancedData.Length;
+                int previousLength = instancedData.Length;
+                int iterationsMin = iterations.Min();
+
+                Array.Resize(ref instancedData, savedData.Length);
+                Array.Resize(ref iterations, savedData.Length);
+
+                if (addedInfo)
+                {
+                    for(int i = previousLength; i < instancedData.Length; i++)
+                    {
+                        instancedData[i] = savedData[i] != null
+                            ? getInstancedVersion(savedData[i])
+                            : null;
+
+                        iterations[i] = iterationsMin;
+                    }
+                }
+            } //potentially add more complicated actions for removal--that will only be necissarry if removal is not always from the back though--which currently--I believe it always is
+
+            ReflectionUtils.SetMemberAtPath(instancedContainer, instancedData, instancedPath);
         }
 
         public static void CopyFromTo<T>(T[] from, T[] to)

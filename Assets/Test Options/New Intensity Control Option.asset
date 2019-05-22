@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7cab2c93433eee49ab61a9f47783877, type: 3}
-  m_Name: BlinkOther
+  m_Name: New Intensity Control Option
   m_EditorClassIdentifier: 
   listedIntensities:
     useControl: 0
@@ -55,27 +55,18 @@ MonoBehaviour:
         - serializedVersion: 3
           time: 0
           value: 0
-          inSlope: 0
-          outSlope: 29.854403
-          tangentMode: 69
+          inSlope: 1
+          outSlope: 1
+          tangentMode: 34
           weightedMode: 0
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 0.33117616
-          value: 9.887066
-          inSlope: 29.854403
-          outSlope: -143.65755
-          tangentMode: 69
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.33333334
-        - serializedVersion: 3
-          time: 0.4
-          value: 0
-          inSlope: -143.65755
-          outSlope: 443.29388
-          tangentMode: 69
+          time: 1
+          value: 1
+          inSlope: 1
+          outSlope: 1
+          tangentMode: 34
           weightedMode: 0
           inWeight: 0
           outWeight: 0
@@ -87,15 +78,14 @@ MonoBehaviour:
     maxCurveTracker:
       minMaxPoints:
       - 0
-      - 0.33117616
-      - 0.4
+      - 1
       wrapMode: 1
     minCurveTracker:
       minMaxPoints:
       - 0
       - 1
       wrapMode: 2
-    maxValue: 9.887066
+    maxValue: 1
     minValue: 0
   listedRoC:
     useControl: 0
@@ -106,9 +96,9 @@ MonoBehaviour:
     maxValue: 0
     minValue: 0
   curvedRoC:
-    useControl: 0
+    useControl: 1
     minMaxCurve:
-      m_Mode: 2
+      m_Mode: 0
       m_CurveMultiplier: 1
       m_CurveMin:
         serializedVersion: 2
@@ -158,26 +148,30 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMin: 1
+      m_ConstantMax: 2
     maxCurveTracker:
-      minMaxPoints: []
+      minMaxPoints:
+      - 0
+      - 1
       wrapMode: 2
     minCurveTracker:
-      minMaxPoints: []
+      minMaxPoints:
+      - 0
+      - 1
       wrapMode: 2
-    maxValue: 0
-    minValue: 0
+    maxValue: 2
+    minValue: 2
   roCMode: 1
-  controlTarget: 5
+  controlTarget: 1
   intensityModifers:
+  - Multiplier: 10
+    Offset: 0
+    RelateInversely: 0
   - Multiplier: 1
     Offset: 0
     RelateInversely: 0
-  - Multiplier: 0.2
-    Offset: 0
-    RelateInversely: 0
-  - Multiplier: 0.2
+  - Multiplier: 1
     Offset: 0
     RelateInversely: 0
   - Multiplier: 1
@@ -190,4 +184,4 @@ MonoBehaviour:
   useLightIntensityFloor: 0
   useLightIntensityCeiling: 0
   floor: 0
-  ceiling: 0
+  ceiling: 1000000

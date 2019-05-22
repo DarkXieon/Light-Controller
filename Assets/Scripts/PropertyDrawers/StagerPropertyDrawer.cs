@@ -1,5 +1,7 @@
 ﻿#if UNITY_EDITOR
 
+using System;
+using System.Collections.Generic;
 using LightControls.ControlOptions.Stages;
 using LightControls.Utilities;
 
@@ -19,86 +21,67 @@ namespace LightControls.PropertyDrawers
         private readonly GUIContent controlOptionsLengthContent = new GUIContent("Control Options", "");
         private readonly GUIContent controlOptionsElementContent = new GUIContent("Control Option", "");
 
+        private class PropertyData
+        {
+            public SerializedProperty RandomizeNextStage;
+            public SerializedProperty CanSkipStages;
+        }
+
+        private Dictionary<string, PropertyData> currentPropertyPerPath = new Dictionary<string, PropertyData>();
+        private PropertyData currentProperty;
+
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            int indent = EditorGUI.indentLevel;
-            EditorGUI.indentLevel = 0;
+            Initialize(property);
+            
             EditorGUI.BeginProperty(position, label, property);
 
-            PropertyDrawerRect currentRect = new PropertyDrawerRect(position);
+            Rect indentedRect = EditorUtils.BeginPropertyDrawer(position);
 
-            using (EditorUtils.StartIndent(currentRect, indent))
-            {
-                EditorGUI.BeginChangeCheck();
+            indentedRect = EditorUtils.GetTopRect(indentedRect, EditorStyles.label);
+            currentProperty.RandomizeNextStage.boolValue = EditorGUI.Toggle(indentedRect, randomizeStageOrderContent, currentProperty.RandomizeNextStage.boolValue);
 
-                currentRect.CurrentRect = EditorUtils.GetTopRect(currentRect.CurrentRect, EditorUtils.LineHeight);
-                property.FindPropertyRelative("RandomizeNextStage").boolValue = EditorGUI.Toggle(currentRect.CurrentRect, randomizeStageOrderContent, property.FindPropertyRelative("RandomizeNextStage").boolValue);
-                //EditorGUI.PropertyField(currentRect.CurrentRect, property.FindPropertyRelative("RandomizeNextStage"), randomizeStageOrderContent);
-
-                currentRect.CurrentRect = EditorUtils.GetRectBelow(currentRect.CurrentRect, EditorUtils.LineHeight);
-                property.FindPropertyRelative("CanSkipStages").boolValue = EditorGUI.Toggle(currentRect.CurrentRect, allowLooseOrderContent, property.FindPropertyRelative("CanSkipStages").boolValue);
-
-                //currentRect.CurrentRect = EditorUtils.GetRectBelow(currentRect.CurrentRect, EditorUtils.LineHeight);
-                //int size = EditorUtils.ArraySizeField(currentRect.CurrentRect, new GUIContent("Size"), self.StageControl.Stages.Length);
-
-                //if (EditorGUI.EndChangeCheck())
-                //{
-                //    self.Stages = MiscUtils.ResizeAndFillWith(self.Stages, size, () => null);
-                //    self.ControlOptionInfos = MiscUtils.ResizeAndFill(self.ControlOptionInfos, size);
-                //}
-
-                //parent.Update();
-
-                //for (int i = 0; i < self.StageControl.Stages.Length; i++)
-                //{
-                //    SerializedProperty stage = property.FindPropertyRelative("Stages").GetArrayElementAtIndex(i);
-
-                //    SerializedProperty controlOptionInfo = property.FindPropertyRelative("ControlOptionInfos").GetArrayElementAtIndex(i);
-
-                //    currentRect.CurrentRect = EditorUtils.GetRectBelow(currentRect.CurrentRect, EditorUtils.LineHeight);
-
-                //    Rect labelRect = currentRect.CurrentRect;
-
-                //    EditorGUI.LabelField(labelRect, new GUIContent(EditorUtils.GetRichText(string.Format("Stage {0}", i + 1), TextOptions.Bold), ""), EditorUtils.RichTextStyle);
-
-                //    currentRect.CurrentRect = EditorUtils.GetRectBelow(currentRect.CurrentRect, EditorGUI.GetPropertyHeight(stage));
-
-                //    Rect full = currentRect.CurrentRect;
-
-                //    currentRect.CurrentRect = EditorUtils.GetRectBelow(currentRect.CurrentRect, EditorGUI.GetPropertyHeight(controlOptionInfo));
-
-                //    Rect full2 = currentRect.CurrentRect;
-
-                //    Rect total = new Rect(full.x, full.y, full.width, full.height + full2.height + EditorUtils.VerticalBuffer * 2);
-
-                //    GUI.Box(total, GUIContent.none);
-
-                //    EditorGUI.PropertyField(full, stage);
-
-                //    parent.ApplyModifiedProperties();
-
-                //    self.StageControl.Stages[i].ControlOptions = self.StageControl.Stages[i].ControlOptions.Select(option => option == null ? UnityEngine.Object.Instantiate(GetInstancedOption()) : option).ToArray();
-
-                //    parent.Update();
-
-                //    EditorGUI.PropertyField(full2, controlOptionInfo);
-
-                //    parent.ApplyModifiedProperties();
-
-                //    self.StageControl.ControlOptionInfos = self.StageControl.ControlOptionInfos.Select(info => info == null ? new ControlOptionInfo() : info).ToArray();
-
-                //    parent.Update();
-                //}
-            }
+            indentedRect = EditorUtils.GetRectBelow(indentedRect, EditorStyles.label);
+            currentProperty.CanSkipStages.boolValue = EditorGUI.Toggle(indentedRect, allowLooseOrderContent, currentProperty.CanSkipStages.boolValue);
             
-            EditorGUI.indentLevel = indent;
+            EditorUtils.EndPropertyDrawer();
+
             EditorGUI.EndProperty();
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
+            Initialize(property);
+
             return (EditorUtils.LineHeight + EditorUtils.VerticalBuffer) * 2f;
         }
+
+        private void Initialize(SerializedProperty property)
+        {
+            if (!currentPropertyPerPath.TryGetValue(property.propertyPath, out currentProperty))
+            {
+                currentProperty = new PropertyData()
+                {
+                    RandomizeNextStage = property.FindPropertyRelative("randomizeNextStage"),
+                    CanSkipStages = property.FindPropertyRelative("canSkipStages")
+                };
+
+                currentPropertyPerPath.Add(property.propertyPath, currentProperty);
+            }
+        }
+
+        protected static void UpdateInstancedBase<TInfo>(SerializedProperty property, TInfo[] info, Action<TInfo> instancedOperation)
+        {
+            property.serializedObject.ApplyModifiedProperties();
+
+            for (int i = 0; i < info.Length; i++)
+            {
+                instancedOperation(info[i]);
+            }
+
+            property.serializedObject.Update();
+        }
+
     }
 }
 

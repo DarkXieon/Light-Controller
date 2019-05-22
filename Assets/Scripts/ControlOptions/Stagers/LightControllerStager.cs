@@ -1,15 +1,17 @@
-﻿namespace LightControls.ControlOptions.Stages
+﻿using UnityEngine;
+
+namespace LightControls.ControlOptions.Stages
 {
     [System.Serializable]
     public class LightControllerStager : Stager
     {
-        public override Stage[] StagerStages => Stages;
+        public override Stage[] StagerStages => stages;
 
-        public LightControllerStage[] Stages = new LightControllerStage[1] { new LightControllerStage() };
+        [SerializeField] private LightControllerStage[] stages = new LightControllerStage[1] { new LightControllerStage() };
 
         public LightControllerStager() : base()
         {
-            Stages = Stages ?? new LightControllerStage[1];
+            stages = stages ?? new LightControllerStage[1] { new LightControllerStage() };
         }
     }
 }

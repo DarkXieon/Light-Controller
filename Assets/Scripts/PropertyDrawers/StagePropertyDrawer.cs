@@ -6,18 +6,20 @@ using System.Linq;
 using System.Reflection;
 using LightControls.Controllers;
 using LightControls.ControlOptions;
+using LightControls.ControlOptions.ControlGroups;
 using LightControls.ControlOptions.Stages;
 using LightControls.Utilities;
 
 using UnityEditor;
 
 using UnityEngine;
+using static LightControls.Utilities.EditorUtils;
 
 namespace LightControls.PropertyDrawers
 {
     [InitializeOnLoad]
     [CustomPropertyDrawer(typeof(Stage), true)]
-    public class StagePropertyDrawer : PropertyDrawer
+    public abstract class StagePropertyDrawer : PropertyDrawer
     {
         private static readonly GUIContent stageActivationContent;
         private static readonly GUIContent stageActivationLimitStarts;
@@ -75,13 +77,17 @@ namespace LightControls.PropertyDrawers
             public SerializedProperty ContinueFor;
             public SerializedProperty AdvanceAfter;
             public SerializedProperty ContinueForListedTimeGeneration;
+            public SerializedProperty UseContinueForListedTimeGeneration;
             public SerializedProperty ContinueForCurvedTimeGeneration;
+            public SerializedProperty UseContinueForCurvedTimeGeneration;
             public SerializedProperty ContinueForIterationsMin;
             public SerializedProperty ContinueForIterationsMax;
             public SerializedProperty ContinueForEventDetectorScript;
             public SerializedProperty ContinueForEventDetectorMethodName;
             public SerializedProperty AdvanceAfterListedTimeGeneration;
+            public SerializedProperty UseAdvanceAfterListedTimeGeneration;
             public SerializedProperty AdvanceAfterCurvedTimeGeneration;
+            public SerializedProperty UseAdvanceAfterCurvedTimeGeneration;
             public SerializedProperty AdvanceAfterIterationsMin;
             public SerializedProperty AdvanceAfterIterationsMax;
             public SerializedProperty AdvanceAfterEventDetectorScript;
@@ -134,8 +140,14 @@ namespace LightControls.PropertyDrawers
             EditorGUI.LabelField(indentedPosition, stageDurationContent, EditorStyles.boldLabel);
 
             indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorUtils.LineHeight);
+            EditorGUI.BeginChangeCheck();
             StagingOptions chosenOption = (StagingOptions)EditorGUI.EnumPopup(indentedPosition, stageDurationTypeContent, (StagingOptions)currentProperty.ContinueFor.intValue);
             currentProperty.ContinueFor.intValue = (int)chosenOption;
+
+            if(EditorGUI.EndChangeCheck() && EditorApplication.isPlaying)
+            {
+                OnContinueForChanged(property);
+            }
 
             if (chosenOption == StagingOptions.Iterations)
             {
@@ -165,14 +177,14 @@ namespace LightControls.PropertyDrawers
                     EditorUtils.SetValueGenerationMode(currentProperty.ContinueForCurvedTimeGeneration, currentProperty.ContinueForListedTimeGeneration, intensityGenerationMode);
                 }
 
-                if (currentProperty.ContinueForCurvedTimeGeneration.FindPropertyRelative("useControl").boolValue)
+                if (currentProperty.UseContinueForCurvedTimeGeneration.boolValue)
                 {
                     indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorUtils.LineHeight);
                     indentedPosition.height = EditorGUI.GetPropertyHeight(currentProperty.ContinueForCurvedTimeGeneration);
 
                     EditorGUI.PropertyField(indentedPosition, currentProperty.ContinueForCurvedTimeGeneration);
                 }
-                else if (currentProperty.ContinueForListedTimeGeneration.FindPropertyRelative("useControl").boolValue)
+                else if (currentProperty.UseContinueForListedTimeGeneration.boolValue)
                 {
                     indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorUtils.LineHeight);
                     indentedPosition.height = EditorGUI.GetPropertyHeight(currentProperty.ContinueForListedTimeGeneration);
@@ -218,8 +230,14 @@ namespace LightControls.PropertyDrawers
             EditorGUI.LabelField(indentedPosition, triggerDelayContent, EditorStyles.boldLabel);
 
             indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorUtils.LineHeight);
+            EditorGUI.BeginChangeCheck();
             chosenOption = (StagingOptions)EditorGUI.EnumPopup(indentedPosition, triggerDelayTypeContent, (StagingOptions)currentProperty.AdvanceAfter.intValue);
             currentProperty.AdvanceAfter.intValue = (int)chosenOption;
+
+            if (EditorGUI.EndChangeCheck() && EditorApplication.isPlaying)
+            {
+                OnAdvanceAfterChanged(property);
+            }
 
             if (chosenOption == StagingOptions.Iterations)
             {
@@ -249,14 +267,14 @@ namespace LightControls.PropertyDrawers
                     EditorUtils.SetValueGenerationMode(currentProperty.AdvanceAfterCurvedTimeGeneration, currentProperty.AdvanceAfterListedTimeGeneration, intensityGenerationMode);
                 }
 
-                if (currentProperty.AdvanceAfterCurvedTimeGeneration.FindPropertyRelative("useControl").boolValue)
+                if (currentProperty.UseAdvanceAfterCurvedTimeGeneration.boolValue)
                 {
                     indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorUtils.LineHeight);
                     indentedPosition.height = EditorGUI.GetPropertyHeight(currentProperty.AdvanceAfterCurvedTimeGeneration);
 
                     EditorGUI.PropertyField(indentedPosition, currentProperty.AdvanceAfterCurvedTimeGeneration);
                 }
-                else if (currentProperty.AdvanceAfterListedTimeGeneration.FindPropertyRelative("useControl").boolValue)
+                else if (currentProperty.UseAdvanceAfterListedTimeGeneration.boolValue)
                 {
                     indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorUtils.LineHeight);
                     indentedPosition.height = EditorGUI.GetPropertyHeight(currentProperty.AdvanceAfterListedTimeGeneration);
@@ -346,27 +364,103 @@ namespace LightControls.PropertyDrawers
             {
                 currentProperty = new PropertyData()
                 {
-                    ContinueFor = property.FindPropertyRelative("ContinueFor"),
-                    AdvanceAfter = property.FindPropertyRelative("AdvanceAfter"),
-                    ContinueForListedTimeGeneration = property.FindPropertyRelative("ContinueForListedTimeGeneration"),
-                    ContinueForCurvedTimeGeneration = property.FindPropertyRelative("ContinueForCurvedTimeGeneration"),
-                    ContinueForIterationsMin = property.FindPropertyRelative("ContinueForIterationsMin"),
-                    ContinueForIterationsMax = property.FindPropertyRelative("ContinueForIterationsMax"),
-                    ContinueForEventDetectorScript = property.FindPropertyRelative("ContinueForEventDetector.detector"),
-                    ContinueForEventDetectorMethodName = property.FindPropertyRelative("ContinueForEventDetector.methodName"),
-                    AdvanceAfterListedTimeGeneration = property.FindPropertyRelative("AdvanceAfterListedTimeGeneration"),
-                    AdvanceAfterCurvedTimeGeneration = property.FindPropertyRelative("AdvanceAfterCurvedTimeGeneration"),
-                    AdvanceAfterIterationsMin = property.FindPropertyRelative("AdvanceAfterIterationsMin"),
-                    AdvanceAfterIterationsMax = property.FindPropertyRelative("AdvanceAfterIterationsMax"),
-                    AdvanceAfterEventDetectorScript = property.FindPropertyRelative("AdvanceAfterEventDetector.detector"),
-                    AdvanceAfterEventDetectorMethodName = property.FindPropertyRelative("AdvanceAfterEventDetector.methodName"),
-                    LimitStarts = property.FindPropertyRelative("LimitStarts"),
-                    MaxStartAmountMin = property.FindPropertyRelative("MaxStartAmountMin"),
-                    MaxStartAmountMax = property.FindPropertyRelative("MaxStartAmountMax")
+                    ContinueFor = property.FindPropertyRelative("continueFor"),
+                    AdvanceAfter = property.FindPropertyRelative("advanceAfter"),
+                    ContinueForListedTimeGeneration = property.FindPropertyRelative("continueForListedTimeGeneration"),
+                    UseContinueForListedTimeGeneration = property.FindPropertyRelative("continueForListedTimeGeneration.useControl"),
+                    ContinueForCurvedTimeGeneration = property.FindPropertyRelative("continueForCurvedTimeGeneration"),
+                    UseContinueForCurvedTimeGeneration = property.FindPropertyRelative("continueForCurvedTimeGeneration.useControl"),
+                    ContinueForIterationsMin = property.FindPropertyRelative("continueForIterationsMin"),
+                    ContinueForIterationsMax = property.FindPropertyRelative("continueForIterationsMax"),
+                    ContinueForEventDetectorScript = property.FindPropertyRelative("continueForEventDetector.detector"),
+                    ContinueForEventDetectorMethodName = property.FindPropertyRelative("continueForEventDetector.methodName"),
+                    AdvanceAfterListedTimeGeneration = property.FindPropertyRelative("advanceAfterListedTimeGeneration"),
+                    UseAdvanceAfterListedTimeGeneration = property.FindPropertyRelative("advanceAfterListedTimeGeneration.useControl"),
+                    AdvanceAfterCurvedTimeGeneration = property.FindPropertyRelative("advanceAfterCurvedTimeGeneration"),
+                    UseAdvanceAfterCurvedTimeGeneration = property.FindPropertyRelative("advanceAfterCurvedTimeGeneration.useControl"),
+                    AdvanceAfterIterationsMin = property.FindPropertyRelative("advanceAfterIterationsMin"),
+                    AdvanceAfterIterationsMax = property.FindPropertyRelative("advanceAfterIterationsMax"),
+                    AdvanceAfterEventDetectorScript = property.FindPropertyRelative("advanceAfterEventDetector.detector"),
+                    AdvanceAfterEventDetectorMethodName = property.FindPropertyRelative("advanceAfterEventDetector.methodName"),
+                    LimitStarts = property.FindPropertyRelative("limitStarts"),
+                    MaxStartAmountMin = property.FindPropertyRelative("maxStartAmountMin"),
+                    MaxStartAmountMax = property.FindPropertyRelative("maxStartAmountMax")
                 };
 
                 currentPropertyPerPath.Add(property.propertyPath, currentProperty);
             }
+        }
+
+        protected abstract string GetInstancedPath(SerializedProperty self);
+
+        private void OnStagingOptionsChanged(SerializedProperty self, string prefix)
+        {
+            self.serializedObject.ApplyModifiedProperties();
+
+            string instancedPath = GetInstancedPath(self);
+            FoundControl[] foundControls = EditorUtils.FindControls<StagedControlOption>(self);
+            Stage currentSelf = ReflectionUtils.GetMemberAtPath<Stage>(self.serializedObject.targetObject, self.propertyPath); //shouldn't need to loop for each target as the values being used should all be the same
+            
+            for(int i = 0; i < foundControls.Length; i++)
+            {
+                InstancedStage current = ReflectionUtils.GetMemberAtPath<InstancedStage>(foundControls[i].InstancedOption, instancedPath);
+                
+                switch ((StagingOptions)currentProperty.ContinueFor.intValue)
+                {
+                    case StagingOptions.Iterations:
+                        int iterations = UnityEngine.Random.Range(currentSelf.ContinueForIterationsMin, currentSelf.ContinueForIterationsMax);
+                        ReflectionUtils.SetMemberAtPath(current, iterations, $"{prefix}Iterations");
+
+                        break;
+
+                    case StagingOptions.Time:
+                        ListControlGroup continueForList = ReflectionUtils.GetMemberAtPath<ListControlGroup>(current, $"{prefix}ListedTimeGeneration");
+                        CurveControlGroup continueForCurve = ReflectionUtils.GetMemberAtPath<CurveControlGroup>(current, $"{prefix}CurvedTimeGeneration");
+                        
+                        if (continueForList.UseControl)
+                        {
+                            continueForList.IncrementControlValue();
+
+                            ReflectionUtils.SetMemberAtPath(current, continueForList.GetControlValue(), $"{prefix}Time");
+                        }
+
+                        if (continueForCurve.UseControl)
+                        {
+                            continueForCurve.IncrementControlValue();
+
+                            ReflectionUtils.SetMemberAtPath(current, continueForCurve.GetControlValue(), $"{prefix}Time");
+                        }
+
+                        ReflectionUtils.SetMemberAtPath(current, continueForList, $"{prefix}ListedTimeGeneration");
+                        ReflectionUtils.SetMemberAtPath(current, continueForCurve, $"{prefix}CurvedTimeGeneration");
+
+                        break;
+
+                    case StagingOptions.Event:
+                        break;
+
+                    case StagingOptions.None:
+                        break;
+
+                    default:
+                        Debug.LogError("Unrecognized Staging Option");
+                        break;
+                }
+
+                ReflectionUtils.SetMemberAtPath(foundControls[i].InstancedOption, current, instancedPath);
+            }
+
+            self.serializedObject.Update();
+        }
+
+        private void OnContinueForChanged(SerializedProperty self)
+        {
+            OnStagingOptionsChanged(self, "continueFor");
+        }
+
+        private void OnAdvanceAfterChanged(SerializedProperty self)
+        {
+            OnStagingOptionsChanged(self, "advanceAfter");
         }
     }
 }

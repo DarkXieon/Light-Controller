@@ -85,7 +85,7 @@ namespace LightControls.Editors
 
             //serializedObject.Update();
 
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("Stager"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("stager"));
 
             serializedObject.ApplyModifiedProperties();
 
@@ -105,7 +105,7 @@ namespace LightControls.Editors
         {
             currentProperty = new PropertyData
             {
-                StagesProperty = serializedObject.FindProperty("Stager.Stages"),
+                StagesProperty = serializedObject.FindProperty("stager.stages"),
                 RandomizeNextStageProperty = serializedObject.FindProperty("Stager.RandomizeNextStage"),
                 CanSkipStagesProperty = serializedObject.FindProperty("Stager.CanSkipStages")
             };

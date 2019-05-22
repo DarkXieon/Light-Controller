@@ -27,8 +27,6 @@ namespace LightControls.ControlOptions.Stages
         
         public bool ApplyOn(ApplicationStages stage)
         {
-            var test = controlOptions.Where(element => element.ApplyOn(stage)).ToArray();
-
             return controlOptions.Any(element => element.ApplyOn(stage));
         }
 

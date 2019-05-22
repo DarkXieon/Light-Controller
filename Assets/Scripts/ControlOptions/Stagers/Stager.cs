@@ -12,8 +12,11 @@ namespace LightControls.ControlOptions.Stages
     public abstract class Stager //maybe rename this stager data
     {
         public abstract Stage[] StagerStages { get; }
-        
-        public bool RandomizeNextStage;
-        public bool CanSkipStages;
+
+        public bool RandomizeNextStage => randomizeNextStage;
+        public bool CanSkipStages => canSkipStages;
+
+        [SerializeField] private bool randomizeNextStage;
+        [SerializeField] private bool canSkipStages;
     }
 }

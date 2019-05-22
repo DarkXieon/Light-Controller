@@ -28,7 +28,7 @@ namespace LightControls.ControlOptions.ControlGroups.Data
             useControl = use;
             randomizeBetweenValues = false;
             randomizeChosenEntry = false;
-            listedValues = new float[1];
+            listedValues = new float[] { 0 };
         }
     }
 }

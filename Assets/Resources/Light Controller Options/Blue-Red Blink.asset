@@ -12,17 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da30f1436ca434347ba08a8a78d3b10c, type: 3}
   m_Name: Blue-Red Blink
   m_EditorClassIdentifier: 
-  Stager:
-    RandomizeNextStage: 0
-    CanSkipStages: 0
-    Stages:
-    - guid: d9d06445dda18c74ebebcb81ff8a5441
-      ContinueFor: 0
-      AdvanceAfter: 2
-      ContinueForEventDetector:
+  stager:
+    randomizeNextStage: 0
+    canSkipStages: 0
+    stages:
+    - guid: f9ca7943f31d7c84684d9234d7c2d4af
+      continueFor: 1
+      advanceAfter: 1
+      continueForEventDetector:
         detector: {fileID: 0}
         methodName: 
-      ContinueForListedTimeGeneration:
+      continueForListedTimeGeneration:
         useControl: 0
         randomizeBetweenValues: 0
         randomizeChosenEntry: 0
@@ -30,90 +30,10 @@ MonoBehaviour:
         - 0
         maxValue: 0
         minValue: 0
-      ContinueForCurvedTimeGeneration:
-        useControl: 1
-        minMaxCurve:
-          m_Mode: 3
-          m_CurveMultiplier: 1
-          m_CurveMin:
-            serializedVersion: 2
-            m_Curve:
-            - serializedVersion: 3
-              time: 0
-              value: 0
-              inSlope: 0
-              outSlope: 10
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            - serializedVersion: 3
-              time: 1
-              value: 10
-              inSlope: 10
-              outSlope: 0
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            m_PreInfinity: 2
-            m_PostInfinity: 2
-            m_RotationOrder: 4
-          m_CurveMax:
-            serializedVersion: 2
-            m_Curve:
-            - serializedVersion: 3
-              time: 0
-              value: 5
-              inSlope: 0
-              outSlope: 5
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            - serializedVersion: 3
-              time: 1
-              value: 10
-              inSlope: 5
-              outSlope: 0
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            m_PreInfinity: 2
-            m_PostInfinity: 2
-            m_RotationOrder: 4
-          m_ConstantMin: 0.1
-          m_ConstantMax: 2
-        maxCurveTracker:
-          minMaxPoints:
-          - 0
-          - 1
-          wrapMode: 2
-        minCurveTracker:
-          minMaxPoints:
-          - 0
-          - 1
-          wrapMode: 2
-        maxValue: 2
-        minValue: 0.1
-      ContinueForIterationsMin: 1
-      ContinueForIterationsMax: 1
-      AdvanceAfterEventDetector:
-        detector: {fileID: 0}
-        methodName: OnDurationFinish
-      AdvanceAfterListedTimeGeneration:
+      continueForCurvedTimeGeneration:
         useControl: 0
-        randomizeBetweenValues: 0
-        randomizeChosenEntry: 0
-        listedValues:
-        - 0
-        maxValue: 0
-        minValue: 0
-      AdvanceAfterCurvedTimeGeneration:
-        useControl: 1
         minMaxCurve:
-          m_Mode: 0
+          m_Mode: 2
           m_CurveMultiplier: 1
           m_CurveMin:
             serializedVersion: 2
@@ -164,33 +84,21 @@ MonoBehaviour:
             m_PostInfinity: 2
             m_RotationOrder: 4
           m_ConstantMin: 0
-          m_ConstantMax: 1
+          m_ConstantMax: 0
         maxCurveTracker:
-          minMaxPoints:
-          - 0
-          - 1
+          minMaxPoints: []
           wrapMode: 2
         minCurveTracker:
-          minMaxPoints:
-          - 0
-          - 1
+          minMaxPoints: []
           wrapMode: 2
-        maxValue: 1
-        minValue: 1
-      AdvanceAfterIterationsMin: 1
-      AdvanceAfterIterationsMax: 1
-      LimitStarts: 0
-      MaxStartAmountMin: 1
-      MaxStartAmountMax: 1
-      ControlOptions:
-      - {fileID: 11400000, guid: ec3da4ef102e9324d8c39dc2bcd9d981, type: 2}
-    - guid: 71fdf8368c32f6d4b977da04bdb5ca66
-      ContinueFor: 0
-      AdvanceAfter: 2
-      ContinueForEventDetector:
+        maxValue: 0
+        minValue: 0
+      continueForIterationsMin: 1
+      continueForIterationsMax: 1
+      advanceAfterEventDetector:
         detector: {fileID: 0}
         methodName: 
-      ContinueForListedTimeGeneration:
+      advanceAfterListedTimeGeneration:
         useControl: 0
         randomizeBetweenValues: 0
         randomizeChosenEntry: 0
@@ -198,90 +106,10 @@ MonoBehaviour:
         - 0
         maxValue: 0
         minValue: 0
-      ContinueForCurvedTimeGeneration:
-        useControl: 1
-        minMaxCurve:
-          m_Mode: 3
-          m_CurveMultiplier: 1
-          m_CurveMin:
-            serializedVersion: 2
-            m_Curve:
-            - serializedVersion: 3
-              time: 0
-              value: 0
-              inSlope: 0
-              outSlope: 10
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            - serializedVersion: 3
-              time: 1
-              value: 10
-              inSlope: 10
-              outSlope: 0
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            m_PreInfinity: 2
-            m_PostInfinity: 2
-            m_RotationOrder: 4
-          m_CurveMax:
-            serializedVersion: 2
-            m_Curve:
-            - serializedVersion: 3
-              time: 0
-              value: 5
-              inSlope: 0
-              outSlope: 5
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            - serializedVersion: 3
-              time: 1
-              value: 10
-              inSlope: 5
-              outSlope: 0
-              tangentMode: 0
-              weightedMode: 0
-              inWeight: 0
-              outWeight: 0
-            m_PreInfinity: 2
-            m_PostInfinity: 2
-            m_RotationOrder: 4
-          m_ConstantMin: 0.1
-          m_ConstantMax: 0.8
-        maxCurveTracker:
-          minMaxPoints:
-          - 0
-          - 1
-          wrapMode: 2
-        minCurveTracker:
-          minMaxPoints:
-          - 0
-          - 1
-          wrapMode: 2
-        maxValue: 0.8
-        minValue: 0.1
-      ContinueForIterationsMin: 1
-      ContinueForIterationsMax: 1
-      AdvanceAfterEventDetector:
-        detector: {fileID: 0}
-        methodName: OnDurationFinish
-      AdvanceAfterListedTimeGeneration:
+      advanceAfterCurvedTimeGeneration:
         useControl: 0
-        randomizeBetweenValues: 0
-        randomizeChosenEntry: 0
-        listedValues:
-        - 0
-        maxValue: 0
-        minValue: 0
-      AdvanceAfterCurvedTimeGeneration:
-        useControl: 1
         minMaxCurve:
-          m_Mode: 0
+          m_Mode: 2
           m_CurveMultiplier: 1
           m_CurveMin:
             serializedVersion: 2
@@ -332,23 +160,18 @@ MonoBehaviour:
             m_PostInfinity: 2
             m_RotationOrder: 4
           m_ConstantMin: 0
-          m_ConstantMax: 1
+          m_ConstantMax: 0
         maxCurveTracker:
-          minMaxPoints:
-          - 0
-          - 1
+          minMaxPoints: []
           wrapMode: 2
         minCurveTracker:
-          minMaxPoints:
-          - 0
-          - 1
+          minMaxPoints: []
           wrapMode: 2
-        maxValue: 1
-        minValue: 1
-      AdvanceAfterIterationsMin: 1
-      AdvanceAfterIterationsMax: 1
-      LimitStarts: 0
-      MaxStartAmountMin: 1
-      MaxStartAmountMax: 1
-      ControlOptions:
-      - {fileID: 11400000, guid: 840879577a62fea418effac50f503dce, type: 2}
+        maxValue: 0
+        minValue: 0
+      advanceAfterIterationsMin: 1
+      advanceAfterIterationsMax: 1
+      limitStarts: 0
+      maxStartAmountMin: 1
+      maxStartAmountMax: 1
+      controlOptions: []
