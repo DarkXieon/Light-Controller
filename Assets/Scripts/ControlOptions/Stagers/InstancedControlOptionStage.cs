@@ -19,6 +19,7 @@ namespace LightControls.ControlOptions.Stages
             controlStage = stage;
 
             controlOptions = controlStage.ControlOptions
+                .Where(option => option != null)
                 .Select(option => option.GetInstanced())
                 .ToArray();
 
@@ -64,6 +65,8 @@ namespace LightControls.ControlOptions.Stages
 
         public void ApplyControl(ControlOptionGroup controlInfo)
         {
+            //Debug.Log(controlOptions.Length);
+
             for (int i = 0; i < controlOptions.Length; i++)
             {
                 //if (controlOptions[i].UseControl)

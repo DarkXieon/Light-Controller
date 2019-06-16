@@ -111,10 +111,5 @@ namespace LightControls.Controllers
             //WarningSystem.DisplayStagedLightControllerWarnings(this);
 #endif
         }
-
-        //public void UpdateInstancedController()
-        //{
-        //    instancedStager.UpdateInstanced();
-        //}
     }
 }

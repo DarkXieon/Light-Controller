@@ -18,7 +18,7 @@ namespace LightControls.Utilities
     public class StagerReorderableListWrapper
     {
         private const double doubleClickTimeFrame = 0.5;
-        
+
         private static readonly Texture2D alternateBoxTexture;
         private static readonly GUIStyle headingStyle;
 
@@ -28,7 +28,7 @@ namespace LightControls.Utilities
         public delegate void InstancedAddHandler(SerializedProperty elementProperty);
         public delegate void InstancedRemoveHandler(SerializedProperty elementProperty, int index);
         public delegate void InstancedReorderHandler(SerializedProperty elementProperty, int oldIndex, int newIndex);
-        
+
         public float ListHeight
         {
             get
@@ -50,7 +50,7 @@ namespace LightControls.Utilities
 
         private ReorderableList displayList;
         private List<StageData> stageData;
-        
+
         private int currentFocus;
         private double clickStartTime;
 
@@ -63,13 +63,23 @@ namespace LightControls.Utilities
                 fontStyle = FontStyle.Bold
             };
         }
+        //public StagerReorderableListWrapper(
+        //    SerializedProperty listProperty,
+        //    InstancedAddHandler addHandler,
+        //    InstancedRemoveHandler removeHandler,
+        //    InstancedReorderHandler reorderHandler) 
+        //    : this(
+        //        listProperty: listProperty.serializedObject,
+        //        )
+        //{
+
+        //}
 
         public StagerReorderableListWrapper( 
             SerializedProperty listProperty,
             InstancedAddHandler addHandler,
             InstancedRemoveHandler removeHandler,
             InstancedReorderHandler reorderHandler)
-            //, string stagerPropertyName, string stageArrayPropertyName)
         {
             displayList = new ReorderableList(listProperty.serializedObject, listProperty);
             stageData = new List<StageData>();
@@ -77,10 +87,7 @@ namespace LightControls.Utilities
             instancedAddUpdater = addHandler;
             instancedRemoveUpdater = removeHandler;
             instancedReorderUpdater = reorderHandler;
-
-            //instancedStageArrayPropertyName = stageArrayPropertyName;
-            //instancedStagerPropertyName = stagerPropertyName;
-
+            
             var valueTracker = new List<string>();
 
             for(int i = 0; i < listProperty.arraySize; i++)
@@ -265,119 +272,119 @@ namespace LightControls.Utilities
                 .FindPropertyRelative("guid");
         }
 
-        private class InstancedStageModifier<TStage, TInstanced> : IDisposable
-            where TStage : Stage
-            where TInstanced : InstancedStage
+        private class InstancedElementModifier<TSerialized, TInstanced> : IDisposable
+            where TSerialized : class
+            where TInstanced : class
         {
-            public TStage[] Stages;
-            public TInstanced[] InstancedStages;
+            public TSerialized[] SerializedData;
+            public TInstanced[] InstancedData;
             public int[] Iterations;
 
-            private object container;
-            private object instancedContainer;
-            private string stagesPath;
-            private string instancedStagesPath;
-            private string iterationsPath;
+            private object dataParentContainer;
+            private object instancedParentContainer;
+            private string dataMemberPath;
+            private string instancedMemberPath;
+            private string iterationsMemberPath;
 
-            public InstancedStageModifier(
-                object container,
-                object instancedContainer,
-                string stagesPath,
-                string instancedStagesPath,
-                string iterationsPath)
+            public InstancedElementModifier(
+                object dataParentContainer,
+                object instancedParentContainer,
+                string dataMemberPath,
+                string instancedMemberPath,
+                string iterationsMemberPath)
             {
 
-                this.Stages = ReflectionUtils.GetMemberAtPath<TStage[]>(container, stagesPath);
-                this.InstancedStages = ReflectionUtils.GetMemberAtPath<TInstanced[]>(instancedContainer, instancedStagesPath);
-                this.Iterations = ReflectionUtils.GetMemberAtPath<int[]>(instancedContainer, iterationsPath);
+                this.SerializedData = ReflectionUtils.GetMemberAtPath<TSerialized[]>(dataParentContainer, dataMemberPath);
+                this.InstancedData = ReflectionUtils.GetMemberAtPath<TInstanced[]>(instancedParentContainer, instancedMemberPath);
+                this.Iterations = ReflectionUtils.GetMemberAtPath<int[]>(instancedParentContainer, iterationsMemberPath);
 
-                this.container = container;
-                this.instancedContainer = instancedContainer;
-                this.stagesPath = stagesPath;
-                this.instancedStagesPath = instancedStagesPath;
-                this.iterationsPath = iterationsPath;
+                this.dataParentContainer = dataParentContainer;
+                this.instancedParentContainer = instancedParentContainer;
+                this.dataMemberPath = dataMemberPath;
+                this.instancedMemberPath = instancedMemberPath;
+                this.iterationsMemberPath = iterationsMemberPath;
             }
 
             public void Dispose()
             {
-                ReflectionUtils.SetMemberAtPath(this.instancedContainer, this.InstancedStages, instancedStagesPath);
-                ReflectionUtils.SetMemberAtPath(this.instancedContainer, this.Iterations, iterationsPath);
+                ReflectionUtils.SetMemberAtPath(this.instancedParentContainer, this.InstancedData, instancedMemberPath);
+                ReflectionUtils.SetMemberAtPath(this.instancedParentContainer, this.Iterations, iterationsMemberPath);
             }
         }
 
-        public static void DefaultUpdateInstancedAdd<TStage, TInstanced>(
-            object container,
-            object instancedContainer,
-            string stagesPath, 
-            string instancedStagesPath, 
-            string iterationsPath,
-            Func<TStage, TInstanced> createInstanced)
-            where TStage : Stage
-            where TInstanced : InstancedStage
+        public static void DefaultUpdateInstancedAdd<TSerialized, TInstanced>(
+            object dataParentContainer,
+            object instancedParentContainer,
+            string dataMemberPath, 
+            string instancedMemberPath, 
+            string iterationsMemberPath,
+            Func<TSerialized, TInstanced> createInstanced)
+            where TSerialized : class
+            where TInstanced : class
         {
-            using (var modifier = new InstancedStageModifier<TStage, TInstanced>(container, instancedContainer, stagesPath, instancedStagesPath, iterationsPath))
+            using (var modifier = new InstancedElementModifier<TSerialized, TInstanced>(dataParentContainer, instancedParentContainer, dataMemberPath, instancedMemberPath, iterationsMemberPath))
             {
-                Debug.Assert(modifier.Stages.Length - modifier.InstancedStages.Length == 1);
+                Debug.Assert(modifier.SerializedData.Length - modifier.InstancedData.Length == 1);
 
                 int iterationsMin = modifier.Iterations.Min();
 
-                Array.Resize(ref modifier.InstancedStages, modifier.Stages.Length);
-                Array.Resize(ref modifier.Iterations, modifier.Stages.Length);
+                Array.Resize(ref modifier.InstancedData, modifier.SerializedData.Length);
+                Array.Resize(ref modifier.Iterations, modifier.SerializedData.Length);
 
-                modifier.InstancedStages[modifier.InstancedStages.Length - 1] = createInstanced(modifier.Stages[modifier.Stages.Length - 1]);
+                modifier.InstancedData[modifier.InstancedData.Length - 1] = createInstanced(modifier.SerializedData[modifier.SerializedData.Length - 1]);
                 modifier.Iterations[modifier.Iterations.Length - 1] = iterationsMin;
             }
         }
 
-        public static void DefaultInstancedRemove<TStage, TInstanced>(
-            object container,
-            object instancedContainer,
-            int removedAt,
-            string stagesPath,
-            string instancedStagesPath,
-            string iterationsPath)
-            where TStage : Stage
-            where TInstanced : InstancedStage
+        public static void DefaultInstancedRemove<TSerialized, TInstanced>(
+            object dataParentContainer,
+            object instancedParentContainer,
+            string dataMemberPath,
+            string instancedMemberPath,
+            string iterationsMemberPath,
+            int removedAt)
+            where TSerialized : class
+            where TInstanced : class
         {
-            using (var modifier = new InstancedStageModifier<TStage, TInstanced>(container, instancedContainer, stagesPath, instancedStagesPath, iterationsPath))
+            using (var modifier = new InstancedElementModifier<TSerialized, TInstanced>(dataParentContainer, instancedParentContainer, dataMemberPath, instancedMemberPath, iterationsMemberPath))
             {
-                Debug.Assert(modifier.Stages.Length - modifier.InstancedStages.Length == -1);
+                Debug.Assert(modifier.SerializedData.Length - modifier.InstancedData.Length == -1);
 
-                modifier.InstancedStages[removedAt] = null;
+                modifier.InstancedData[removedAt] = null;
 
-                for (int i = removedAt + 1; i < modifier.InstancedStages.Length; i++)
+                for (int i = removedAt + 1; i < modifier.InstancedData.Length; i++)
                 {
-                    modifier.InstancedStages[i - 1] = modifier.InstancedStages[i];
+                    modifier.InstancedData[i - 1] = modifier.InstancedData[i];
                     modifier.Iterations[i - 1] = modifier.Iterations[i];
                 }
 
-                Array.Resize(ref modifier.InstancedStages, modifier.Stages.Length);
-                Array.Resize(ref modifier.Iterations, modifier.Stages.Length);
+                Array.Resize(ref modifier.InstancedData, modifier.SerializedData.Length);
+                Array.Resize(ref modifier.Iterations, modifier.SerializedData.Length);
             }
         }
 
-        public static void DefaultInstancedReorder<TStage, TInstanced>(
-            object container,
-            object instancedContainer,
+        public static void DefaultInstancedReorder<TSerialized, TInstanced>(
+            object dataParentContainer,
+            object instancedParentContainer,
+            string dataMemberPath,
+            string instancedMemberPath,
+            string iterationsMemberPath,
             int oldIndex,
-            int newIndex,
-            string stagesPath,
-            string instancedStagesPath,
-            string iterationsPath)
-            where TStage : Stage
-            where TInstanced : InstancedStage
+            int newIndex)
+            where TSerialized : class
+            where TInstanced : class
         {
-            using (var modifier = new InstancedStageModifier<TStage, TInstanced>(container, instancedContainer, stagesPath, instancedStagesPath, iterationsPath))
+            using (var modifier = new InstancedElementModifier<TSerialized, TInstanced>(dataParentContainer, instancedParentContainer, dataMemberPath, instancedMemberPath, iterationsMemberPath))
             {
-                Debug.Assert(modifier.Stages.Length - modifier.InstancedStages.Length == 0 && oldIndex != newIndex);
+                Debug.Assert(modifier.SerializedData.Length - modifier.InstancedData.Length == 0 && oldIndex != newIndex);
 
-                TInstanced moved = modifier.InstancedStages[oldIndex];
+                TInstanced moved = modifier.InstancedData[oldIndex];
 
                 if (oldIndex > newIndex)
                 {
                     for (int k = oldIndex; k > newIndex; k--)
                     {
-                        modifier.InstancedStages[k] = modifier.InstancedStages[k - 1];
+                        modifier.InstancedData[k] = modifier.InstancedData[k - 1];
                         modifier.Iterations[k] = modifier.Iterations[k - 1];
                     }
                 }
@@ -385,13 +392,25 @@ namespace LightControls.Utilities
                 {
                     for (int k = oldIndex; k < newIndex; k++)
                     {
-                        modifier.InstancedStages[k] = modifier.InstancedStages[k + 1];
+                        modifier.InstancedData[k] = modifier.InstancedData[k + 1];
                         modifier.Iterations[k] = modifier.Iterations[k - 1];
                     }
                 }
 
-                modifier.InstancedStages[newIndex] = moved;
+                modifier.InstancedData[newIndex] = moved;
             }
+        }
+
+        public static void DefaultInstancedUpdate<TContainer>(SerializedProperty property, TContainer[] containers, Action<TContainer> updateOperation)
+        {
+            property.serializedObject.ApplyModifiedProperties();
+
+            for (int i = 0; i < containers.Length; i++)
+            {
+                updateOperation(containers[i]);
+            }
+
+            property.serializedObject.Update();
         }
     }
 }

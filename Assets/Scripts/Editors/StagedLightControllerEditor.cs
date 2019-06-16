@@ -13,9 +13,18 @@ namespace LightControls.Editors
     [CustomEditor(typeof(StagedLightController))]
     public class StagedLightControllerEditor : Editor
     {
+        private static readonly string[] _dontIncludeMe = new string[] { "m_Script" };
+
         public override void OnInspectorGUI()
         {
-            base.OnInspectorGUI();
+            EditorGUILayout.Space();
+            EditorGUILayout.Space();
+
+            serializedObject.Update();
+
+            DrawPropertiesExcluding(serializedObject, _dontIncludeMe);
+
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }

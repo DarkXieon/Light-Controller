@@ -69,19 +69,6 @@ namespace LightControls.PropertyDrawers
                 currentPropertyPerPath.Add(property.propertyPath, currentProperty);
             }
         }
-
-        protected static void UpdateInstancedBase<TInfo>(SerializedProperty property, TInfo[] info, Action<TInfo> instancedOperation)
-        {
-            property.serializedObject.ApplyModifiedProperties();
-
-            for (int i = 0; i < info.Length; i++)
-            {
-                instancedOperation(info[i]);
-            }
-
-            property.serializedObject.Update();
-        }
-
     }
 }
 

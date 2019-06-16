@@ -47,8 +47,10 @@ namespace LightControls.PropertyDrawers
 
             EditorGUI.BeginChangeCheck();
 
+            EditorGUI.BeginChangeCheck();
+
             int size = EditorUtils.ArraySizeField(indentedPosition, stageControlsAmountContent, controlOptions.arraySize, controlOptions.hasMultipleDifferentValues);
-            
+
             if (EditorGUI.EndChangeCheck())
             {
                 LightControlOption[] currentOptions = controlOptions.GetArray<LightControlOption>();
@@ -56,14 +58,14 @@ namespace LightControls.PropertyDrawers
                 controlOptions.SetArray(currentOptions);
             }
 
-            EditorGUI.BeginChangeCheck();
+            EditorUtils.ArraySizeField(indentedPosition, controlOptions, stageControlsAmountContent);
 
             indentedPosition = EditorUtils.GetRectBelow(indentedPosition, EditorUtils.GetSinglelinePropertyArrayHeight(controlOptions, stageControlsElementContent));
             EditorUtils.DisplaySinglelinePropertyArray(indentedPosition, controlOptions, stageControlsElementContent);
 
             if (EditorGUI.EndChangeCheck() && EditorApplication.isPlaying)
             {
-                UpdateInstancedControlOptions(property);
+                UpdateInstancedControls(property);
             }
 
             EditorGUI.indentLevel = indent;
@@ -85,104 +87,41 @@ namespace LightControls.PropertyDrawers
         {
             string[] splitOriginalPath = self.propertyPath.Split('.');
             string instancedStagePath = $"instancedOptionStager.instancedStages.Array.{splitOriginalPath[splitOriginalPath.Length - 1]}";
-            
+
+
             return instancedStagePath;
         }
 
-        private void UpdateInstancedControlOptions(SerializedProperty self)
+        private void UpdateInstancedControls(SerializedProperty self)
         {
             self.serializedObject.ApplyModifiedProperties();
 
             FoundControl[] foundControls = EditorUtils.FindControls<StagedControlOption>(self);
 
-            LightControlOption[] serializedOptions = new LightControlOption[foundControls.Length];
-            InstancedControlOption[] instancedOptions = new InstancedControlOption[foundControls.Length];
-
-            //Debug.Assert(serializedOptions.All(option => serializedOptions.All(otherOption => option == otherOption)), "For some reason not all of your data that SHOULD come from a single option, is not consistient");
-
-            for(int i = 0; i < foundControls.Length; i++)
+            foreach(FoundControl found in foundControls)
             {
-                serializedOptions[i] = foundControls[i].ControlOption;
-                instancedOptions[i] = foundControls[i].InstancedOption;
+                string controlPropertyPath = $"{found.OptionPath}.{self.propertyPath}";
+                string instancedPropertyPath = $"{found.InstancedPath}.{self.propertyPath}".Replace("stager", "instancedOptionStager").Replace("stages", "instancedStages");
+
+                string serializedOptionsPropertyPath = $"{controlPropertyPath}.controlOptions";
+                string instancedOptionsPropertyPath = $"{instancedPropertyPath}.controlOptions";
+                string iterationsPropertyPath = $"{instancedPropertyPath}.iterations";
+                
+                string[] controlPathSplit = found.InstancedPath.Split('.');
+                string updatePropertyPath = string.Join(".", controlPathSplit.Take(controlPathSplit.Length - 3));
+                string updateTogglePath = $"{updatePropertyPath}.controlOptionGroup.UpdateColorInfo";
+                
+                EditorUtils.UpdateInstancedArray<LightControlOption, InstancedControlOption>(
+                    serializedContainer: found.Controller,
+                    instancedContainer: found.Controller,
+                    serializedPath: serializedOptionsPropertyPath,
+                    instancedPath: instancedOptionsPropertyPath,
+                    iterationsPath: iterationsPropertyPath,
+                    isInstancedVersion: (option, instanced) => EditorUtils.InstancedVersionOf(instanced, option),
+                    getInstancedVersion: option => option.GetInstanced());
+
+                ReflectionUtils.SetMemberAtPath(found.Controller, true, updateTogglePath);
             }
-
-            string[] splitOriginalPath = self.propertyPath.Split('.');
-            string serializedControlsPath = $"{self.propertyPath}.controlOptions";
-            string instancedControlsPath = $"instancedOptionStager.instancedStages.Array.{splitOriginalPath[splitOriginalPath.Length - 1]}.controlOptions";
-            string iterationsPath = $"instancedOptionStager.instancedStages.Array.{splitOriginalPath[splitOriginalPath.Length - 1]}.iterations";
-            
-            EditorUtils.UpdateInstancedArray<LightControlOption, InstancedControlOption>(
-                serializedContainers: serializedOptions,
-                instancedContainers: instancedOptions,
-                serializedPath: serializedControlsPath,
-                instancedPath: instancedControlsPath,
-                iterationsPath: iterationsPath,
-                (controlOption, instancedOption) => EditorUtils.InstancedVersionOf(instancedOption, controlOption),
-                controlOption => controlOption.GetInstanced());
-
-            self.serializedObject.Update();
-
-            /*
-            self.serializedObject.ApplyModifiedProperties();
-
-            FoundControl[] foundControls = EditorUtils.FindControls<StagedControlOption>(self);
-
-            string[] splitOriginalPath = self.propertyPath.Split('.');
-            string normalControlsPath = $"{self.propertyPath}.controlOptions";
-            string instancedControlsPath = $"instancedOptionStager.instancedStages.Array.{splitOriginalPath[splitOriginalPath.Length - 1]}.controlOptions";
-
-            for (int i = 0; i < foundControls.Length; i++)
-            {
-                LightControlOption[] controlOptions = ReflectionUtils.GetMemberAtPath<LightControlOption[]>(foundControls[i].ControlOption, normalControlsPath);
-                InstancedControlOption[] instancedControlOptions = ReflectionUtils.GetMemberAtPath<InstancedControlOption[]>(foundControls[i].InstancedOption, instancedControlsPath);
-
-                if(controlOptions.Length == instancedControlOptions.Length)
-                {
-                    for(int k = 0; k < controlOptions.Length; k++)
-                    {
-                        if(!EditorUtils.InstancedVersionOf(instancedControlOptions[k], controlOptions[k]))
-                        {
-                            instancedControlOptions[k] = controlOptions[k].GetInstanced();
-                        }
-                    }
-                }
-                //else if(controlOptions.Length < instancedControlOptions.Length)
-                //{
-                //    for (int k = 0; k < instancedControlOptions.Length; k++)
-                //    {
-                //        if (!EditorUtils.InstancedVersionOf(instancedControlOptions[k], controlOptions[k]))
-                //        {
-                //            InstancedControlOption[] newOptions = new InstancedControlOption[instancedControlOptions.Length - 1];
-
-                //            for (int j = 0; j < k; j++)
-                //            {
-                //                newOptions[j] = instancedControlOptions[j];
-                //            }
-                //            for (int j = k; j < newOptions.Length; j++)
-                //            {
-                //                newOptions[j] = instancedControlOptions[j + 1];
-                //            }
-
-                //            instancedControlOptions = newOptions;
-                //            k--;
-                //        }
-                //    }
-
-                //    if (controlOptions.Length < instancedControlOptions.Length)
-                //    {
-                //        Array.Resize(ref instancedControlOptions, controlOptions.Length);
-                //    }
-                //}
-                else
-                {
-                    Array.Resize(ref instancedControlOptions, controlOptions.Length);
-                }
-
-                ReflectionUtils.SetMemberAtPath(foundControls[i].Controller, instancedControlOptions, $"{foundControls[i].InstancedPath}.{instancedControlsPath}");
-            }
-
-            self.serializedObject.Update();
-            */
         }
     }
 }

@@ -77,46 +77,46 @@ namespace LightControls.PropertyDrawers
 
         private void UpdateInstancedAdd(SerializedProperty list)
         {
-            UpdateInstancedBase<FoundControl>(
+            StagerReorderableListWrapper.DefaultInstancedUpdate<FoundControl>(
                 property: list,
-                info: EditorUtils.FindControls<StagedControlOption>(list),
-                instancedOperation: foundControl => StagerReorderableListWrapper.DefaultUpdateInstancedAdd<ControlOptionStage, InstancedControlOptionStage>(
-                    container: foundControl.ControlOption,
-                    instancedContainer: foundControl.InstancedOption,
-                    stagesPath: "stager.stages",
-                    instancedStagesPath: "instancedOptionStager.instancedStages",
-                    iterationsPath: "instancedOptionStager.iterations",
+                containers: EditorUtils.FindControls<StagedControlOption>(list),
+                updateOperation: foundControl => StagerReorderableListWrapper.DefaultUpdateInstancedAdd<ControlOptionStage, InstancedControlOptionStage>(
+                    dataParentContainer: foundControl.ControlOption,
+                    instancedParentContainer: foundControl.InstancedOption,
+                    dataMemberPath: "stager.stages",
+                    instancedMemberPath: "instancedOptionStager.instancedStages",
+                    iterationsMemberPath: "instancedOptionStager.iterations",
                     stage => new InstancedControlOptionStage(stage)));
         }
 
         private void UpdateInstancedRemove(SerializedProperty list, int removedAt)
         {
-            UpdateInstancedBase<FoundControl>(
+            StagerReorderableListWrapper.DefaultInstancedUpdate<FoundControl>(
                 property: list,
-                info: EditorUtils.FindControls<StagedControlOption>(list),
-                instancedOperation: foundControl => StagerReorderableListWrapper.DefaultInstancedRemove<ControlOptionStage, InstancedControlOptionStage>(
-                    container: foundControl.ControlOption,
-                    instancedContainer: foundControl.InstancedOption,
+                containers: EditorUtils.FindControls<StagedControlOption>(list),
+                updateOperation: foundControl => StagerReorderableListWrapper.DefaultInstancedRemove<ControlOptionStage, InstancedControlOptionStage>(
+                    dataParentContainer: foundControl.ControlOption,
+                    instancedParentContainer: foundControl.InstancedOption,
                     removedAt: removedAt,
-                    stagesPath: "stager.stages",
-                    instancedStagesPath: "instancedOptionStager.instancedStages",
-                    iterationsPath: "instancedOptionStager.iterations"));
+                    dataMemberPath: "stager.stages",
+                    instancedMemberPath: "instancedOptionStager.instancedStages",
+                    iterationsMemberPath: "instancedOptionStager.iterations"));
         }
 
 
         private void UpdateInstancedReorder(SerializedProperty list, int oldIndex, int newIndex)
         {
-            UpdateInstancedBase<FoundControl>(
+            StagerReorderableListWrapper.DefaultInstancedUpdate<FoundControl>(
                 property: list,
-                info: EditorUtils.FindControls<StagedControlOption>(list),
-                instancedOperation: foundControl => StagerReorderableListWrapper.DefaultInstancedReorder<ControlOptionStage, InstancedControlOptionStage>(
-                    container: foundControl.ControlOption,
-                    instancedContainer: foundControl.InstancedOption,
+                containers: EditorUtils.FindControls<StagedControlOption>(list),
+                updateOperation: foundControl => StagerReorderableListWrapper.DefaultInstancedReorder<ControlOptionStage, InstancedControlOptionStage>(
+                    dataParentContainer: foundControl.ControlOption,
+                    instancedParentContainer: foundControl.InstancedOption,
                     oldIndex: oldIndex,
                     newIndex: newIndex,
-                    stagesPath: "stager.stages",
-                    instancedStagesPath: "instancedOptionStager.instancedStages",
-                    iterationsPath: "instancedOptionStager.iterations"));
+                    dataMemberPath: "stager.stages",
+                    instancedMemberPath: "instancedOptionStager.instancedStages",
+                    iterationsMemberPath: "instancedOptionStager.iterations"));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using LightControls.Controllers;
+using UnityEngine;
 
 namespace LightControls.ControlOptions.Stages
 {
@@ -30,6 +31,8 @@ namespace LightControls.ControlOptions.Stages
 
         public void ApplyControl(ControlOptionGroup controlInfo)
         {
+            //Debug.Log(instancedStages.Length);
+
             foreach (InstancedControlOptionStage instanced in activeStages)
             {
                 instanced.ApplyControl(controlInfo);

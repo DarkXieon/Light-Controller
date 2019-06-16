@@ -10,7 +10,7 @@ namespace LightControls.Utilities
         public static object GetMemberAtPath(object memberContainer, string path)
         {
             string[] propertyNames = path.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
-
+            
             if (propertyNames.Length > 0)
             {
                 //Here we handle special cases
@@ -40,15 +40,37 @@ namespace LightControls.Utilities
                 MemberInfo foundMember = memberContainer
                     .GetType()
                     .FindMembers(
-                        memberType: MemberTypes.Field | MemberTypes.Property,
+                        memberType: MemberTypes.Field | MemberTypes.Property | MemberTypes.Method,
                         bindingAttr: BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                         filter: NameMatches,
                         filterCriteria: propertyNames[0])
                     .Single();
 
-                object memberValue = foundMember.MemberType == MemberTypes.Field
-                    ? (foundMember as FieldInfo).GetValue(memberContainer)
-                    : (foundMember as PropertyInfo).GetValue(memberContainer);
+                object memberValue = null;
+
+                switch(foundMember.MemberType)
+                {
+                    case MemberTypes.Field:
+                        memberValue = (foundMember as FieldInfo).GetValue(memberContainer);
+                        break;
+                    case MemberTypes.Property:
+                        memberValue = (foundMember as PropertyInfo).GetValue(memberContainer);
+                        break;
+                    case MemberTypes.Method:
+                        bool hasParameters = (foundMember as MethodInfo).GetParameters().Any();
+                        bool isVoid = (foundMember as MethodInfo).ReturnType.Equals(typeof(void));
+
+                        if(hasParameters || !isVoid)
+                        {
+                            Debug.LogError("Only parameterless void methods are currently supported");
+                        }
+
+                        memberValue = (foundMember as MethodInfo).CreateDelegate(typeof(Action), memberContainer);
+                        break;
+                    default:
+                        Debug.LogError("Invalid Member Type Found");
+                        break;
+                }
 
                 if (propertyNames.Length > 1)
                 {

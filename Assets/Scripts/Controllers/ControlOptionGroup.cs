@@ -8,6 +8,16 @@ using UnityEngine;
 
 namespace LightControls.Controllers
 {
+    public struct RendererColor
+    {
+        public Color[] Colors;
+        
+        public RendererColor(Color[] materialColors)
+        {
+            Colors = materialColors;
+        }
+    }
+
     public class ControlOptionGroup
     {
         public Light[] Lights => controlOptionGroupData.Lights;
@@ -17,7 +27,8 @@ namespace LightControls.Controllers
         public bool SaveMaterialColor => saveMaterialColor;
 
         public Color[] LightColors => lightColors;
-        public Color[][] MaterialColors => materialColors;
+        //public Color[][] MaterialColors => materialColors;
+        public RendererColor[] MaterialColors => materialColors;
 
         public ApplicationStages CurrentStage;
 
@@ -29,7 +40,8 @@ namespace LightControls.Controllers
         private bool saveMaterialColor;
 
         private Color[] lightColors;
-        private Color[][] materialColors;
+        //private Color[][] materialColors;
+        private RendererColor[] materialColors;
 
         private ControlOptionGroupData controlOptionGroupData;
 
@@ -39,7 +51,8 @@ namespace LightControls.Controllers
 
             UpdateColorInfo = false;
             lightColors = new Color[0];
-            materialColors = new Color[0][];
+            //materialColors = new Color[0][];
+            materialColors = new RendererColor[0];
 
             InitializeColors();
 
@@ -82,13 +95,21 @@ namespace LightControls.Controllers
             {
                 if (EmissiveMaterialRenderers[i] != null)
                 {
-                    for (int k = 0; k < materialColors[i].Length; k++)
+                    for (int k = 0; k < materialColors[i].Colors.Length; k++)
                     {
                         if (EmissiveMaterialRenderers[i].materials[k] != null)
                         {
-                            EmissiveMaterialRenderers[i].materials[k].SetColor("_EmissionColor", materialColors[i][k]);
+                            EmissiveMaterialRenderers[i].materials[k].SetColor("_EmissionColor", materialColors[i].Colors[k]);
                         }
                     }
+
+                    //for (int k = 0; k < materialColors[i].Length; k++)
+                    //{
+                    //    if (EmissiveMaterialRenderers[i].materials[k] != null)
+                    //    {
+                    //        EmissiveMaterialRenderers[i].materials[k].SetColor("_EmissionColor", materialColors[i][k]);
+                    //    }
+                    //}
                 }
             }
         }
@@ -105,20 +126,20 @@ namespace LightControls.Controllers
                 } 
             }
 
-            materialColors = new Color[EmissiveMaterialRenderers.Length][];
+            materialColors = new RendererColor[EmissiveMaterialRenderers.Length];
 
             for (int i = 0; i < EmissiveMaterialRenderers.Length; i++)
             {
                 if (EmissiveMaterialRenderers[i] != null)
                 {
-                    materialColors[i] = new Color[EmissiveMaterialRenderers[i].materials.Length];
+                    materialColors[i].Colors = new Color[EmissiveMaterialRenderers[i].materials.Length];
 
-                    for (int k = 0; k < materialColors[i].Length; k++)
+                    for (int k = 0; k < materialColors[i].Colors.Length; k++)
                     {
                         if (EmissiveMaterialRenderers[i].materials[k] != null)
                         {
                             EmissiveMaterialRenderers[i].materials[k].EnableKeyword("_EMISSION");
-                            materialColors[i][k] = EmissiveMaterialRenderers[i].materials[k].GetColor("_EmissionColor");
+                            materialColors[i].Colors[k] = EmissiveMaterialRenderers[i].materials[k].GetColor("_EmissionColor");
                         }
                     }
 
@@ -126,9 +147,34 @@ namespace LightControls.Controllers
                 }
                 else
                 {
-                    materialColors[i] = new Color[0];
+                    materialColors[i].Colors = new Color[0];
                 }
             }
+
+            //materialColors = new Color[EmissiveMaterialRenderers.Length][];
+
+            //for (int i = 0; i < EmissiveMaterialRenderers.Length; i++)
+            //{
+            //    if (EmissiveMaterialRenderers[i] != null)
+            //    {
+            //        materialColors[i] = new Color[EmissiveMaterialRenderers[i].materials.Length];
+
+            //        for (int k = 0; k < materialColors[i].Length; k++)
+            //        {
+            //            if (EmissiveMaterialRenderers[i].materials[k] != null)
+            //            {
+            //                EmissiveMaterialRenderers[i].materials[k].EnableKeyword("_EMISSION");
+            //                materialColors[i][k] = EmissiveMaterialRenderers[i].materials[k].GetColor("_EmissionColor");
+            //            }
+            //        }
+
+            //        EmissiveMaterialRenderers[i].UpdateGIMaterials();
+            //    }
+            //    else
+            //    {
+            //        materialColors[i] = new Color[0];
+            //    }
+            //}
         }
     }
 }

@@ -63,7 +63,7 @@ namespace Assets.Scripts.PropertyDrawers
             
             Rect[] splitLine = EditorUtils.ReplicateDefaultSplitLineRect(position, new GUIContent[] { label, intensityModifiersScaleContent, intensityModifiersOffsetContent, intensityModifiersRelateInverselyContent }, new EditorUtils.FieldType[] { EditorUtils.FieldType.Text, EditorUtils.FieldType.Text, EditorUtils.FieldType.Toggle }, EditorStyles.label);
 
-            Debug.Log(position.width > EditorUtils.MinDefaultSpaceNeeded(new GUIContent[] { label, intensityModifiersScaleContent, intensityModifiersOffsetContent, intensityModifiersRelateInverselyContent }, EditorStyles.label));
+            //Debug.Log(position.width > EditorUtils.MinDefaultSpaceNeeded(new GUIContent[] { label, intensityModifiersScaleContent, intensityModifiersOffsetContent, intensityModifiersRelateInverselyContent }, EditorStyles.label));
 
             EditorGUI.LabelField(splitLine[0], label);
 

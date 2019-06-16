@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using LightControls.Controllers;
@@ -570,6 +571,24 @@ namespace LightControls.Utilities
 
             if(droppedObjects.Length > 0)
             {
+                //for (int i = 0; i < array.serializedObject.targetObjects.Length; i++)
+                //{
+                //    //array.arraySize = combinedSize;
+
+                //    UnityEngine.Object currentTarget = array.serializedObject.targetObjects[i];
+
+                //    Type[] currentArray = ReflectionUtils.GetMemberAtPath<Type[]>(currentTarget, array.propertyPath);
+
+                //    currentArray = currentArray
+                //        .Concat(droppedObjects)
+                //        .ToArray();
+
+                //    array.SetArray(currentArray);
+                //}
+
+                //EditedValue = $"{array.arraySize}";
+                //GUI.changed = true;
+
                 array.serializedObject.ApplyModifiedProperties();
 
                 for (int j = 0; j < array.serializedObject.targetObjects.Length; j++)
@@ -578,7 +597,7 @@ namespace LightControls.Utilities
 
                     Type[] currentArray = ReflectionUtils.GetMemberAtPath<Type[]>(currentTarget, array.propertyPath);
                     Array.Resize(ref currentArray, currentArray.Length + droppedObjects.Length);
-                    
+
                     for (int i = currentArray.Length - droppedObjects.Length; i < currentArray.Length; i++)
                     {
                         currentArray[i] = droppedObjects[i - (currentArray.Length - droppedObjects.Length)];
@@ -590,6 +609,7 @@ namespace LightControls.Utilities
                 array.serializedObject.Update();
 
                 GUI.changed = true;
+                EditedValue = $"{array.arraySize}";
             }
         }
 
@@ -718,7 +738,7 @@ namespace LightControls.Utilities
 
         public static void ArraySizeField(Rect rect, SerializedProperty array, GUIContent label)
         {
-            bool guiChanged = false;
+            //bool guiChanged = false;
 
             // Get current control id
             int controlID = GUIUtility.GetControlID(FocusType.Passive);
@@ -745,7 +765,8 @@ namespace LightControls.Utilities
                 // Reset values, the edit value must go back to its original state
                 EditedValue = string.Empty;
                 EditedControl = string.Empty;
-                guiChanged = true;
+                GUI.changed = true;
+                //guiChanged = true;
 
                 return;
             }
@@ -778,7 +799,7 @@ namespace LightControls.Utilities
                         : array.arraySize.ToString();
             }
 
-            GUI.changed = guiChanged;
+            //GUI.changed = guiChanged;
         }
 
         public static void ArraySizeField<Type>(Rect rect, SerializedProperty array, GUIContent label)
@@ -788,14 +809,14 @@ namespace LightControls.Utilities
 
             Rect dragAndDropArea = new Rect(rect.x, rect.y, EditorStyles.numberField.CalcSize(label).x, rect.height);
 
-            EditorGUI.BeginChangeCheck();
+            //EditorGUI.BeginChangeCheck();
 
             ArrayDragAndDropArea<Type>(dragAndDropArea, array);
 
-            if(EditorGUI.EndChangeCheck())
-            {
-                EditedValue = $"{array.arraySize}";
-            }
+            //if(EditorGUI.EndChangeCheck())
+            //{
+            //    EditedValue = $"{array.arraySize}";
+            //}
         }
 
         public static void DisplayMultilinePropertyArray(SerializedProperty arrayProperty, GUIContent elementContent, bool highlight = false, bool addSpacing = false, int? length = null)
@@ -1077,65 +1098,105 @@ namespace LightControls.Utilities
 
             EditorGUI.BeginChangeCheck();
             intensityControlTargetProperty.intValue = (int)(IntensityControlTarget)EditorGUI.EnumFlagsField(rect, intensityControlTargetLabelContent, (IntensityControlTarget)intensityControlTargetProperty.intValue);
-
-            if(EditorGUI.EndChangeCheck() && EditorApplication.isPlaying)
+            
+            if (EditorGUI.EndChangeCheck() && EditorApplication.isPlaying)
             {
-                intensityControlTargetProperty.serializedObject.ApplyModifiedProperties();
-
-                IntensityControlTarget current = (IntensityControlTarget)intensityControlTargetProperty.intValue;
-
-                for (int j = 0; j < intensityControlTargetProperty.serializedObject.targetObjects.Length; j++)
+                for (int i = 0; i < intensityControlTargetProperty.serializedObject.targetObjects.Length; i++)
                 {
-                    LightControlOption option = (LightControlOption)intensityControlTargetProperty.serializedObject.targetObjects[j];
+                    IntensityControlTarget current = (IntensityControlTarget)intensityControlTargetProperty.intValue;
+                    LightControlOption option = (LightControlOption)intensityControlTargetProperty.serializedObject.targetObjects[i];
 
-                    GameObject.FindObjectsOfType<GroupedLightController>()
-                        .SelectMany(groupedController => ReflectionUtils.GetMemberAtPath<LightControllerGroup[]>(groupedController, "lightControllerGroups"))
-                        .Where(group => ReflectionUtils.GetMemberAtPath<InstancedControlOption[]>(group, "controlOptions")
-                            .Any(controlOption => group != null && InstancedVersionOf(controlOption, option))) //controlOption.InstancedVersionOf(option)))
-                        .ToList().ForEach(controllerGroup =>
+                    FoundControl[] found = FindControls(option);
+
+                    foreach (FoundControl control in found)
+                    {
+                        string[] splitPath = control.InstancedPath.Split('.');
+                        string relevantPath = string.Join(".", splitPath.Take(3));
+
+                        if (previous.HasFlag(IntensityControlTarget.LightColorIntensity) && !current.HasFlag(IntensityControlTarget.LightColorIntensity))
                         {
-                            ControlOptionGroup optionGroup = ReflectionUtils.GetMemberAtPath<ControlOptionGroup>(controllerGroup, "controlOptionGroup");
+                            string methodPath = $"{relevantPath}.controlOptionGroup.RestoreLightColors";
 
-                            if (optionGroup.SaveLightColor
-                            && previous.HasFlag(IntensityControlTarget.LightColorIntensity)
-                            && !current.HasFlag(IntensityControlTarget.LightColorIntensity))
-                            {
-                                Debug.Assert(optionGroup.Lights.Length == optionGroup.LightColors.Length);
+                            Action restoreLightColors = ReflectionUtils.GetMemberAtPath<Action>(control.Controller, methodPath);
 
-                                for (int i = 0; i < optionGroup.Lights.Length; i++)
-                                {
-                                    if (optionGroup.Lights[i] != null)
-                                    {
-                                        optionGroup.Lights[i].color = optionGroup.LightColors[i];
-                                    }
-                                }
-                            }
+                            restoreLightColors();
+                        }
 
-                            if (optionGroup.SaveMaterialColor
-                            && previous.HasFlag(IntensityControlTarget.MaterialColorIntensity)
-                            && !current.HasFlag(IntensityControlTarget.MaterialColorIntensity))
-                            {
-                                Debug.Assert(optionGroup.EmissiveMaterialRenderers.Length == optionGroup.MaterialColors.Length);
+                        if (previous.HasFlag(IntensityControlTarget.MaterialColorIntensity) && !current.HasFlag(IntensityControlTarget.MaterialColorIntensity))
+                        {
+                            string methodPath = $"{relevantPath}.controlOptionGroup.RestoreMaterialColors";
 
-                                for (int i = 0; i < optionGroup.EmissiveMaterialRenderers.Length; i++)
-                                {
-                                    if (optionGroup.EmissiveMaterialRenderers[i] != null)
-                                    {
-                                        for (int k = 0; k < optionGroup.EmissiveMaterialRenderers[i].materials.Length; k++)
-                                        {
-                                            if (optionGroup.EmissiveMaterialRenderers[i].materials[k] != null)
-                                            {
-                                                optionGroup.EmissiveMaterialRenderers[i].materials[k].SetColor("_EmissionColor", optionGroup.MaterialColors[i][k]);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        });
+                            Action restoreMaterialColors = ReflectionUtils.GetMemberAtPath<Action>(control.Controller, methodPath);
+
+                            restoreMaterialColors();
+                        }
+                    }
                 }
-
-                intensityControlTargetProperty.serializedObject.Update();
             }
+
+            //IntensityControlTarget previous = (IntensityControlTarget)intensityControlTargetProperty.intValue;
+
+            //EditorGUI.BeginChangeCheck();
+            //intensityControlTargetProperty.intValue = (int)(IntensityControlTarget)EditorGUI.EnumFlagsField(rect, intensityControlTargetLabelContent, (IntensityControlTarget)intensityControlTargetProperty.intValue);
+
+            //if (EditorGUI.EndChangeCheck() && EditorApplication.isPlaying)
+            //{
+            //    intensityControlTargetProperty.serializedObject.ApplyModifiedProperties();
+
+            //    IntensityControlTarget current = (IntensityControlTarget)intensityControlTargetProperty.intValue;
+
+            //    for (int j = 0; j < intensityControlTargetProperty.serializedObject.targetObjects.Length; j++)
+            //    {
+            //        LightControlOption option = (LightControlOption)intensityControlTargetProperty.serializedObject.targetObjects[j];
+
+            //        GameObject.FindObjectsOfType<GroupedLightController>()
+            //            .SelectMany(groupedController => ReflectionUtils.GetMemberAtPath<LightControllerGroup[]>(groupedController, "lightControllerGroups"))
+            //            .Where(group => ReflectionUtils.GetMemberAtPath<InstancedControlOption[]>(group, "controlOptions")
+            //                .Any(controlOption => group != null && InstancedVersionOf(controlOption, option))) //controlOption.InstancedVersionOf(option)))
+            //            .ToList().ForEach(controllerGroup =>
+            //            {
+            //                ControlOptionGroup optionGroup = ReflectionUtils.GetMemberAtPath<ControlOptionGroup>(controllerGroup, "controlOptionGroup");
+
+            //                if (optionGroup.SaveLightColor
+            //                && previous.HasFlag(IntensityControlTarget.LightColorIntensity)
+            //                && !current.HasFlag(IntensityControlTarget.LightColorIntensity))
+            //                {
+            //                    Debug.Assert(optionGroup.Lights.Length == optionGroup.LightColors.Length);
+
+            //                    for (int i = 0; i < optionGroup.Lights.Length; i++)
+            //                    {
+            //                        if (optionGroup.Lights[i] != null)
+            //                        {
+            //                            optionGroup.Lights[i].color = optionGroup.LightColors[i];
+            //                        }
+            //                    }
+            //                }
+
+            //                if (optionGroup.SaveMaterialColor
+            //                && previous.HasFlag(IntensityControlTarget.MaterialColorIntensity)
+            //                && !current.HasFlag(IntensityControlTarget.MaterialColorIntensity))
+            //                {
+            //                    Debug.Assert(optionGroup.EmissiveMaterialRenderers.Length == optionGroup.MaterialColors.Length);
+
+            //                    for (int i = 0; i < optionGroup.EmissiveMaterialRenderers.Length; i++)
+            //                    {
+            //                        if (optionGroup.EmissiveMaterialRenderers[i] != null)
+            //                        {
+            //                            for (int k = 0; k < optionGroup.EmissiveMaterialRenderers[i].materials.Length; k++)
+            //                            {
+            //                                if (optionGroup.EmissiveMaterialRenderers[i].materials[k] != null)
+            //                                {
+            //                                    optionGroup.EmissiveMaterialRenderers[i].materials[k].SetColor("_EmissionColor", optionGroup.MaterialColors[i][k]);
+            //                                }
+            //                            }
+            //                        }
+            //                    }
+            //                }
+            //            });
+            //    }
+
+            //    intensityControlTargetProperty.serializedObject.Update();
+            //}
         }
 
 
@@ -1148,45 +1209,91 @@ namespace LightControls.Utilities
 
             if (EditorGUI.EndChangeCheck() && EditorApplication.isPlaying)
             {
-                colorControlTargetProperty.serializedObject.ApplyModifiedProperties();
-
-                ColorControlTarget current = (ColorControlTarget)colorControlTargetProperty.intValue;
-
                 for (int i = 0; i < colorControlTargetProperty.serializedObject.targetObjects.Length; i++)
                 {
+                    ColorControlTarget current = (ColorControlTarget)colorControlTargetProperty.intValue;
                     LightControlOption option = (LightControlOption)colorControlTargetProperty.serializedObject.targetObjects[i];
 
-                    GameObject.FindObjectsOfType<GroupedLightController>()
-                        .SelectMany(groupedController => ReflectionUtils.GetMemberAtPath<LightControllerGroup[]>(groupedController, "lightControllerGroups"))
-                        .Where(group => ReflectionUtils.GetMemberAtPath<InstancedControlOption[]>(group, "controlOptions")
-                            .Any(controlOption => group != null && InstancedVersionOf(controlOption, option))) //controlOption.InstancedVersionOf(option)))
-                        .ToList().ForEach(controllerGroup =>
+                    FoundControl[] found = FindControls(option);
+
+                    foreach (FoundControl control in found)
+                    {
+                        string[] splitPath = control.InstancedPath.Split('.');
+                        string relevantPath = string.Join(".", splitPath.Take(3));
+
+                        if (previous.HasFlag(ColorControlTarget.Light) && !current.HasFlag(ColorControlTarget.Light))
                         {
-                            ControlOptionGroup optionGroup = ReflectionUtils.GetMemberAtPath<ControlOptionGroup>(controllerGroup, "controlOptionGroup");
-                            LightControllerGroupData controllerGroupData = ReflectionUtils.GetMemberAtPath<LightControllerGroupData>(controllerGroup, "controllerGroupData");
+                            string methodPath = $"{relevantPath}.controlOptionGroup.RestoreLightColors";
 
-                            if ((current ^ previous).HasFlag(ColorControlTarget.Light))
-                            {
-                                bool hasLightColorController = controllerGroupData.LightControlOptions
-                                    .Any(controlOption => controlOption is ColorControlOption &&
-                                                         (controlOption as ColorControlOption).ColorTarget.HasFlag(ColorControlTarget.Light));
+                            Action restoreLightColors = ReflectionUtils.GetMemberAtPath<Action>(control.Controller, methodPath);
 
-                                ReflectionUtils.SetMemberAtPath(optionGroup, !hasLightColorController, "saveLightColor");
-                            }
+                            restoreLightColors();
+                        }
 
-                            if ((current ^ previous).HasFlag(ColorControlTarget.Material))
-                            {
-                                bool hasMaterialColorController = controllerGroupData.LightControlOptions
-                                    .Any(controlOption => controlOption is ColorControlOption &&
-                                                         (controlOption as ColorControlOption).ColorTarget.HasFlag(ColorControlTarget.Material));
+                        if (previous.HasFlag(ColorControlTarget.Material) && !current.HasFlag(ColorControlTarget.Material))
+                        {
+                            string methodPath = $"{relevantPath}.controlOptionGroup.RestoreMaterialColors";
 
-                                ReflectionUtils.SetMemberAtPath(optionGroup, !hasMaterialColorController, "saveMaterialColor");
-                            }
-                        });
+                            Action restoreMaterialColors = ReflectionUtils.GetMemberAtPath<Action>(control.Controller, methodPath);
+
+                            restoreMaterialColors();
+                        }
+
+                        //string updateTogglePath = $"{relevantPath}.controlOptionGroup.RestoreMaterialColors";
+
+                        //Action restoreMaterialColors = ReflectionUtils.GetMemberAtPath<Action>(control.Controller, updateTogglePath);
+
+                        //restoreMaterialColors();
+                    }
                 }
-
-                colorControlTargetProperty.serializedObject.Update();
             }
+            
+            //ColorControlTarget previous = (ColorControlTarget)colorControlTargetProperty.intValue;
+
+            //EditorGUI.BeginChangeCheck();
+            //colorControlTargetProperty.intValue = (int)(ColorControlTarget)EditorGUI.EnumFlagsField(rect, intensityControlTargetLabelContent, (ColorControlTarget)colorControlTargetProperty.intValue);
+
+            //if (EditorGUI.EndChangeCheck() && EditorApplication.isPlaying)
+            //{
+            //    colorControlTargetProperty.serializedObject.ApplyModifiedProperties();
+
+            //    ColorControlTarget current = (ColorControlTarget)colorControlTargetProperty.intValue;
+
+            //    for (int i = 0; i < colorControlTargetProperty.serializedObject.targetObjects.Length; i++)
+            //    {
+            //        LightControlOption option = (LightControlOption)colorControlTargetProperty.serializedObject.targetObjects[i];
+
+            //        GameObject.FindObjectsOfType<GroupedLightController>()
+            //            .SelectMany(groupedController => ReflectionUtils.GetMemberAtPath<LightControllerGroup[]>(groupedController, "lightControllerGroups"))
+            //            .Where(group => ReflectionUtils.GetMemberAtPath<InstancedControlOption[]>(group, "controlOptions")
+            //                .Any(controlOption => group != null && InstancedVersionOf(controlOption, option))) //controlOption.InstancedVersionOf(option)))
+            //            .ToList().ForEach(controllerGroup =>
+            //            {
+            //                ControlOptionGroup optionGroup = ReflectionUtils.GetMemberAtPath<ControlOptionGroup>(controllerGroup, "controlOptionGroup");
+            //                LightControllerGroupData controllerGroupData = ReflectionUtils.GetMemberAtPath<LightControllerGroupData>(controllerGroup, "controllerGroupData");
+
+            //                if ((current ^ previous).HasFlag(ColorControlTarget.Light))
+            //                {
+            //                    bool hasLightColorController = controllerGroupData.LightControlOptions
+            //                        .Any(controlOption => controlOption is ColorControlOption &&
+            //                                             (controlOption as ColorControlOption).ColorTarget.HasFlag(ColorControlTarget.Light));
+
+            //                    ReflectionUtils.SetMemberAtPath(optionGroup, !hasLightColorController, "saveLightColor");
+            //                }
+
+            //                if ((current ^ previous).HasFlag(ColorControlTarget.Material))
+            //                {
+            //                    bool hasMaterialColorController = controllerGroupData.LightControlOptions
+            //                        .Any(controlOption => controlOption is ColorControlOption &&
+            //                                             (controlOption as ColorControlOption).ColorTarget.HasFlag(ColorControlTarget.Material));
+
+            //                    ReflectionUtils.SetMemberAtPath(optionGroup, !hasMaterialColorController, "saveMaterialColor");
+            //                }
+            //            });
+            //    }
+
+            //    colorControlTargetProperty.serializedObject.Update();
+            //}
         }
 
         public static bool InstancedVersionOf(InstancedControlOption instanced, LightControlOption option)
@@ -1235,7 +1342,7 @@ namespace LightControls.Utilities
             return targetIsControlOption.serializedObject.targetObjects
                 .Select(target => (TOption)target)
                 .SelectMany(target => GameObject.FindObjectsOfType<GroupedLightController>()
-                    .Select(controller => FindIn(controller, target))
+                    .SelectMany(controller => FindIn(controller, target))
                     .Where(found => found != null))
                 .ToArray();
         }
@@ -1243,7 +1350,7 @@ namespace LightControls.Utilities
         public static FoundControl[] FindControls(LightControlOption controlOption)
         {
             return GameObject.FindObjectsOfType<GroupedLightController>()
-                .Select(controller => FindIn(controller, controlOption))
+                .SelectMany(controller => FindIn(controller, controlOption))
                 .Where(found => found != null)
                 .ToArray();
         }
@@ -1253,40 +1360,41 @@ namespace LightControls.Utilities
         private const string instancedGroupPath = "lightControllerGroups";
         private const string instancedControlOptionsPath = "controlOptions";
 
-        public static FoundControl FindIn(GroupedLightController controller, LightControlOption option)
+        public static FoundControl[] FindIn(GroupedLightController controller, LightControlOption option)
         {
             LightControllerGroupData[] groupData = ReflectionUtils.GetMemberAtPath<LightControllerGroupData[]>(controller, lightControllerGroupDataPath);
+            List<FoundControl> foundControls = new List<FoundControl>();
 
-            for(int i = 0; i < groupData.Length; i++)
+            for (int i = 0; i < groupData.Length; i++)
             {
                 LightControlOption[] options = ReflectionUtils.GetMemberAtPath<LightControlOption[]>(groupData[i], groupLightControlsPath);
 
-                for(int k = 0; k < options.Length; k++)
+                for (int k = 0; k < options.Length; k++)
                 {
                     if (options[k] == option)
                     {
-                        return new FoundControl()
+                        foundControls.Add(new FoundControl()
                         {
                             Controller = controller,
                             ControlOption = option,
                             InstancedOption = ReflectionUtils.GetMemberAtPath<InstancedControlOption>(controller, $"{instancedGroupPath}.Array.data[{i}].{instancedControlOptionsPath}.Array.data[{k}]"),
                             OptionPath = $"{lightControllerGroupDataPath}.Array.data[{i}].{groupLightControlsPath}.Array.data[{k}]",
                             InstancedPath = $"{instancedGroupPath}.Array.data[{i}].{instancedControlOptionsPath}.Array.data[{k}]"
-                        };
+                        });
                     }
                     else if (options[k] is StagedControlOption)
                     {
-                        FoundControl found = FindIn(controller, (StagedControlOption)options[k], option, $"{lightControllerGroupDataPath}.Array.data[{i}].{groupLightControlsPath}.Array.data[{k}]");
+                        FoundControl[] found = FindIn(controller, (StagedControlOption)options[k], option, $"{lightControllerGroupDataPath}.Array.data[{i}].{groupLightControlsPath}.Array.data[{k}]");
 
-                        if (found != null)
+                        if (found != null && found.Length > 0)
                         {
-                            return found;
+                            foundControls.AddRange(found);
                         }
                     }
                 }
             }
 
-            return null;
+            return foundControls.ToArray();
         }
 
         private const string stagedStagesPath = "stager.stages";
@@ -1295,49 +1403,165 @@ namespace LightControls.Utilities
         private const string instancedStagesPath = "instancedOptionStager.instancedStages";
         private const string instancedStageControlsPath = "controlOptions";
 
-        public static FoundControl FindIn(GroupedLightController controller, StagedControlOption staged, LightControlOption toFind, string path)
+        public static FoundControl[] FindIn(GroupedLightController controller, StagedControlOption staged, LightControlOption toFind, string path)
         {
             ControlOptionStage[] stages = ReflectionUtils.GetMemberAtPath<ControlOptionStage[]>(staged, stagedStagesPath);
+            List<FoundControl> allFoundControls = new List<FoundControl>();
 
-            for(int i = 0; i < stages.Length; i++)
+            for (int i = 0; i < stages.Length; i++)
             {
                 LightControlOption[] foundControls = ReflectionUtils.GetMemberAtPath<LightControlOption[]>(stages[i], stagedStageControlsPath);
 
                 for (int k = 0; k < foundControls.Length; k++)
                 {
-                    path += $".{stagedStagesPath}.Array.data[{i}].{stagedStageControlsPath}.Array.data[{k}]";
-                    
+                    string foundPath = path + $".{stagedStagesPath}.Array.data[{i}].{stagedStageControlsPath}.Array.data[{k}]";
+                    //path += $".{stagedStagesPath}.Array.data[{i}].{stagedStageControlsPath}.Array.data[{k}]";
+
                     if (foundControls[k] == toFind)
                     {
-                        string instancedPath = path
+                        string instancedPath = foundPath
                             .Replace(lightControllerGroupDataPath, instancedGroupPath)
                             .Replace(groupLightControlsPath, instancedControlOptionsPath)
                             .Replace(stagedStagesPath, instancedStagesPath)
                             .Replace(stagedStageControlsPath, instancedStageControlsPath);
 
-                        return new FoundControl()
+                        allFoundControls.Add(new FoundControl()
                         {
                             Controller = controller,
                             ControlOption = toFind,
                             InstancedOption = ReflectionUtils.GetMemberAtPath<InstancedControlOption>(controller, instancedPath),
-                            OptionPath = path,
+                            OptionPath = foundPath,
                             InstancedPath = instancedPath
-                        };
+                        });
                     }
                     else if (foundControls[k] is StagedControlOption)
                     {
-                        FoundControl found = FindIn(controller, (StagedControlOption)foundControls[k], toFind, path);
+                        FoundControl[] found = FindIn(controller, (StagedControlOption)foundControls[k], toFind, foundPath);
 
-                        if (found != null)
+                        if (found != null && found.Length > 0)
                         {
-                            return found;
+                            allFoundControls.AddRange(found);
                         }
                     }
                 }
             }
 
-            return null;
+            return allFoundControls.ToArray();
         }
+
+        ////Only use when the serializedObject's target objects are LightControlOptions
+        //public static FoundControl[] FindControls<TOption>(SerializedProperty targetIsControlOption)
+        //    where TOption : LightControlOption
+        //{
+        //    return targetIsControlOption.serializedObject.targetObjects
+        //        .Select(target => (TOption)target)
+        //        .SelectMany(target => GameObject.FindObjectsOfType<GroupedLightController>()
+        //            .Select(controller => FindIn(controller, target))
+        //            .Where(found => found != null))
+        //        .ToArray();
+        //}
+
+        //public static FoundControl[] FindControls(LightControlOption controlOption)
+        //{
+        //    return GameObject.FindObjectsOfType<GroupedLightController>()
+        //        .Select(controller => FindIn(controller, controlOption))
+        //        .Where(found => found != null)
+        //        .ToArray();
+        //}
+
+        //private const string lightControllerGroupDataPath = "lightControllerGroupsData";
+        //private const string groupLightControlsPath = "lightControlOptions";
+        //private const string instancedGroupPath = "lightControllerGroups";
+        //private const string instancedControlOptionsPath = "controlOptions";
+
+        //public static FoundControl FindIn(GroupedLightController controller, LightControlOption option)
+        //{
+        //    LightControllerGroupData[] groupData = ReflectionUtils.GetMemberAtPath<LightControllerGroupData[]>(controller, lightControllerGroupDataPath);
+
+        //    for(int i = 0; i < groupData.Length; i++)
+        //    {
+        //        LightControlOption[] options = ReflectionUtils.GetMemberAtPath<LightControlOption[]>(groupData[i], groupLightControlsPath);
+
+        //        for(int k = 0; k < options.Length; k++)
+        //        {
+        //            if (options[k] == option)
+        //            {
+        //                return new FoundControl()
+        //                {
+        //                    Controller = controller,
+        //                    ControlOption = option,
+        //                    InstancedOption = ReflectionUtils.GetMemberAtPath<InstancedControlOption>(controller, $"{instancedGroupPath}.Array.data[{i}].{instancedControlOptionsPath}.Array.data[{k}]"),
+        //                    OptionPath = $"{lightControllerGroupDataPath}.Array.data[{i}].{groupLightControlsPath}.Array.data[{k}]",
+        //                    InstancedPath = $"{instancedGroupPath}.Array.data[{i}].{instancedControlOptionsPath}.Array.data[{k}]"
+        //                };
+        //            }
+        //            else if (options[k] is StagedControlOption)
+        //            {
+        //                FoundControl found = FindIn(controller, (StagedControlOption)options[k], option, $"{lightControllerGroupDataPath}.Array.data[{i}].{groupLightControlsPath}.Array.data[{k}]");
+
+        //                if (found != null)
+        //                {
+        //                    return found;
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    return null;
+        //}
+
+        //private const string stagedStagesPath = "stager.stages";
+        //private const string stagedStageControlsPath = "controlOptions";
+
+        //private const string instancedStagesPath = "instancedOptionStager.instancedStages";
+        //private const string instancedStageControlsPath = "controlOptions";
+
+        //public static FoundControl FindIn(GroupedLightController controller, StagedControlOption staged, LightControlOption toFind, string path)
+        //{
+        //    ControlOptionStage[] stages = ReflectionUtils.GetMemberAtPath<ControlOptionStage[]>(staged, stagedStagesPath);
+
+        //    for(int i = 0; i < stages.Length; i++)
+        //    {
+        //        LightControlOption[] foundControls = ReflectionUtils.GetMemberAtPath<LightControlOption[]>(stages[i], stagedStageControlsPath);
+
+        //        for (int k = 0; k < foundControls.Length; k++)
+        //        {
+        //            string foundPath = path + $".{stagedStagesPath}.Array.data[{i}].{stagedStageControlsPath}.Array.data[{k}]";
+        //            //path += $".{stagedStagesPath}.Array.data[{i}].{stagedStageControlsPath}.Array.data[{k}]";
+
+        //            if (foundControls[k] == toFind)
+        //            {
+        //                string instancedPath = foundPath
+        //                    .Replace(lightControllerGroupDataPath, instancedGroupPath)
+        //                    .Replace(groupLightControlsPath, instancedControlOptionsPath)
+        //                    .Replace(stagedStagesPath, instancedStagesPath)
+        //                    .Replace(stagedStageControlsPath, instancedStageControlsPath);
+
+        //                Debug.Log(instancedPath);
+
+        //                return new FoundControl()
+        //                {
+        //                    Controller = controller,
+        //                    ControlOption = toFind,
+        //                    InstancedOption = ReflectionUtils.GetMemberAtPath<InstancedControlOption>(controller, instancedPath),
+        //                    OptionPath = foundPath,
+        //                    InstancedPath = instancedPath
+        //                };
+        //            }
+        //            else if (foundControls[k] is StagedControlOption)
+        //            {
+        //                FoundControl found = FindIn(controller, (StagedControlOption)foundControls[k], toFind, foundPath);
+
+        //                if (found != null)
+        //                {
+        //                    return found;
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    return null;
+        //}
 
         public static void UpdateInstancedArray<TSerialized, TInstanced>(
             object[] serializedContainers,
@@ -1348,7 +1572,6 @@ namespace LightControls.Utilities
             Func<TSerialized, TInstanced, bool> isInstancedVersion,
             Func<TSerialized, TInstanced> getInstancedVersion)
             where TSerialized : class
-            where TInstanced : class
         {
             for(int i = 0; i < instancedContainers.Length; i++)
             {
@@ -1372,11 +1595,12 @@ namespace LightControls.Utilities
             Func<TSerialized, TInstanced, bool> isInstancedVersion,
             Func<TSerialized, TInstanced> getInstancedVersion)
             where TSerialized : class
-            where TInstanced : class
         {
             TSerialized[] savedData = ReflectionUtils.GetMemberAtPath<TSerialized[]>(serializedContainer, serializedPath);
             TInstanced[] instancedData = ReflectionUtils.GetMemberAtPath<TInstanced[]>(instancedContainer, instancedPath);
-            int[] iterations = ReflectionUtils.GetMemberAtPath<int[]>(instancedContainer, iterationsPath);
+            int[] iterations = !string.IsNullOrWhiteSpace(iterationsPath)
+                ? ReflectionUtils.GetMemberAtPath<int[]>(instancedContainer, iterationsPath)
+                : new int[instancedData.Length];
             
             if (savedData.Length == instancedData.Length)
             {
@@ -1399,11 +1623,11 @@ namespace LightControls.Utilities
 
                 if (addedInfo)
                 {
-                    for(int i = previousLength; i < instancedData.Length; i++)
+                    for(int i = previousLength; i < savedData.Length; i++)
                     {
                         instancedData[i] = savedData[i] != null
                             ? getInstancedVersion(savedData[i])
-                            : null;
+                            : default(TInstanced);
 
                         iterations[i] = iterationsMin;
                     }
@@ -1411,6 +1635,9 @@ namespace LightControls.Utilities
             } //potentially add more complicated actions for removal--that will only be necissarry if removal is not always from the back though--which currently--I believe it always is
 
             ReflectionUtils.SetMemberAtPath(instancedContainer, instancedData, instancedPath);
+            
+            if(!string.IsNullOrWhiteSpace(iterationsPath))
+                ReflectionUtils.SetMemberAtPath(instancedContainer, iterations, iterationsPath);
         }
 
         public static void CopyFromTo<T>(T[] from, T[] to)

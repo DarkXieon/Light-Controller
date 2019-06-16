@@ -1,6 +1,5 @@
 ﻿#if UNITY_EDITOR
 
-using System;
 using System.Collections.Generic;
 
 using LightControls.ControlOptions.Stages;
@@ -75,46 +74,46 @@ namespace LightControls.PropertyDrawers
         
         private void UpdateInstancedAdd(SerializedProperty property)
         {
-            UpdateInstancedBase<UnityEngine.Object>(
+            StagerReorderableListWrapper.DefaultInstancedUpdate<UnityEngine.Object>(
                 property: property,
-                info: property.serializedObject.targetObjects,
-                instancedOperation: target => StagerReorderableListWrapper.DefaultUpdateInstancedAdd<LightControllerStage, InstancedLightControllerStage>(
-                    container: target,
-                    instancedContainer: target,
-                    stagesPath: "controllerStager.stages",
-                    instancedStagesPath: "instancedStager.controllerStages",
-                    iterationsPath: "instancedStager.iterations",
+                containers: property.serializedObject.targetObjects,
+                updateOperation: target => StagerReorderableListWrapper.DefaultUpdateInstancedAdd<LightControllerStage, InstancedLightControllerStage>(
+                    dataParentContainer: target,
+                    instancedParentContainer: target,
+                    dataMemberPath: "controllerStager.stages",
+                    instancedMemberPath: "instancedStager.controllerStages",
+                    iterationsMemberPath: "instancedStager.iterations",
                     stage => new InstancedLightControllerStage(stage)));
         }
 
         private void UpdateInstancedRemove(SerializedProperty property, int removedAt)
         {
-            UpdateInstancedBase<UnityEngine.Object>(
+            StagerReorderableListWrapper.DefaultInstancedUpdate<UnityEngine.Object>(
                 property: property,
-                info: property.serializedObject.targetObjects,
-                instancedOperation: target => StagerReorderableListWrapper.DefaultInstancedRemove<ControlOptionStage, InstancedControlOptionStage>(
-                    container: target,
-                    instancedContainer: target,
+                containers: property.serializedObject.targetObjects,
+                updateOperation: target => StagerReorderableListWrapper.DefaultInstancedRemove<ControlOptionStage, InstancedControlOptionStage>(
+                    dataParentContainer: target,
+                    instancedParentContainer: target,
                     removedAt: removedAt,
-                    stagesPath: "controllerStager.stages",
-                    instancedStagesPath: "instancedStager.controllerStages",
-                    iterationsPath: "instancedStager.iterations"));
+                    dataMemberPath: "controllerStager.stages",
+                    instancedMemberPath: "instancedStager.controllerStages",
+                    iterationsMemberPath: "instancedStager.iterations"));
         }
 
 
         private void UpdateInstancedReorder(SerializedProperty property, int oldIndex, int newIndex)
         {
-            UpdateInstancedBase<UnityEngine.Object>(
+            StagerReorderableListWrapper.DefaultInstancedUpdate<UnityEngine.Object>(
                 property: property,
-                info: property.serializedObject.targetObjects,
-                instancedOperation: target => StagerReorderableListWrapper.DefaultInstancedReorder<ControlOptionStage, InstancedControlOptionStage>(
-                    container: target,
-                    instancedContainer: target,
+                containers: property.serializedObject.targetObjects,
+                updateOperation: target => StagerReorderableListWrapper.DefaultInstancedReorder<ControlOptionStage, InstancedControlOptionStage>(
+                    dataParentContainer: target,
+                    instancedParentContainer: target,
                     oldIndex: oldIndex,
                     newIndex: newIndex,
-                    stagesPath: "controllerStager.stages",
-                    instancedStagesPath: "instancedStager.controllerStages",
-                    iterationsPath: "instancedStager.iterations"));
+                    dataMemberPath: "controllerStager.stages",
+                    instancedMemberPath: "instancedStager.controllerStages",
+                    iterationsMemberPath: "instancedStager.iterations"));
         }
     }
 }

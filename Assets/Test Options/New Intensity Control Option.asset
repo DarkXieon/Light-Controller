@@ -24,7 +24,7 @@ MonoBehaviour:
     useControl: 1
     minMaxCurve:
       m_Mode: 1
-      m_CurveMultiplier: 1
+      m_CurveMultiplier: 50
       m_CurveMin:
         serializedVersion: 2
         m_Curve:
@@ -54,27 +54,27 @@ MonoBehaviour:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 0
-          inSlope: 1
-          outSlope: 1
+          value: 0.2
+          inSlope: 0.8
+          outSlope: 0.8
           tangentMode: 34
           weightedMode: 0
           inWeight: 0
-          outWeight: 0
+          outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
           value: 1
-          inSlope: 1
-          outSlope: 1
+          inSlope: 0.8
+          outSlope: 0.8
           tangentMode: 34
           weightedMode: 0
-          inWeight: 0
+          inWeight: 0.33333334
           outWeight: 0
-        m_PreInfinity: 2
+        m_PreInfinity: 1
         m_PostInfinity: 1
         m_RotationOrder: 4
       m_ConstantMin: 0
-      m_ConstantMax: 0
+      m_ConstantMax: 10
     maxCurveTracker:
       minMaxPoints:
       - 0
@@ -85,8 +85,8 @@ MonoBehaviour:
       - 0
       - 1
       wrapMode: 2
-    maxValue: 1
-    minValue: 0
+    maxValue: 50
+    minValue: 10
   listedRoC:
     useControl: 0
     randomizeBetweenValues: 0
@@ -168,10 +168,10 @@ MonoBehaviour:
   - Multiplier: 10
     Offset: 0
     RelateInversely: 0
-  - Multiplier: 1
+  - Multiplier: 0.02
     Offset: 0
     RelateInversely: 0
-  - Multiplier: 1
+  - Multiplier: 0.05
     Offset: 0
     RelateInversely: 0
   - Multiplier: 1

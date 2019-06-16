@@ -13,6 +13,8 @@ namespace LightControls.Controllers.Data
 
         [SerializeField] private ControlOptionGroupData controlOptionGroupData;
         [SerializeField] private LightControlOption[] lightControlOptions = new LightControlOption[0];
+        [SerializeField] private string guid;
+
 
         public LightControllerGroupData()
         {

@@ -376,7 +376,8 @@ namespace LightControls.ControlOptions
                             for (int k = 0; k < controlOptionInfo.EmissiveMaterialRenderers[i].materials.Length; k++)
                             {
                                 Color currentColor = controlOptionInfo.SaveMaterialColor
-                                    ? controlOptionInfo.MaterialColors[i][k]
+                                    //? controlOptionInfo.MaterialColors[i][k]
+                                    ? controlOptionInfo.MaterialColors[i].Colors[k]
                                     : controlOptionInfo.EmissiveMaterialRenderers[i].materials[k].GetColor("_EmissionColor");
 
                                 controlOptionInfo.EmissiveMaterialRenderers[i].materials[k].SetColor("_EmissionColor", currentColor * scaledIntensity);
